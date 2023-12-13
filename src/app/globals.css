@@ -3,25 +3,111 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --primary-100: #009b4c;
+  --primary-50: #7fcca5;
+  --primary-10: #e6f5ee;
+  --neutral-100: #353535;
+  --neutral-50: #999999;
+  --neutral-10: #ebebeb;
+  --neutral-5: #f5f5f5;
+  --neutral-0: #ffffff;
+  --secondary-100: #ed751e;
+  --secondary-50: #f5b98e;
+  --secondary-10: #fef2e9;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --primary-100: #009b4c;
+    --primary-50: #7fcca5;
+    --primary-10: #e6f5ee;
+    --neutral-100: #353535;
+    --neutral-50: #999999;
+    --neutral-10: #ebebeb;
+    --neutral-5: #f9f9f9;
+    --neutral-0: #ffffff;
+    --secondary-100: #ed751e;
+    --secondary-50: #f5b98e;
+    --secondary-10: #fef2e9;
   }
 }
 
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--neutral-100);
+  background: var(--neutral-0);
+}
+
+/* Fixed Navbar */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-5px);
+    visibility: hidden;
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(5px);
+    visibility: hidden;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+  }
+}
+
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(5px);
+    visibility: hidden;
+  }
+}
+
+.fade-in-down {
+  animation: fadeIn 0.2s ease-in-out forwards;
+}
+
+.fade-out-up {
+  animation: fadeOut 0.2s ease-in-out forwards;
+}
+
+.fade-in-left {
+  animation: fadeInLeft 0.2s ease-in-out forwards;
+}
+
+.fade-out-right {
+  animation: fadeOutRight 0.2s ease-in-out forwards;
 }
