@@ -9,6 +9,7 @@ const comparePassword = async (password: string, hashedPassword: string) => {
 }
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXT_AUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -39,11 +40,17 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     jwt(params: any) {
+      if (params.user) {
+        params.token.username = params.user.username
+        params.token.id = params.user.id
+      }
       return params.token
     },
     session({ session, token }) {
       if (session.user) {
         ;(session.user as { id: string }).id = token.id as string
+        ;(session.user as { username: string }).username =
+          token.username as string
       }
       return session
     },

@@ -4,23 +4,25 @@ import Link from "next/link"
 import React, { useState } from "react"
 import { navListMenu } from "./list-menu"
 import { usePathname, useRouter } from "next/navigation"
-import { ArrowDown, ChevronDown, LogIn, Menu, X } from "react-feather"
+import { ArrowDown, ChevronDown, LogIn, LogOut, Menu, X } from "react-feather"
 import { useDesktopSize, useTabletSize } from "@/hooks/useWindowSize"
 import InputField from "../input-field/InputField"
 import FilledButton from "../buttons/FilledButton"
 import { showToast } from "@/helpers/showToast"
 import { WidgetTypes } from "@/constants/button-types"
 import { signUp } from "@/controllers/admin-controller"
-import { signIn } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
+import OutlinedButton from "../buttons/OutlinedButton"
 
 type Props = {
-  isAuth: boolean
+  isAuthed: boolean
 }
 
-export default function Navbar({ isAuth }: Props) {
+export default function Navbar({ isAuthed }: Props) {
   const isDesktopSize = useDesktopSize()
   const isTabletSize = useTabletSize()
   const router = useRouter()
+  const { data: session, status } = useSession()
 
   const pathName = usePathname()
   const [isOtherMenuExpanded, setIsOtherMenuExpanded] = useState(false)
@@ -47,6 +49,10 @@ export default function Navbar({ isAuth }: Props) {
     setIsMenuExpanded(false)
   }
 
+  const onLogout = async () => {
+    await signOut()
+  }
+
   const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value)
   }
@@ -71,8 +77,6 @@ export default function Navbar({ isAuth }: Props) {
         password,
         redirect: false,
       })
-
-      console.log(res)
 
       if (res?.error) {
         setIsLoadingLogin(false)
@@ -168,28 +172,41 @@ export default function Navbar({ isAuth }: Props) {
                 </div>
               </div>
             </div>
-            {!isAuth && (
-              <div>
-                <button
-                  className="border-2 border-primary-100 px-8 py-2 rounded-full font-semibold text-neutral-100 transition-all hover:bg-primary-50"
+            <div>
+              {isAuthed ? (
+                <OutlinedButton
+                  text="Logout"
+                  onClick={onLogout}
+                  ButtonIcon={LogOut}
+                />
+              ) : (
+                <OutlinedButton
+                  text="Login"
                   onClick={onToggleModalLogin}
-                >
-                  Login
-                </button>
-              </div>
-            )}
+                  ButtonIcon={LogIn}
+                />
+              )}
+            </div>
           </>
         ) : (
           // Mobile and Tablet Navbar
           <div className="flex gap-4 items-center">
-            {isTabletSize && !isAuth && (
+            {isTabletSize && !isAuthed && (
               <div>
-                <button
-                  className="border-2 border-primary-100 px-8 py-2 rounded-full font-semibold text-neutral-100 transition-all hover:bg-primary-50"
+                <OutlinedButton
+                  text="Login"
                   onClick={onToggleModalLogin}
-                >
-                  Login
-                </button>
+                  ButtonIcon={LogIn}
+                />
+              </div>
+            )}
+            {isTabletSize && isAuthed && (
+              <div>
+                <OutlinedButton
+                  text="Logout"
+                  onClick={onLogout}
+                  ButtonIcon={LogOut}
+                />
               </div>
             )}
             <Menu className="w-6 cursor-pointer" onClick={onToggleMenu} />
@@ -222,15 +239,18 @@ export default function Navbar({ isAuth }: Props) {
                   </div>
                 ))}
               </div>
-              {!isAuth && (
-                <div>
-                  <button
-                    className="border-2 border-primary-100 px-8 py-2 rounded-full font-semibold text-neutral-100 transition-all hover:bg-primary-50"
-                    onClick={onToggleModalLogin}
-                  >
-                    Login
-                  </button>
-                </div>
+              {isAuthed ? (
+                <OutlinedButton
+                  text="Logout"
+                  onClick={onLogout}
+                  ButtonIcon={LogOut}
+                />
+              ) : (
+                <OutlinedButton
+                  text="Login"
+                  onClick={onToggleModalLogin}
+                  ButtonIcon={LogIn}
+                />
               )}
             </div>
           </div>
