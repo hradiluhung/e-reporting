@@ -17,9 +17,9 @@ export const navListMenu = [
     isMain: true,
   },
   {
-    name: "Publikasi",
-    path: "/publikasi",
-    icon: Hexagon,
+    name: "Profil Lembaga",
+    path: "/profil",
+    icon: User,
     isMain: true,
   },
   {
@@ -29,21 +29,15 @@ export const navListMenu = [
     isMain: true,
   },
   {
-    name: "Persebaran Satwa",
-    path: "/persebaran",
-    icon: Disc,
-    isMain: true,
-  },
-  {
-    name: "Profil Lembaga",
-    path: "/profil",
-    icon: User,
-    isMain: false,
-  },
-  {
     name: "Monitoring Satwa",
     path: "/monitoring-satwa",
     icon: Monitor,
+    isMain: true,
+  },
+  {
+    name: "Persebaran Satwa",
+    path: "/persebaran",
+    icon: Disc,
     isMain: false,
   },
   {
@@ -53,8 +47,14 @@ export const navListMenu = [
     isMain: false,
   },
   {
-    name: "Galeri",
-    path: "/galeri",
+    name: "Publikasi",
+    path: "/publikasi",
+    icon: Hexagon,
+    isMain: false,
+  },
+  {
+    name: "Gallery",
+    path: "/gallery",
     icon: Image,
     isMain: false,
   },

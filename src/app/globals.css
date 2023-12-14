@@ -44,7 +44,7 @@ body {
 }
 
 /* Fixed Navbar */
-@keyframes fadeIn {
+@keyframes fadeInDown {
   from {
     opacity: 0;
     transform: translateY(-5px);
@@ -57,7 +57,7 @@ body {
   }
 }
 
-@keyframes fadeOut {
+@keyframes fadeOutUp {
   from {
     opacity: 1;
     transform: translateY(0);
@@ -97,11 +97,11 @@ body {
 }
 
 .fade-in-down {
-  animation: fadeIn 0.2s ease-in-out forwards;
+  animation: fadeInDown 0.2s ease-in-out forwards;
 }
 
 .fade-out-up {
-  animation: fadeOut 0.2s ease-in-out forwards;
+  animation: fadeOutUp 0.2s ease-in-out forwards;
 }
 
 .fade-in-left {

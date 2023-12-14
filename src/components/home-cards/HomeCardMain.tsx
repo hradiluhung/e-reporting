@@ -1,6 +1,6 @@
 import React from "react"
 import OutlinedButton from "../buttons/OutlinedButton"
-import { ButtonTypes } from "../buttons/button-types"
+import { WidgetTypes } from "../../constants/button-types"
 import { ArrowRight } from "react-feather"
 import Image from "next/image"
 import Link from "next/link"
@@ -28,7 +28,7 @@ export default function HomeCardMain({
           : "md:rounded-tr-full md:rounded-br-full bg-secondary-10 md:flex-row"
       } md:px-12 md:py-8 lg:px-24 lg:py16`}
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 md:basis-3/5">
         <div className="flex flex-col gap-2">
           <h1
             className={`font-bold ${
@@ -37,7 +37,7 @@ export default function HomeCardMain({
           >
             {title}
           </h1>
-          <p className="font-normal text-neutral-100 text-xs md:text-base lg:text-lg">
+          <p className="font-normal text-neutral-100 text-xs md:text-base lg:text-base">
             {description}
           </p>
         </div>
@@ -45,7 +45,7 @@ export default function HomeCardMain({
           <Link href={url}>
             <OutlinedButton
               type={
-                index % 2 !== 0 ? ButtonTypes.PRIMARY : ButtonTypes.SECONDARY
+                index % 2 !== 0 ? WidgetTypes.PRIMARY : WidgetTypes.SECONDARY
               }
               text="Lebih Lanjut"
               ButtonIcon={ArrowRight}
@@ -53,14 +53,14 @@ export default function HomeCardMain({
           </Link>
         </div>
       </div>
-      <div className="">
+      <div className="w-full p-4 md:p-0 md:basis-2/5 lg:h-full lg:flex lg:justify-center">
         <Image
           width={0}
           height={0}
           sizes="100vw"
           src={`/assets/${image}`}
           alt="Logo"
-          className="w-96"
+          className="w-full lg:h-full lg:w-auto"
         />
       </div>
     </div>
