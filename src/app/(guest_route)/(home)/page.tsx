@@ -3,11 +3,11 @@ import FilledButton from "@/components/buttons/FilledButton"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "react-feather"
-import { MAIN_FEATURES_LIST, OTHER_FEATURES_LIST } from "./features-list"
 import HomeCardMain from "@/components/home-cards/HomeCardMain"
 import HomeCardSecondary from "@/components/home-cards/HomeCardSecondary"
 import { motion } from "framer-motion"
 import { fadeInUpVariants } from "@/motion/motion"
+import { GUEST_MENUS } from "@/constants/menus"
 
 export default function Page() {
   return (
@@ -82,8 +82,17 @@ export default function Page() {
             <h1 className="text-neutral-100 font-bold text-2xl">Fitur Utama</h1>
           </div>
           <div className="flex flex-col gap-8 w-full">
-            {MAIN_FEATURES_LIST.map((feature, index) => (
-              <HomeCardMain key={index} index={index} {...feature} />
+            {GUEST_MENUS.filter(
+              (menu) => menu.isMain === true && menu.name !== "Beranda"
+            ).map((menu, index) => (
+              <HomeCardMain
+                key={index}
+                index={index}
+                title={menu.name}
+                description={menu.description}
+                image={menu.image}
+                url={menu.path}
+              />
             ))}
           </div>
         </div>
@@ -104,9 +113,16 @@ export default function Page() {
             </h1>
           </div>
           <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {OTHER_FEATURES_LIST.map((feature, index) => (
-              <HomeCardSecondary key={index} {...feature} />
-            ))}
+            {GUEST_MENUS.filter((menu) => menu.isMain === false).map(
+              (menu, index) => (
+                <HomeCardSecondary
+                  key={index}
+                  title={menu.name}
+                  url={menu.path}
+                  MenuIcon={menu.icon}
+                />
+              )
+            )}
           </div>
         </div>
       </motion.div>

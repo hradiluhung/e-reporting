@@ -2,17 +2,16 @@
 import Image from "next/image"
 import Link from "next/link"
 import React, { useState } from "react"
-import { navListMenu } from "./list-menu"
 import { usePathname, useRouter } from "next/navigation"
-import { ArrowDown, ChevronDown, LogIn, LogOut, Menu, X } from "react-feather"
-import { useDesktopSize, useTabletSize } from "@/hooks/useWindowSize"
+import { ChevronDown, LogIn, LogOut, Menu, X } from "react-feather"
+import { useDesktopSize } from "@/hooks/useWindowSize"
 import InputField from "../input-field/InputField"
 import FilledButton from "../buttons/FilledButton"
 import { showToast } from "@/helpers/showToast"
 import { WidgetTypes } from "@/constants/button-types"
-import { signUp } from "@/controllers/admin-controller"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signIn, signOut } from "next-auth/react"
 import OutlinedButton from "../buttons/OutlinedButton"
+import { GUEST_MENUS, ADMIN_MENUS } from "@/constants/menus"
 
 type Props = {
   isAuthed: boolean
@@ -20,12 +19,11 @@ type Props = {
 
 export default function Navbar({ isAuthed }: Props) {
   const isDesktopSize = useDesktopSize()
-  const isTabletSize = useTabletSize()
   const router = useRouter()
-  const { data: session, status } = useSession()
 
   const pathName = usePathname()
   const [isOtherMenuExpanded, setIsOtherMenuExpanded] = useState(false)
+  const [isAdminMenuExpanded, setIsAdminMenuExpanded] = useState(false)
   const [isMenuExpanded, setIsMenuExpanded] = useState(false)
   const [isModalLoginOpen, setIsModalLoginOpen] = useState(false)
   const [username, setUsername] = useState("")
@@ -38,6 +36,14 @@ export default function Navbar({ isAuthed }: Props) {
 
   const onCloseOtherMenu = () => {
     setIsOtherMenuExpanded(false)
+  }
+
+  const onOpenAdminMenu = () => {
+    setIsAdminMenuExpanded(true)
+  }
+
+  const onCloseAdminMenu = () => {
+    setIsAdminMenuExpanded(false)
   }
 
   const onToggleMenu = () => {
@@ -110,68 +116,166 @@ export default function Navbar({ isAuthed }: Props) {
           // Desktop Navbar
           <>
             <div className="flex gap-10">
-              {navListMenu
-                .filter((item) => item.isMain == true)
-                .map((item, index) => (
-                  <div key={index}>
-                    <Link href={item.path}>
-                      <p
-                        className={`font-semibold hover:text-primary-100 transition-all ${
-                          pathName == item.path ? "text-primary-100" : ""
-                        }`}
-                      >
-                        {item.name}
+              {!isAuthed && (
+                <>
+                  {GUEST_MENUS.filter((item) => item.isMain == true).map(
+                    (item, index) => (
+                      <div key={index}>
+                        <Link href={item.path}>
+                          <p
+                            className={`font-semibold hover:text-primary-100 transition-all ${
+                              pathName == item.path ? "text-primary-100" : ""
+                            }`}
+                          >
+                            {item.name}
+                          </p>
+                        </Link>
+                      </div>
+                    )
+                  )}
+                  <div
+                    className={`flex gap-2 cursor-pointer relative ${
+                      GUEST_MENUS.filter((item) => item.isMain == false).some(
+                        (item) => item.path == pathName
+                      )
+                        ? "text-primary-100"
+                        : "text-neutral-100"
+                    }`}
+                    onMouseEnter={onOpenOtherMenu}
+                    onMouseLeave={onCloseOtherMenu}
+                  >
+                    <p className="font-semibold">Lainnya</p>
+                    <ChevronDown
+                      className={`w-4 transition-all ${
+                        isOtherMenuExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                    <div
+                      className={`absolute flex flex-col gap-2 top-6 end-0 bg-neutral-0 border border-neutral-50 px-6 py-4 rounded-lg whitespace-nowrap ${
+                        isOtherMenuExpanded ? "fade-in-down" : "fade-out-up"
+                      }`}
+                    >
+                      <p className="text-neutral-50 text-sm opacity-80">
+                        Menu Lainnya
                       </p>
-                    </Link>
+                      <div className="flex flex-col gap-4">
+                        {GUEST_MENUS.filter((item) => item.isMain == false).map(
+                          (item, index) => (
+                            <div key={index}>
+                              <Link href={item.path}>
+                                <p
+                                  className={`font-semibold hover:text-primary-100 transition-all ${
+                                    pathName == item.path
+                                      ? "text-primary-100"
+                                      : "text-neutral-100"
+                                  }`}
+                                >
+                                  {item.name}
+                                </p>
+                              </Link>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
                   </div>
-                ))}
-              <div
-                className={`flex gap-2 cursor-pointer relative ${
-                  navListMenu
-                    .filter((item) => item.isMain == false)
-                    .some((item) => item.path == pathName)
-                    ? "text-primary-100"
-                    : "text-neutral-100"
-                }`}
-                onMouseEnter={onOpenOtherMenu}
-                onMouseLeave={onCloseOtherMenu}
-              >
-                <p className="font-semibold">Lainnya</p>
-                <ChevronDown
-                  className={`w-4 transition-all ${
-                    isOtherMenuExpanded ? "rotate-180" : ""
-                  }`}
-                />
-                <div
-                  className={`absolute flex flex-col gap-2 top-6 end-0 bg-neutral-0 border border-neutral-50 px-6 py-4 rounded-lg whitespace-nowrap ${
-                    isOtherMenuExpanded ? "fade-in-down" : "fade-out-up"
-                  }`}
-                >
-                  <p className="text-neutral-50 text-sm opacity-80">
-                    Menu Lainnya
-                  </p>
-                  <div className="flex flex-col gap-4">
-                    {navListMenu
-                      .filter((item) => item.isMain == false)
-                      .map((item, index) => (
-                        <div key={index}>
-                          <Link href={item.path}>
-                            <p
-                              className={`font-semibold hover:text-primary-100 transition-all ${
-                                pathName == item.path
-                                  ? "text-primary-100"
-                                  : "text-neutral-100"
-                              }`}
-                            >
-                              {item.name}
-                            </p>
-                          </Link>
-                        </div>
-                      ))}
+                </>
+              )}
+              {isAuthed && (
+                <>
+                  <div
+                    className={`flex gap-2 cursor-pointer relative ${
+                      GUEST_MENUS.filter((item) => item.isMain == false).some(
+                        (item) => item.path == pathName
+                      )
+                        ? "text-primary-100"
+                        : "text-neutral-100"
+                    }`}
+                    onMouseEnter={onOpenAdminMenu}
+                    onMouseLeave={onCloseAdminMenu}
+                  >
+                    <p className="font-semibold">Admin Menu</p>
+                    <ChevronDown
+                      className={`w-4 transition-all ${
+                        isAdminMenuExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                    <div
+                      className={`absolute flex flex-col gap-2 top-6 end-0 bg-neutral-0 border border-neutral-50 px-6 py-4 rounded-lg whitespace-nowrap ${
+                        isAdminMenuExpanded ? "fade-in-down" : "fade-out-up"
+                      }`}
+                    >
+                      <p className="text-neutral-50 text-sm opacity-80">
+                        Admin Menu
+                      </p>
+                      <div className="flex flex-col gap-4">
+                        {ADMIN_MENUS.map((item, index) => (
+                          <div key={index}>
+                            <Link href={item.path}>
+                              <p
+                                className={`font-semibold hover:text-primary-100 transition-all ${
+                                  pathName == item.path
+                                    ? "text-primary-100"
+                                    : "text-neutral-100"
+                                }`}
+                              >
+                                {item.name}
+                              </p>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+
+                  <div
+                    className={`flex gap-2 cursor-pointer relative ${
+                      GUEST_MENUS.filter((item) => item.isMain == false).some(
+                        (item) => item.path == pathName
+                      )
+                        ? "text-primary-100"
+                        : "text-neutral-100"
+                    }`}
+                    onMouseEnter={onOpenOtherMenu}
+                    onMouseLeave={onCloseOtherMenu}
+                  >
+                    <p className="font-semibold">Guest Menu</p>
+                    <ChevronDown
+                      className={`w-4 transition-all ${
+                        isOtherMenuExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                    <div
+                      className={`absolute flex flex-col gap-2 top-6 start-0 bg-neutral-0 border border-neutral-50 px-6 py-4 rounded-lg whitespace-nowrap ${
+                        isOtherMenuExpanded ? "fade-in-down" : "fade-out-up"
+                      }`}
+                    >
+                      <p className="text-neutral-50 text-sm opacity-80">
+                        Guest Menu
+                      </p>
+                      <div className="flex flex-col gap-4">
+                        {GUEST_MENUS.map((item, index) => (
+                          <div key={index}>
+                            <Link href={item.path}>
+                              <p
+                                className={`font-semibold hover:text-primary-100 transition-all ${
+                                  pathName == item.path
+                                    ? "text-primary-100"
+                                    : "text-neutral-100"
+                                }`}
+                              >
+                                {item.name}
+                              </p>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
+
             <div>
               {isAuthed ? (
                 <OutlinedButton
@@ -191,24 +295,6 @@ export default function Navbar({ isAuthed }: Props) {
         ) : (
           // Mobile and Tablet Navbar
           <div className="flex gap-4 items-center">
-            {isTabletSize && !isAuthed && (
-              <div>
-                <OutlinedButton
-                  text="Login"
-                  onClick={onToggleModalLogin}
-                  ButtonIcon={LogIn}
-                />
-              </div>
-            )}
-            {isTabletSize && isAuthed && (
-              <div>
-                <OutlinedButton
-                  text="Logout"
-                  onClick={onLogout}
-                  ButtonIcon={LogOut}
-                />
-              </div>
-            )}
             <Menu className="w-6 cursor-pointer" onClick={onToggleMenu} />
           </div>
         )}
@@ -224,21 +310,111 @@ export default function Navbar({ isAuthed }: Props) {
               <X onClick={onToggleMenu} className="w-6 cursor-pointer" />
             </div>
             <div className="flex gap-8 flex-col items-center justify-center">
-              <div className="flex flex-col gap-4 items-center">
-                {navListMenu.map((item, index) => (
-                  <div key={index}>
-                    <Link href={item.path} onClick={onToggleMenu}>
-                      <p
-                        className={`font-semibold hover:text-primary-100 transition-all ${
-                          pathName == item.path ? "text-primary-100" : ""
+              <div className="flex flex-col gap-4 items-center w-80 md:w-96">
+                {!isAuthed &&
+                  GUEST_MENUS.map((item, index) => (
+                    <div key={index}>
+                      <Link href={item.path} onClick={onToggleMenu}>
+                        <p
+                          className={`font-semibold text-center hover:text-primary-100 transition-all ${
+                            pathName == item.path ? "text-primary-100" : ""
+                          }`}
+                        >
+                          {item.name}
+                        </p>
+                      </Link>
+                    </div>
+                  ))}
+
+                {isAuthed && (
+                  <div className="w-full flex flex-col gap-4">
+                    <div className="flex gap-2 flex-col">
+                      <div
+                        className="flex justify-between gap-4"
+                        onClick={() => {
+                          isAdminMenuExpanded
+                            ? onCloseAdminMenu()
+                            : (onOpenAdminMenu(), onCloseOtherMenu())
+                        }}
+                      >
+                        <p className="font-semibold">Admin Menu</p>
+                        <ChevronDown
+                          className={`w-4 transition-all ${
+                            isAdminMenuExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </div>
+
+                      <div
+                        className={`flex flex-col gap-2 ${
+                          isAdminMenuExpanded
+                            ? "block fade-in-down"
+                            : "hidden fade-out-up"
                         }`}
                       >
-                        {item.name}
-                      </p>
-                    </Link>
+                        {ADMIN_MENUS.map((item, index) => (
+                          <div key={index}>
+                            <Link href={item.path} onClick={onToggleMenu}>
+                              <p
+                                className={`font-normal text-neutral-50 hover:text-primary-100 transition-all ${
+                                  pathName == item.path
+                                    ? "text-primary-100"
+                                    : ""
+                                }`}
+                              >
+                                {item.name}
+                              </p>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 flex-col">
+                      <div
+                        className="flex justify-between gap-4"
+                        onClick={() => {
+                          isOtherMenuExpanded
+                            ? onCloseOtherMenu()
+                            : (onOpenOtherMenu(), onCloseAdminMenu())
+                        }}
+                      >
+                        <p className="font-semibold">Guest Menu</p>
+                        <ChevronDown
+                          className={`w-4 transition-all ${
+                            isOtherMenuExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </div>
+
+                      <div
+                        className={`flex flex-col gap-2 ${
+                          isOtherMenuExpanded
+                            ? "block fade-in-down"
+                            : "hidden fade-out-up"
+                        }`}
+                      >
+                        {GUEST_MENUS.map((item, index) => (
+                          <div key={index}>
+                            <Link href={item.path} onClick={onToggleMenu}>
+                              <p
+                                className={`font-normal text-neutral-50 hover:text-primary-100 transition-all ${
+                                  pathName == item.path
+                                    ? "text-primary-100"
+                                    : ""
+                                }`}
+                              >
+                                {item.name}
+                              </p>
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
+
               {isAuthed ? (
                 <OutlinedButton
                   text="Logout"
