@@ -12,7 +12,7 @@ export default function Footer({}: Props) {
       </div>
       <div>
         <p className="text-neutral-0 text-end text-sm md:text-base">
-          Indonesia Wildlife , {new Date().getFullYear()} © Seluruh Hak Cipta
+          Indonesia Wildlife, {new Date().getFullYear()} © Seluruh Hak Cipta
         </p>
       </div>
     </div>

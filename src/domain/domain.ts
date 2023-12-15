@@ -1,7 +1,7 @@
 // Lembaga
 type Lembaga = {
   _id: string
-  menu: string
+  nama: string
   tentang: string
   alamat: string
   kontak: string

@@ -4,12 +4,12 @@ import Link from "next/link"
 import React, { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { ChevronDown, LogIn, LogOut, Menu, X } from "react-feather"
-import { useDesktopSize } from "@/hooks/useWindowSize"
+import { useDesktopSize, useTabletSize } from "@/hooks/useWindowSize"
 import InputField from "../input-field/InputField"
 import FilledButton from "../buttons/FilledButton"
 import { showToast } from "@/helpers/showToast"
 import { WidgetTypes } from "@/constants/button-types"
-import { signIn, signOut } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
 import OutlinedButton from "../buttons/OutlinedButton"
 import { GUEST_MENUS, ADMIN_MENUS } from "@/constants/menus"
 
@@ -89,8 +89,8 @@ export default function Navbar({ isAuthed }: Props) {
         return showToast(res.error, WidgetTypes.ERROR)
       }
 
-      setIsLoadingLogin(false)
       router.push("/admin")
+      setIsLoadingLogin(false)
     } catch (error: any) {
       setIsLoadingLogin(false)
       showToast(error.message, WidgetTypes.ERROR)
@@ -134,7 +134,7 @@ export default function Navbar({ isAuthed }: Props) {
                     )
                   )}
                   <div
-                    className={`flex gap-2 cursor-pointer relative ${
+                    className={`flex gap-2 cursor-pointer group relative ${
                       GUEST_MENUS.filter((item) => item.isMain == false).some(
                         (item) => item.path == pathName
                       )
@@ -152,7 +152,9 @@ export default function Navbar({ isAuthed }: Props) {
                     />
                     <div
                       className={`absolute flex flex-col gap-2 top-6 end-0 bg-neutral-0 border border-neutral-50 px-6 py-4 rounded-lg whitespace-nowrap ${
-                        isOtherMenuExpanded ? "fade-in-down" : "fade-out-up"
+                        isOtherMenuExpanded
+                          ? "group-hover:fade-in-down"
+                          : "fade-out-up"
                       }`}
                     >
                       <p className="text-neutral-50 text-sm opacity-80">
@@ -184,7 +186,7 @@ export default function Navbar({ isAuthed }: Props) {
               {isAuthed && (
                 <>
                   <div
-                    className={`flex gap-2 cursor-pointer relative ${
+                    className={`flex gap-2 cursor-pointer relative group ${
                       GUEST_MENUS.filter((item) => item.isMain == false).some(
                         (item) => item.path == pathName
                       )
@@ -202,7 +204,9 @@ export default function Navbar({ isAuthed }: Props) {
                     />
                     <div
                       className={`absolute flex flex-col gap-2 top-6 end-0 bg-neutral-0 border border-neutral-50 px-6 py-4 rounded-lg whitespace-nowrap ${
-                        isAdminMenuExpanded ? "fade-in-down" : "fade-out-up"
+                        isAdminMenuExpanded
+                          ? "group-hover:fade-in-down"
+                          : "fade-out-up"
                       }`}
                     >
                       <p className="text-neutral-50 text-sm opacity-80">
@@ -229,7 +233,7 @@ export default function Navbar({ isAuthed }: Props) {
                   </div>
 
                   <div
-                    className={`flex gap-2 cursor-pointer relative ${
+                    className={`flex gap-2 cursor-pointer relative group ${
                       GUEST_MENUS.filter((item) => item.isMain == false).some(
                         (item) => item.path == pathName
                       )
@@ -247,7 +251,9 @@ export default function Navbar({ isAuthed }: Props) {
                     />
                     <div
                       className={`absolute flex flex-col gap-2 top-6 start-0 bg-neutral-0 border border-neutral-50 px-6 py-4 rounded-lg whitespace-nowrap ${
-                        isOtherMenuExpanded ? "fade-in-down" : "fade-out-up"
+                        isOtherMenuExpanded
+                          ? "group-hover:fade-in-down"
+                          : "fade-out-up"
                       }`}
                     >
                       <p className="text-neutral-50 text-sm opacity-80">

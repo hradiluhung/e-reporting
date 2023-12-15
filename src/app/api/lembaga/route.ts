@@ -20,3 +20,29 @@ export async function GET() {
     return NextResponse.json({ status: 500, message: error.message })
   }
 }
+
+// CREATE LEMBAGA
+export async function POST(request: Request) {
+  await startDb()
+
+  try {
+    const reqBody = await request.json()
+    const { nama, tentang, alamat, kontak, namaKontak } = reqBody
+
+    const lembaga = await Lembaga.create({
+      nama,
+      tentang,
+      alamat,
+      kontak,
+      namaKontak,
+    })
+
+    return NextResponse.json({
+      status: 201,
+      message: `Berhasil membuat lembaga ${lembaga.nama}`,
+      data: lembaga,
+    })
+  } catch (error: any) {
+    return NextResponse.json({ status: 500, message: error.message })
+  }
+}

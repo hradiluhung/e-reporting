@@ -2,9 +2,9 @@ import { Schema, model, models } from "mongoose"
 
 const lembagaSchema = new Schema(
   {
-    menu: {
+    nama: {
       type: String,
-      required: [true, "Menu tidak boleh kosong"],
+      required: [true, "nama tidak boleh kosong"],
     },
     tentang: {
       type: String,
