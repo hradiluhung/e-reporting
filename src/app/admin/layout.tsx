@@ -3,7 +3,6 @@ import { redirect } from "next/navigation"
 import React, { Suspense } from "react"
 import { authOptions } from "../api/auth/[...nextauth]/authOptions"
 import Sidebar from "@/components/sidebar/Sidebar"
-import Loading from "./loading"
 
 type Props = {
   children: React.ReactNode
