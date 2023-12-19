@@ -6,6 +6,14 @@ type Lembaga = {
   alamat: string
   kontak: string
   namaKontak: string
+  feedbacks: [
+    {
+      pengirim: string
+      isi: string
+      jenis: string
+      kontakPengirim: string
+    }
+  ]
   createdAt: string
   updatedAt: string
 }

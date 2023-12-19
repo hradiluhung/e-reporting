@@ -37,3 +37,13 @@ export const createLembaga = async ({
     throw new Error(error)
   }
 }
+
+// DELETE LEMBAGA BY ID
+export const deleteLembagaById = async (id: string) => {
+  try {
+    const response = await axios.delete(`/api/lembaga/${id}`)
+    return response.data
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}

@@ -1,7 +1,8 @@
 "use client"
 import FilledButton from "@/components/buttons/FilledButton"
+import OutlinedButton from "@/components/buttons/OutlinedButton"
 import InputField from "@/components/input-field/InputField"
-import { WidgetTypes } from "@/constants/button-types"
+import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { createLembaga } from "@/controllers/lembaga-controller"
 import { showToast } from "@/helpers/showToast"
 import { useRouter } from "next/navigation"
@@ -22,6 +23,17 @@ export default function Page() {
     e.preventDefault()
     try {
       setIsLoadingSubmit(true)
+
+      if (
+        !inputLembaga.nama ||
+        !inputLembaga.tentang ||
+        !inputLembaga.alamat ||
+        !inputLembaga.kontak ||
+        !inputLembaga.namaKontak
+      ) {
+        throw new Error("Mohon isi semua field")
+      }
+
       const res = await createLembaga(inputLembaga)
 
       if (res.status === 201) {
@@ -38,9 +50,9 @@ export default function Page() {
   }
 
   return (
-    <div className="w-full px-4 pt-24 pb-12 md:px-8 lg:px-36 lg:pt-36 lg:pb-24">
-      <div className="w-full flex flex-col items-center justify-center gap-8">
-        <div className="w-full flex flex-col items-center justify-center gap-6 md:w-3/4 lg:w-2/3">
+    <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
+      <div className="flex flex-col items-start gap-8">
+        <div className="w-full flex flex-col items-start justify-center gap-6 md:w-1/3 lg:w-1/2">
           <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
             Tambah Lembaga
           </h1>
@@ -50,6 +62,7 @@ export default function Page() {
             className="flex flex-col gap-5 w-full"
           >
             <InputField
+              size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, nama: e.target.value })
               }}
@@ -57,6 +70,7 @@ export default function Page() {
               value={inputLembaga.nama}
             />
             <InputField
+              size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, tentang: e.target.value })
               }}
@@ -64,6 +78,7 @@ export default function Page() {
               value={inputLembaga.tentang}
             />
             <InputField
+              size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, alamat: e.target.value })
               }}
@@ -71,6 +86,7 @@ export default function Page() {
               value={inputLembaga.alamat}
             />
             <InputField
+              size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, kontak: e.target.value })
               }}
@@ -78,18 +94,27 @@ export default function Page() {
               value={inputLembaga.kontak}
             />
             <InputField
+              size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, namaKontak: e.target.value })
               }}
               placeholder="Nama Kontak"
               value={inputLembaga.namaKontak}
             />
-            <FilledButton
-              text="Tambah"
-              isSubmit={true}
-              isLoading={isLoadingSubmit}
-              isDisabled={isLoadingSubmit}
-            />
+            <div className="w-full flex justify-end gap-2">
+              <OutlinedButton
+                text="Batal"
+                size={WidgetSizes.MEDIUM}
+                onClick={() => router.back()}
+              />
+              <FilledButton
+                text="Tambah"
+                isSubmit={true}
+                size={WidgetSizes.MEDIUM}
+                isLoading={isLoadingSubmit}
+                isDisabled={isLoadingSubmit}
+              />
+            </div>
           </form>
         </div>
       </div>

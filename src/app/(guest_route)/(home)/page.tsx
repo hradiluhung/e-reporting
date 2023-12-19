@@ -3,11 +3,12 @@ import FilledButton from "@/components/buttons/FilledButton"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "react-feather"
-import HomeCardMain from "@/components/home-cards/HomeCardMain"
-import HomeCardSecondary from "@/components/home-cards/HomeCardSecondary"
+import HomeCardMain from "@/components/cards/HomeCardMain"
+import HomeCardSecondary from "@/components/cards/HomeCardSecondary"
 import { motion } from "framer-motion"
 import { fadeInUpVariants } from "@/motion/motion"
 import { GUEST_MENUS } from "@/constants/menus"
+import { WidgetSizes } from "@/constants/button-types"
 
 export default function Page() {
   return (
@@ -36,7 +37,11 @@ export default function Page() {
             </div>
             <div>
               <Link href="/profil">
-                <FilledButton text="Lebih Lanjut" ButtonIcon={ArrowRight} />
+                <FilledButton
+                  text="Lebih Lanjut"
+                  ButtonIcon={ArrowRight}
+                  size={WidgetSizes.LARGE}
+                />
               </Link>
             </div>
           </div>

@@ -13,7 +13,7 @@ export const useTabletSize = () => {
     windowSize &&
     windowSize.width &&
     windowSize.width >= 640 &&
-    windowSize.width <= 1024
+    windowSize.width < 1024
 
   return isTabletSize
 }
@@ -21,7 +21,7 @@ export const useTabletSize = () => {
 export const useDesktopSize = () => {
   const windowSize = useWindowSize()
   const isDesktopSize =
-    windowSize && windowSize.width && windowSize.width > 1024
+    windowSize && windowSize.width && windowSize.width >= 1024
 
   return isDesktopSize
 }

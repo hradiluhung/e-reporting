@@ -1,4 +1,5 @@
 import startDb from "@/db/dbConfig"
+import Feedback from "@/models/feedback"
 import Lembaga from "@/models/lembaga"
 import { NextResponse } from "next/server"
 
@@ -11,10 +12,18 @@ export async function GET() {
 
     const lembagas = await Lembaga.find()
 
+    // get feedback for each lembaga
+    const lembagasWithFeedback = await Promise.all(
+      lembagas.map(async (lembaga) => {
+        const feedbacks = await Feedback.find({ lembaga: lembaga._id })
+        return { ...lembaga._doc, feedbacks }
+      })
+    )
+
     return NextResponse.json({
       status: 200,
       message: "Berhasil mendapatkan data lembaga",
-      data: lembagas,
+      data: lembagasWithFeedback,
     })
   } catch (error: any) {
     return NextResponse.json({ status: 500, message: error.message })

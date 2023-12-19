@@ -3,22 +3,24 @@ import React from "react"
 
 type Props = {
   placeholder: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  defaultValue: string
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
   value: string
-  type?: string
   size: WidgetSizes
+  options: string[] | number[]
 }
 
-export default function InputField({
+export default function Dropdown({
   placeholder,
   onChange,
+  defaultValue,
   value,
-  type = "text",
   size,
+  options,
 }: Props) {
   return (
     <div className="w-full">
-      <input
+      <select
         className={`w-full border border-neutral-50 rounded-xl ${
           size === WidgetSizes.SMALL
             ? "text-sm px-2 py-1 "
@@ -26,11 +28,18 @@ export default function InputField({
             ? "text-base px-4 py-2"
             : "text-lg px-4 py-4"
         }`}
-        placeholder={placeholder}
-        type={type}
-        value={value}
         onChange={onChange}
-      />
+        value={value}
+      >
+        <option value="" className="w-full">
+          {defaultValue}
+        </option>
+        {options.map((option, index) => (
+          <option key={index} value={option} className="w-full">
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
   )
 }

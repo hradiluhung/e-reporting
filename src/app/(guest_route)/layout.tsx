@@ -8,7 +8,7 @@ type Props = {
 }
 
 export default function Layout({ children }: Props) {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const isAuthed = status === "authenticated"
 
   return (

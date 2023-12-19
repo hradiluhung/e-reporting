@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import React from "react"
+import React, { Suspense } from "react"
 import { authOptions } from "../api/auth/[...nextauth]/authOptions"
-import Navbar from "@/components/navbar/Navbar"
-import Footer from "@/components/footer/Footer"
+import Sidebar from "@/components/sidebar/Sidebar"
+import Loading from "./loading"
 
 type Props = {
   children: React.ReactNode
@@ -19,9 +19,10 @@ export default async function PrivateLayout({ children }: Props) {
 
   return (
     <>
-      <Navbar isAuthed={isAuthed} />
-      <div className="flex-1">{children}</div>
-      <Footer />
+      <Sidebar />
+      <div className="p-0 py-16 lg:ps-72">
+        <div className="flex-1">{children}</div>
+      </div>
     </>
   )
 }

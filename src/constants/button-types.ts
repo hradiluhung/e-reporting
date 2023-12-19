@@ -7,3 +7,9 @@ export enum WidgetTypes {
   WARNING = "warning",
   ERROR = "error",
 }
+
+export enum WidgetSizes {
+  SMALL = "small",
+  MEDIUM = "medium",
+  LARGE = "large",
+}

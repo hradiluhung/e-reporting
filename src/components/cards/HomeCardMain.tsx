@@ -1,6 +1,6 @@
 import React from "react"
 import OutlinedButton from "../buttons/OutlinedButton"
-import { WidgetTypes } from "../../constants/button-types"
+import { WidgetSizes, WidgetTypes } from "../../constants/button-types"
 import { ArrowRight } from "react-feather"
 import Image from "next/image"
 import Link from "next/link"
@@ -44,6 +44,7 @@ export default function HomeCardMain({
         <div>
           <Link href={url}>
             <OutlinedButton
+              size={WidgetSizes.LARGE}
               type={
                 index % 2 !== 0 ? WidgetTypes.PRIMARY : WidgetTypes.SECONDARY
               }
