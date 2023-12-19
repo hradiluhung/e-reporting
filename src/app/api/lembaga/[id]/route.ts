@@ -2,6 +2,8 @@ import startDb from "@/db/dbConfig"
 import Lembaga from "@/models/lembaga"
 import { NextResponse } from "next/server"
 
+export const dynamic = "force-dynamic"
+
 // DELETE LEMBAGA BY ID
 export async function DELETE(
   request: Request,
