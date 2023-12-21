@@ -6,6 +6,8 @@ type Lembaga = {
   alamat: string
   kontak: string
   namaKontak: string
+  image: string
+  publicId: string
   feedbacks: [
     {
       pengirim: string

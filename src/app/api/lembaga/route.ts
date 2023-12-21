@@ -36,7 +36,8 @@ export async function POST(request: Request) {
 
   try {
     const reqBody = await request.json()
-    const { nama, tentang, alamat, kontak, namaKontak } = reqBody
+    const { nama, tentang, alamat, kontak, namaKontak, image, publicId } =
+      reqBody
 
     const lembaga = await Lembaga.create({
       nama,
@@ -44,6 +45,8 @@ export async function POST(request: Request) {
       alamat,
       kontak,
       namaKontak,
+      image,
+      publicId,
     })
 
     return NextResponse.json({

@@ -1,7 +1,6 @@
 import React from "react"
 import { Icon, Loader } from "react-feather"
 import { WidgetSizes, WidgetTypes } from "../../constants/button-types"
-import { title } from "process"
 
 type Props = {
   text?: string
@@ -41,11 +40,11 @@ export default function OutlinedButton({
       }
       ${
         type === WidgetTypes.PRIMARY
-          ? "border-primary-100 hover:bg-primary-50 text-primary-100"
+          ? "border-primary-100 hover:bg-primary-100 hover:bg-opacity-20 text-primary-100"
           : type === WidgetTypes.SECONDARY
-          ? "border-secondary-100 hover:bg-secondary-50 text-secondary-100"
+          ? "border-secondary-100 hover:bg-secondary-100 hover:bg-opacity-20 text-secondary-100"
           : type === WidgetTypes.ERROR
-          ? "border-red-400 hover:bg-red-200 text-red-400"
+          ? "border-red-400 hover:bg-red-400 hover:bg-opacity-20 text-red-400"
           : ""
       }`}
       title={tooltip ? tooltip : ""}

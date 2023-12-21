@@ -17,12 +17,16 @@ export const createLembaga = async ({
   alamat,
   kontak,
   namaKontak,
+  image,
+  publicId,
 }: {
   nama: string
   tentang: string
   alamat: string
   kontak: string
   namaKontak: string
+  image: string
+  publicId: string
 }) => {
   try {
     const response = await axios.post("/api/lembaga", {
@@ -31,6 +35,8 @@ export const createLembaga = async ({
       alamat,
       kontak,
       namaKontak,
+      image,
+      publicId,
     })
     return response.data
   } catch (error: any) {

@@ -19,7 +19,7 @@ export default async function PrivateLayout({ children }: Props) {
   return (
     <>
       <Sidebar />
-      <div className="p-0 py-16 lg:ps-72">
+      <div className="p-0 py-16 lg:ps-72 min-h-screen bg-no-repeat bg-fixed bg-gradient-primary">
         <div className="flex-1">{children}</div>
       </div>
     </>

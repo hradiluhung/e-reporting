@@ -22,12 +22,14 @@ const lembagaSchema = new Schema(
       type: String,
       required: [true, "Nama kontak tidak boleh kosong"],
     },
-    feedbacks: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "feedbacks",
-      },
-    ],
+    image: {
+      type: String,
+      default: "",
+    },
+    publicId: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

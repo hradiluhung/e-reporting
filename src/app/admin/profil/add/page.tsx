@@ -1,12 +1,16 @@
 "use client"
 import FilledButton from "@/components/buttons/FilledButton"
 import OutlinedButton from "@/components/buttons/OutlinedButton"
-import InputField from "@/components/input-field/InputField"
+import InputField from "@/components/input/InputField"
+import TextArea from "@/components/input/TextArea"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { createLembaga } from "@/controllers/lembaga-controller"
 import { showToast } from "@/helpers/showToast"
+import { uploadPhoto } from "@/helpers/uploadPhotos"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
+import { Trash2 } from "react-feather"
 
 export default function Page() {
   const router = useRouter()
@@ -16,8 +20,16 @@ export default function Page() {
     alamat: "",
     kontak: "",
     namaKontak: "",
+    image: "",
+    publicId: "",
   })
+  const [image, setImage] = useState<File | null>(null)
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
+
+  const onChangeInputFile = async (e: any) => {
+    const file = e.target.files[0]
+    setImage(file)
+  }
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -34,7 +46,23 @@ export default function Page() {
         throw new Error("Mohon isi semua field")
       }
 
-      const res = await createLembaga(inputLembaga)
+      const formData = new FormData()
+      let resUploadImage = null
+
+      if (image !== null) {
+        formData.append("file", image)
+        resUploadImage = await uploadPhoto(formData)
+      }
+
+      const res = await createLembaga({
+        nama: inputLembaga.nama,
+        tentang: inputLembaga.tentang,
+        alamat: inputLembaga.alamat,
+        kontak: inputLembaga.kontak,
+        namaKontak: inputLembaga.namaKontak,
+        image: resUploadImage?.data?.url || "",
+        publicId: resUploadImage?.data?.publicId || "",
+      })
 
       if (res.status === 201) {
         showToast(res.message, WidgetTypes.SUCCESS)
@@ -59,41 +87,80 @@ export default function Page() {
           <form
             method="POST"
             onSubmit={onSubmit}
-            className="flex flex-col gap-5 w-full"
+            className="flex flex-col gap-3 w-full"
           >
+            {!image ? (
+              <InputField
+                label="Gambar"
+                placeholder="Pilih Gambar"
+                type="file"
+                onChange={onChangeInputFile}
+                size={WidgetSizes.MEDIUM}
+                value={inputLembaga.image}
+              />
+            ) : (
+              <div className="w-full">
+                <label className="text-neutral-500 text-sm">Gambar</label>
+                <div className="relative w-full rounded-md border border-neutral-50 bg-neutral-0">
+                  <Image
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    src={URL.createObjectURL(image)}
+                    alt="Cover Mata Kuliah"
+                    className="w-full object-cover rounded-md"
+                  />
+
+                  <div className="absolute top-2 right-2">
+                    <FilledButton
+                      ButtonIcon={Trash2}
+                      onClick={() => setImage(null)}
+                      size={WidgetSizes.MEDIUM}
+                      type={WidgetTypes.ERROR}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
             <InputField
+              label="Nama Lembaga"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, nama: e.target.value })
               }}
-              placeholder="Nama Lembaga"
+              placeholder="Isi nama lembaga"
               value={inputLembaga.nama}
             />
-            <InputField
+            <TextArea
+              label="Deskripsi"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, tentang: e.target.value })
               }}
-              placeholder="Tentang Lembaga"
+              placeholder="Isi deskripsi lembaga"
               value={inputLembaga.tentang}
             />
             <InputField
+              label="Alamat"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, alamat: e.target.value })
               }}
-              placeholder="Alamat"
+              placeholder="Isi Alamat"
               value={inputLembaga.alamat}
             />
             <InputField
+              label="Kontak"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, kontak: e.target.value })
               }}
-              placeholder="Kontak (No Telp)"
+              placeholder="08xxxxxxxxxx"
               value={inputLembaga.kontak}
+              type="tel"
             />
             <InputField
+              label="Nama Kontak"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, namaKontak: e.target.value })

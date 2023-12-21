@@ -5,13 +5,14 @@ import React, { useEffect, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { ChevronDown, LogIn, LogOut, Menu, User, X } from "react-feather"
 import { useDesktopSize } from "@/hooks/useWindowSize"
-import InputField from "../input-field/InputField"
+import InputField from "../input/InputField"
 import FilledButton from "../buttons/FilledButton"
 import { showToast } from "@/helpers/showToast"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { signIn, signOut } from "next-auth/react"
 import OutlinedButton from "../buttons/OutlinedButton"
 import { GUEST_MENUS } from "@/constants/menus"
+import { signUp } from "@/controllers/admin-controller"
 
 type Props = {
   isAuthed: boolean
@@ -61,25 +62,21 @@ export default function Navbar({ isAuthed }: Props) {
   const onLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoadingLogin(true)
-
     if (username == "" || password == "") {
       setIsLoadingLogin(false)
       showToast("Username dan Password tidak boleh kosong", WidgetTypes.ERROR)
       return
     }
-
     try {
       const res = await signIn("credentials", {
         username,
         password,
         redirect: false,
       })
-
       if (res?.error) {
         setIsLoadingLogin(false)
         return showToast(res.error, WidgetTypes.ERROR)
       }
-
       router.push("/admin")
       setIsLoadingLogin(false)
     } catch (error: any) {
@@ -289,12 +286,14 @@ export default function Navbar({ isAuthed }: Props) {
               >
                 <div className="flex flex-col gap-4 w-full">
                   <InputField
+                    label="Username"
                     placeholder="Username"
                     onChange={onUsernameChange}
                     value={username}
                     size={WidgetSizes.MEDIUM}
                   />
                   <InputField
+                    label="Password"
                     placeholder="Password"
                     onChange={onPasswordChange}
                     value={password}
