@@ -23,19 +23,22 @@ export default function AdminProfileCard({
         style={{
           backgroundImage: `url(${lembaga.image})`,
           backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black to-transparent opacity-80"></div>
       </div>
       <div className="w-full flex flex-col items-start justify-start relative">
-        <div className="mt-24 group-hover:-translate-y-12 transition-transform">
+        <div className="mt-24 -translate-y-12 lg:translate-y-0 lg:group-hover:-translate-y-12 transition-transform">
           <div>
             <h1 className="font-semibold text-lg text-neutral-0">
               {lembaga.nama}
             </h1>
-            <div className="flex gap-1 items-center text-neutral-0 text-sm">
-              <MapPin className="w-4" />
-              <p>{lembaga.alamat}</p>
+            <div className="flex gap-1 items-center justify-start text-neutral-0 text-sm">
+              <div>
+                <MapPin className="w-4" />
+              </div>
+              <p className="line-clamp-1">{lembaga.alamat}</p>
             </div>
           </div>
           <div className="mt-2">
@@ -44,7 +47,7 @@ export default function AdminProfileCard({
             </p>
           </div>
         </div>
-        <div className="gap-2 absolute bottom-0 start-0 hidden transition-transform group-hover:flex mt-8">
+        <div className="gap-2 absolute bottom-0 start-0 flex lg:hidden transition-transform lg:group-hover:flex mt-8">
           <OutlinedButton
             ButtonIcon={Trash2}
             size={WidgetSizes.SMALL}

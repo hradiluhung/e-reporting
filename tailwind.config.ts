@@ -25,11 +25,11 @@ const config: Config = {
       backgroundColor: {
         "primary-100": "rgba(var(--primary-100), var(--tw-bg-opacity))",
         "primary-50": "rgba(var(--primary-50), var(--tw-bg-opacity))",
-        "primary-10": "rgba(var(--primary-10), var(--tw-bg-opacity))",
+        "primary-10": "rgba(var(--primary-10), 1)",
         "primary-5": "rgba(var(--primary-5), var(--tw-bg-opacity))",
         "secondary-100": "rgba(var(--secondary-100), var(--tw-bg-opacity))",
         "secondary-50": "rgba(var(--secondary-50), var(--tw-bg-opacity))",
-        "secondary-10": "rgba(var(--secondary-10), var(--tw-bg-opacity))",
+        "secondary-10": "rgba(var(--secondary-10), 1)",
         "neutral-100": "rgba(var(--neutral-100), 1)",
         "neutral-50": "rgba(var(--neutral-50), 1)",
         "neutral-10": "rgba(var(--neutral-10), 1)",

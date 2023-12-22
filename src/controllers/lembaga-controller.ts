@@ -53,3 +53,49 @@ export const deleteLembagaById = async (id: string) => {
     throw new Error(error)
   }
 }
+
+// GET LEMBAGA BY ID
+export const getLembagaById = async (id: string) => {
+  try {
+    const response = await axios.get(`/api/lembaga/${id}`)
+    return response.data
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+// UPDATE LEMBAGA BY ID
+export const updateLembagaById = async ({
+  id,
+  nama,
+  tentang,
+  alamat,
+  kontak,
+  namaKontak,
+  image,
+  publicId,
+}: {
+  id: string
+  nama: string
+  tentang: string
+  alamat: string
+  kontak: string
+  namaKontak: string
+  image: string
+  publicId: string
+}) => {
+  try {
+    const response = await axios.put(`/api/lembaga/${id}`, {
+      nama,
+      tentang,
+      alamat,
+      kontak,
+      namaKontak,
+      image,
+      publicId,
+    })
+    return response.data
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}

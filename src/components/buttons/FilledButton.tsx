@@ -49,14 +49,14 @@ export default function FilledButton({
     >
       {isLoading ? (
         <>
-          <p>{text}</p>
-          <div className="w-5 h-5">
+          {text && <p>{text}</p>}
+          <div>
             <Loader className="animate-spin w-4" />
           </div>
         </>
       ) : (
         <>
-          {text}
+          {text && <p>{text}</p>}
           {ButtonIcon && (
             <div>
               <ButtonIcon className="w-4" />

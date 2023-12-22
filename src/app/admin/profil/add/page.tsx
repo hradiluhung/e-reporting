@@ -5,12 +5,13 @@ import InputField from "@/components/input/InputField"
 import TextArea from "@/components/input/TextArea"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { createLembaga } from "@/controllers/lembaga-controller"
+import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
 import { uploadPhoto } from "@/helpers/uploadPhotos"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
-import { Trash2 } from "react-feather"
+import { PlusCircle, Trash2 } from "react-feather"
 
 export default function Page() {
   const router = useRouter()
@@ -50,7 +51,8 @@ export default function Page() {
       let resUploadImage = null
 
       if (image !== null) {
-        formData.append("file", image)
+        const compressedImage = await compressFile(image)
+        formData.append("file", compressedImage)
         resUploadImage = await uploadPhoto(formData)
       }
 
@@ -140,13 +142,13 @@ export default function Page() {
               placeholder="Isi deskripsi lembaga"
               value={inputLembaga.tentang}
             />
-            <InputField
+            <TextArea
               label="Alamat"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
                 setInputLembaga({ ...inputLembaga, alamat: e.target.value })
               }}
-              placeholder="Isi Alamat"
+              placeholder="Isi alamat"
               value={inputLembaga.alamat}
             />
             <InputField
@@ -176,6 +178,7 @@ export default function Page() {
               />
               <FilledButton
                 text="Tambah"
+                ButtonIcon={PlusCircle}
                 isSubmit={true}
                 size={WidgetSizes.MEDIUM}
                 isLoading={isLoadingSubmit}
