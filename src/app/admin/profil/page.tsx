@@ -200,13 +200,13 @@ export default function Page() {
                       />
                     </div>
                     <div className="flex flex-col gap-1 justify-start items-start mt-4 md:flex-row md:gap-4">
-                      <div className="flex gap-1 text-sm text-neutral-50 items-center justify-center">
+                      <div className="flex gap-2 text-sm text-neutral-50 items-center justify-center">
                         <div>
                           <MapPin className="w-4" />
                         </div>
                         <p>{selectedLembaga?.alamat}</p>
                       </div>
-                      <div className="flex gap-1 text-sm text-neutral-50 items-center justify-center">
+                      <div className="flex gap-2 text-sm text-neutral-50 items-center justify-center">
                         <div>
                           <Phone className="w-4" />
                         </div>

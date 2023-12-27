@@ -5,8 +5,13 @@ import InputField from "@/components/input/InputField"
 import TextArea from "@/components/input/TextArea"
 import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
-import { getLembagaById } from "@/controllers/lembaga-controller"
+import {
+  getLembagaById,
+  updateLembagaById,
+} from "@/controllers/lembaga-controller"
+import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
+import { deletePhoto, uploadPhoto } from "@/helpers/uploadPhotos"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import React, { useCallback, useEffect, useState } from "react"
@@ -57,7 +62,79 @@ export default function Page({ params }: { params: { id: string } }) {
     fetchLembaga()
   }, [fetchLembaga])
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {}
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      setIsLoadingSubmit(true)
+      const formData = new FormData()
+      let resUploadPhoto = null
+
+      if (
+        !lembaga.nama ||
+        !lembaga.tentang ||
+        !lembaga.alamat ||
+        !lembaga.kontak ||
+        !lembaga.namaKontak
+      ) {
+        throw new Error("Mohon isi semua field")
+      }
+
+      if (image == null && lembaga.image == "") {
+        await deletePhoto(lembaga.publicId)
+        const res = await updateLembagaById({
+          id: lembaga._id,
+          nama: lembaga.nama,
+          tentang: lembaga.tentang,
+          alamat: lembaga.alamat,
+          kontak: lembaga.kontak,
+          namaKontak: lembaga.namaKontak,
+          image: "",
+          publicId: "",
+        })
+
+        if (res.status === 200) {
+          showToast(res.message, WidgetTypes.SUCCESS)
+          router.back()
+        } else {
+          showToast(res.message, WidgetTypes.ERROR)
+          setIsLoadingSubmit(false)
+        }
+        return
+      }
+
+      if (lembaga.image == "") {
+        await deletePhoto(lembaga.publicId)
+      }
+
+      if (image != null) {
+        const compressedImage = await compressFile(image)
+        formData.append("file", compressedImage)
+        resUploadPhoto = await uploadPhoto(formData)
+      }
+
+      const res = await updateLembagaById({
+        id: lembaga._id,
+        nama: lembaga.nama,
+        tentang: lembaga.tentang,
+        alamat: lembaga.alamat,
+        kontak: lembaga.kontak,
+        namaKontak: lembaga.namaKontak,
+        image: resUploadPhoto?.data?.url || lembaga.image || "",
+        publicId: resUploadPhoto?.data?.publicId || lembaga.publicId || "",
+      })
+
+      if (res.status === 200) {
+        showToast(res.message, WidgetTypes.SUCCESS)
+        router.back()
+      } else {
+        showToast(res.message, WidgetTypes.ERROR)
+      }
+    } catch (error: any) {
+      showToast(error.message, WidgetTypes.ERROR)
+    } finally {
+      setIsLoadingSubmit(false)
+    }
+  }
 
   return (
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
@@ -76,7 +153,7 @@ export default function Page({ params }: { params: { id: string } }) {
               onSubmit={onSubmit}
               className="flex flex-col gap-3 w-full"
             >
-              {!lembaga?.image ? (
+              {image == null && lembaga.image == "" ? (
                 <InputField
                   label="Gambar"
                   placeholder="Pilih Gambar"
@@ -93,7 +170,11 @@ export default function Page({ params }: { params: { id: string } }) {
                       width={0}
                       height={0}
                       sizes="100vw"
-                      src={lembaga.image}
+                      src={
+                        image != null
+                          ? URL.createObjectURL(image)
+                          : lembaga.image
+                      }
                       alt="Cover Mata Kuliah"
                       className="w-full object-cover rounded-md"
                     />
@@ -103,6 +184,10 @@ export default function Page({ params }: { params: { id: string } }) {
                         ButtonIcon={Trash2}
                         onClick={() => {
                           setImage(null)
+                          setLembaga({
+                            ...lembaga,
+                            image: "",
+                          })
                         }}
                         size={WidgetSizes.MEDIUM}
                         type={WidgetTypes.ERROR}
