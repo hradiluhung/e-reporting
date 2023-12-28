@@ -29,9 +29,11 @@ export default function Page() {
               <div>
                 <p className="font-normal text-neutral-50 text-base">
                   Sebuah pusat data yang menyediakan informasi terkini tentang
-                  satwa liar di Indonesia dan upaya penyelamatan mereka.
-                  Dapatkan wawasan mendalam tentang keanekaragaman hayati
-                  Indonesia dan bagaimana kita bisa membantu.
+                  satwa liar rehabilitasi serta upaya penyelamatannya di
+                  Indonesia. Dapatkan wawasan mendalam tentang upaya
+                  penyelamatan keanekaragaman hayati dan bagaimana kita semua
+                  dapat turut serta dalam upaya konservasi hidupan liar
+                  Indonesia.
                 </p>
               </div>
             </div>
@@ -57,17 +59,31 @@ export default function Page() {
           </div>
         </div>
         <div>
-          <div className="flex items-stretch justify-between gap-2 bg-primary-10 p-2 rounded-full md:p-4 lg:items-center">
-            <div className="flex items-center justify-center bg-neutral-0 rounded-tl-full rounded-bl-full p-4 md:px-8 lg:px-12 lg:py-16">
-              <p className="font-bold text-center text-primary-100 text-base md:text-lg lg:text-xl">
+          <div className="flex items-stretch justify-between gap-2 bg-primary-10 p-3 rounded-xl md:rounded-full md:p-4">
+            <div className="basis-1/3 relative overflow-hidden flex items-center justify-center bg-neutral-0 rounded-lg md:rounded-tl-full md:rounded-bl-full p-4 md:px-8 lg:px-12">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: "url(/assets/klhk.jpg)",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-80"></div>
+              </div>
+
+              <p className="font-bold text-center text-neutral-0 text-base md:text-lg lg:text-xl relative">
                 Tentang KLHK
               </p>
             </div>
-            <div className="p-2 md:py-6 lg:px-16">
-              <p className="pe-2 md:pe-0 text-xs md:text-base lg:text-lg">
-                KLHK, atau Kementerian Lingkungan Hidup dan Kehutanan, adalah
-                lembaga pemerintah Indonesia yang berkomitmen untuk mewujudkan
-                pembangunan lingkungan hidup dan kehutanan secara berkelanjutan.
+
+            <div className="basis-2/3 p-2 md:py-6 lg:px-8">
+              <p className="pe-4 md:pe-0 text-xs md:text-base lg:text-lg">
+                Merujuk pada Peraturan Presiden Nomor 92 Tahun 2020, Kementerian
+                Lingkungan Hidup dan Kehutanan mempunyai tugas menyelenggarakan
+                urusan pemerintahan di bidang lingkungan hidup dan kehutanan
+                untuk membantu Presiden dalam menyelenggarakan pemerintahan
+                negara.
               </p>
             </div>
           </div>
@@ -82,7 +98,7 @@ export default function Page() {
         exit="hide"
         variants={fadeInUpVariants}
       >
-        <div className="py-12 flex flex-col items-center gap-12 lg:py-16">
+        <div className="py-12 flex flex-col items-center gap-8 lg:py-16">
           <div>
             <h1 className="text-neutral-100 font-bold text-2xl">Fitur Utama</h1>
           </div>
@@ -111,7 +127,7 @@ export default function Page() {
         exit="hide"
         variants={fadeInUpVariants}
       >
-        <div className="py-12 flex flex-col items-center gap-12 lg:py-16">
+        <div className="py-12 flex flex-col items-center gap-8 lg:py-16">
           <div>
             <h1 className="text-neutral-100 font-bold text-2xl">
               Fitur Lainnya

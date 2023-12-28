@@ -11,7 +11,7 @@ import { showToast } from "@/helpers/showToast"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { signIn, signOut } from "next-auth/react"
 import OutlinedButton from "../buttons/OutlinedButton"
-import { GUEST_MENUS } from "@/constants/menus"
+import { GUEST_MENUS, NAVBAR_MENUS } from "@/constants/menus"
 import { signUp } from "@/controllers/admin-controller"
 
 type Props = {
@@ -103,11 +103,11 @@ export default function Navbar({ isAuthed }: Props) {
         {isDesktopSize ? (
           // Desktop Navbar
           <>
-            <div className="flex gap-10">
+            <div className="flex gap-6 items-center">
               <>
-                {GUEST_MENUS.filter((item) => item.isMain == true).map(
+                {NAVBAR_MENUS.filter((item) => item.isMain == true).map(
                   (item, index) => (
-                    <div key={index}>
+                    <div key={index} className="break-words text-center">
                       <Link href={item.path}>
                         <p
                           className={`font-semibold hover:text-primary-100 transition-all ${
@@ -122,7 +122,7 @@ export default function Navbar({ isAuthed }: Props) {
                 )}
                 <div
                   className={`flex gap-2 cursor-pointer group relative ${
-                    GUEST_MENUS.filter((item) => item.isMain == false).some(
+                    NAVBAR_MENUS.filter((item) => item.isMain == false).some(
                       (item) => item.path == pathName
                     )
                       ? "text-primary-100"
@@ -148,7 +148,7 @@ export default function Navbar({ isAuthed }: Props) {
                       Menu Lainnya
                     </p>
                     <div className="flex flex-col gap-4">
-                      {GUEST_MENUS.filter((item) => item.isMain == false).map(
+                      {NAVBAR_MENUS.filter((item) => item.isMain == false).map(
                         (item, index) => (
                           <div key={index}>
                             <Link href={item.path}>
@@ -218,7 +218,7 @@ export default function Navbar({ isAuthed }: Props) {
               </div>
               <div className="flex gap-8 flex-col items-center justify-center">
                 <div className="flex flex-col gap-4 items-center w-80 md:w-96">
-                  {GUEST_MENUS.map((item, index) => (
+                  {NAVBAR_MENUS.map((item, index) => (
                     <div key={index}>
                       <Link href={item.path} onClick={onToggleMenu}>
                         <p

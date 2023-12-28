@@ -9,9 +9,10 @@ import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
 import { uploadPhoto } from "@/helpers/uploadPhotos"
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
-import { PlusCircle, Trash2 } from "react-feather"
+import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
 
 export default function Page() {
   const router = useRouter()
@@ -83,9 +84,16 @@ export default function Page() {
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
       <div className="flex flex-col items-start gap-8">
         <div className="w-full flex flex-col items-start justify-center gap-6 md:w-1/3 lg:w-1/2">
-          <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-            Tambah Lembaga
-          </h1>
+          <div className="flex gap-3 items-center">
+            <div>
+              <Link href="/admin/profil" passHref>
+                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+              </Link>
+            </div>
+            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
+              Tambah Lembaga
+            </h1>
+          </div>
           <form
             method="POST"
             onSubmit={onSubmit}

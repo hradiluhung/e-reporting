@@ -37,7 +37,7 @@ export const ADMIN_MENUS = [
     isMain: true,
   },
   {
-    name: "Monitoring Satwa",
+    name: "Monitoring Satwa Rehabilitasi",
     description:
       "Informasi tentang monitoring satwa. Pengguna dapat melihat data dan statistik terkini tentang populasi satwa, serta upaya yang dilakukan untuk melestarikannya.",
     path: "/admin/monitoring-satwa",
@@ -91,7 +91,7 @@ export const GUEST_MENUS = [
   {
     name: "Profil Lembaga",
     description:
-      "Informasi tentang informasi lembaga, termasuk alamat, kontak, dan fitur untuk memberikan laporan atau saran.",
+      "Informasi tentang peruntukan Lembaga Konservasi/organisasi/pusat rehabilitasi satwa, termasuk alamat, kontak, dan fitur partisipasi publik untuk menyampaikan laporan atau saran.",
     path: "/profil",
     icon: User,
     image: "home_feature_illustration_1.png",
@@ -100,19 +100,19 @@ export const GUEST_MENUS = [
   {
     name: "Satwa Rehabilitasi",
     description:
-      "Informasi tentang satwa yang sedang menjalani rehabilitasi. Pengguna dapat melihat jenis satwa, status kesehatannya, dan perkembangan proses rehabilitasinya.",
+      "Informasi tentang satwa yang sedang menjalani rehabilitasi. Pengguna dapat melihat jenis satwa, nomor ID, asal usul, status kesehatan dan perkembangan proses rehabilitasi.",
     path: "/satwa-rehab",
     icon: LifeBuoy,
-    image: "home_feature_illustration_2.png",
+    image: "home_feature_illustration_2.jpg",
     isMain: true,
   },
   {
-    name: "Monitoring Satwa",
+    name: "Monitoring Satwa Rehabilitasi/Persebaran Satwa Rehabilitasi",
     description:
-      "Informasi tentang monitoring satwa. Pengguna dapat melihat data dan statistik terkini tentang populasi satwa, serta upaya yang dilakukan untuk melestarikannya.",
+      "Informasi tentang monitoring persebaran satwa rehabilitasi yang telah dilepasliarkan. Pengguna dapat melihat data dan statistik terkini tentang satwa yang telah dilepasliarkan beserta peta persebarannya",
     path: "/monitoring-satwa",
     icon: Monitor,
-    image: "home_feature_illustration_3.png",
+    image: "home_feature_illustration_3.jpg",
     isMain: true,
   },
   {
@@ -148,3 +148,15 @@ export const GUEST_MENUS = [
     isMain: false,
   },
 ]
+
+export const NAVBAR_MENUS = GUEST_MENUS.map((menu) => {
+  if (
+    menu.name === "Monitoring Satwa Rehabilitasi/Persebaran Satwa Rehabilitasi"
+  ) {
+    return {
+      ...menu,
+      name: "Monitoring Satwa Rehabilitasi",
+    }
+  }
+  return menu
+})

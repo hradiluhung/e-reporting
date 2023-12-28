@@ -19,3 +19,21 @@ type Lembaga = {
   createdAt: string
   updatedAt: string
 }
+
+// SatwaRehabilitasi
+type SatwaRehabilitasi = {
+  _id: string
+  jenisSatwa: string
+  namaIlmiah: string
+  idSatwa: string
+  statusDilindungi: string
+  statusEndemik: string
+  asalUsulSatwa: string
+  lokasiRehabilitasi: string
+  tanggalSerahTerima: Date
+  kondisiSatwa: string
+  status: string
+  keterangan: string
+  createdAt: string
+  updatedAt: string
+}

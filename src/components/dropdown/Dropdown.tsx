@@ -2,6 +2,7 @@ import { WidgetSizes } from "@/constants/button-types"
 import React from "react"
 
 type Props = {
+  label: string
   placeholder: string
   defaultValue: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export default function Dropdown({
+  label,
   placeholder,
   onChange,
   defaultValue,
@@ -20,6 +22,7 @@ export default function Dropdown({
 }: Props) {
   return (
     <div className="w-full">
+      <label className="text-neutral-500 text-sm">{label}</label>
       <select
         className={`w-full border border-neutral-50 rounded-xl ${
           size === WidgetSizes.SMALL
@@ -27,15 +30,20 @@ export default function Dropdown({
             : size === WidgetSizes.MEDIUM
             ? "text-base px-4 py-2"
             : "text-lg px-4 py-4"
-        }`}
+        }
+        ${value === "" && "text-neutral-50"}`}
         onChange={onChange}
         value={value}
       >
-        <option value="" className="w-full">
+        <option value="" className="w-full text-neutral-50">
           {defaultValue}
         </option>
         {options.map((option, index) => (
-          <option key={index} value={option} className="w-full">
+          <option
+            key={index}
+            value={option}
+            className="w-full text-neutral-100"
+          >
             {option}
           </option>
         ))}
