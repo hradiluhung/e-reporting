@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "E-Reporting Indonesia Wildlife",
+  title: "E-Reporting Indonesian Wildlife",
   description:
     "Aplikasi untuk melaporkan kejadian terkait satwa liar di Indonesia",
 }

@@ -20,10 +20,10 @@ export default function Page() {
             <div className="flex flex-col gap-4">
               <div className="flex flex-col items-start">
                 <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50 font-bold text-3xl lg:text-5xl">
-                  Indonesia Wildlife
+                  Indonesian Wildlife
                 </h1>
                 <p className="text-lg text-neutral-100 font-medium lg:text-xl">
-                  Indonesia Wildlife Rescue Data Center
+                  Indonesian Wildlife Rescue Data Center
                 </p>
               </div>
               <div>
