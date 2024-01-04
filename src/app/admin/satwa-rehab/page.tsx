@@ -1,6 +1,8 @@
 "use client"
 import OutlinedButton from "@/components/buttons/OutlinedButton"
+import AdminSatwaRehabCard from "@/components/cards/AdminSatwaRehabCard"
 import SearchBar from "@/components/input/SearchBar"
+import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { getAllSatwaRehabilitasi } from "@/controllers/satwa-rehab-controller"
 import Link from "next/link"
@@ -9,6 +11,9 @@ import { PlusCircle, Search } from "react-feather"
 
 export default function Page() {
   const [satwaRehabs, setSatwaRehabs] = useState<SatwaRehabilitasi[]>([])
+  const [filteredSatwaRehabs, setFilteredSatwaRehabs] = useState<
+    SatwaRehabilitasi[]
+  >([])
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
   const [searchKeyword, setSearchKeyword] = useState<string>("")
 
@@ -28,6 +33,10 @@ export default function Page() {
   useEffect(() => {
     fetchAllSatwaRehab()
   }, [])
+
+  const onClickDetail = () => {}
+
+  const onClickDelete = () => {}
 
   return (
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
@@ -58,7 +67,46 @@ export default function Page() {
             />
           </div>
         </div>
-        <div className="w-full"></div>
+        <div className="w-full">
+          {isLoadingInit ? (
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Skeleton size={WidgetSizes.MEDIUM} />
+              <Skeleton size={WidgetSizes.MEDIUM} />
+              <Skeleton size={WidgetSizes.MEDIUM} />
+              <Skeleton size={WidgetSizes.MEDIUM} />
+            </div>
+          ) : satwaRehabs.length === 0 ? (
+            <div className="w-full flex justify-center">
+              <p className="text-center">Belum ada data satwa rehabilitasi</p>
+            </div>
+          ) : searchKeyword !== "" && filteredSatwaRehabs.length !== 0 ? (
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredSatwaRehabs.map((satwa, index) => (
+                <AdminSatwaRehabCard
+                  key={index}
+                  satwa={satwa}
+                  onClickDelete={onClickDelete}
+                  onClickDetail={onClickDetail}
+                />
+              ))}
+            </div>
+          ) : searchKeyword !== "" && filteredSatwaRehabs.length === 0 ? (
+            <div className="w-full flex justify-center">
+              <p className="text-center">Satwa rehabilitasi tidak ditemukan</p>
+            </div>
+          ) : (
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {satwaRehabs.map((satwa, index) => (
+                <AdminSatwaRehabCard
+                  key={index}
+                  satwa={satwa}
+                  onClickDelete={onClickDelete}
+                  onClickDetail={onClickDetail}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

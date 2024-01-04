@@ -34,6 +34,8 @@ type SatwaRehabilitasi = {
   kondisiSatwa: string
   status: string
   keterangan: string
+  image: string
+  publicId: string
   createdAt: string
   updatedAt: string
 }
