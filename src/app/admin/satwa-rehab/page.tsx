@@ -16,6 +16,7 @@ import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import {
+  Calendar,
   Edit2,
   ExternalLink,
   MapPin,
@@ -450,10 +451,10 @@ export default function Page() {
                 <div className="flex justify-between w-full gap-4 items-center">
                   <div className="flex gap-2 items-center">
                     <h1 className="font-semibold text-lg">
-                      {selectedSatwaRehab?.namaIlmiah}
+                      {selectedSatwaRehab.namaIlmiah}
                     </h1>
                     <Link
-                      href={`/admin/satwa-rehab/edit/${selectedSatwaRehab?._id}`}
+                      href={`/admin/satwa-rehab/edit/${selectedSatwaRehab._id}`}
                     >
                       <OutlinedButton
                         size={WidgetSizes.SMALL}
@@ -477,17 +478,38 @@ export default function Page() {
                   />
                 </div>
                 <div className="flex flex-col gap-1 justify-start items-center mt-4 md:flex-row md:gap-4">
-                  <div className="flex gap-2 text-sm text-neutral-50 items-center justify-start lg:w-1/2">
+                  <div className="flex gap-2 text-sm text-neutral-50 items-center justify-start">
                     <div>
                       <MapPin className="w-4" />
                     </div>
-                    <p>{selectedSatwaRehab?.lokasiRehabilitasi}</p>
+                    <p>
+                      Lokasi Rehabilitasi:{" "}
+                      {selectedSatwaRehab.lokasiRehabilitasi}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 text-sm text-neutral-50 items-center justify-start">
+                    <div>
+                      <Calendar className="w-4" />
+                    </div>
+                    <p>
+                      Tanggal Serah Terima:{" "}
+                      {new Date(
+                        selectedSatwaRehab.tanggalSerahTerima
+                      ).toLocaleDateString("id-ID")}
+                    </p>
                   </div>
                 </div>
               </div>
               <div>
+                <h1 className="font-semibold">Keterangan</h1>
                 <p className="text-sm text-neutral-100">
-                  {selectedSatwaRehab?.keterangan}
+                  {selectedSatwaRehab.keterangan}
+                </p>
+              </div>
+              <div>
+                <h1 className="font-semibold">Asal Usul</h1>
+                <p className="text-sm text-neutral-100">
+                  {selectedSatwaRehab.asalUsulSatwa}
                 </p>
               </div>
             </div>
