@@ -1,6 +1,9 @@
 "use client"
+import Skeleton from "@/components/skeleton/Skeleton"
+import { WidgetSizes } from "@/constants/button-types"
 import { getAllPersebaranSatwa } from "@/controllers/persebaran-satwa-controller"
 import React, { useEffect, useRef, useState } from "react"
+import "mapbox-gl/dist/mapbox-gl.css"
 import {
   GeolocateControl,
   Map,
@@ -62,31 +65,32 @@ export default function Page() {
         </div>
 
         <div className="w-full">
-          <Map
-            ref={mapRef}
-            mapboxAccessToken={mapboxToken}
-            mapStyle="mapbox://styles/mapbox/streets-v12"
-            initialViewState={{
-              // latitude: parseFloat(
-              //   selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[0]
-              // ),
-              // longitude: parseFloat(
-              //   selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[1]
-              // ),
-              zoom: 10,
-            }}
-            style={{
-              width: "100%",
-              height: 300,
-              borderRadius: "16px",
-              overflow: "hidden",
-            }}
-            maxZoom={20}
-            minZoom={3}
-          >
-            <GeolocateControl position="top-left" />
-            <NavigationControl position="top-left" />
-            {/* <Marker
+          {isLoadingInit ? (
+            <div className="w-full">
+              <Skeleton size={WidgetSizes.MEDIUM} />
+            </div>
+          ) : (
+            <Map
+              ref={mapRef}
+              mapboxAccessToken={mapboxToken}
+              mapStyle="mapbox://styles/mapbox/streets-v12"
+              initialViewState={{
+                latitude: -6.2075356060169185,
+                longitude: 106.8288221574222,
+                zoom: 10,
+              }}
+              style={{
+                width: "100%",
+                height: 600,
+                borderRadius: "16px",
+                overflow: "hidden",
+              }}
+              maxZoom={20}
+              minZoom={3}
+            >
+              <GeolocateControl position="top-left" />
+              <NavigationControl position="top-left" />
+              {/* <Marker
               longitude={
                 parseFloat(
                 selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[1]
@@ -117,7 +121,7 @@ export default function Page() {
                 <MapPin size={30} />
               </button>
             </Marker> */}
-            {/* {selectedMarker.latitude !== null &&
+              {/* {selectedMarker.latitude !== null &&
             selectedMarker.longitude !== null ? (
               <Popup
                 offset={25}
@@ -143,7 +147,8 @@ export default function Page() {
                 </h3>
               </Popup>
             ) : null} */}
-          </Map>
+            </Map>
+          )}
         </div>
       </div>
     </div>

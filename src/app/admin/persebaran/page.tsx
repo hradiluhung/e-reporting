@@ -565,7 +565,11 @@ export default function Home() {
                 <div className="w-full flex flex-col gap-2">
                   <div className="w-full">
                     <h1 className="font-semibold">Lokasi Pelepaslarian</h1>
-                    <div className="w-full mt-2">
+                    <div className="mt-2">
+                      <MapPin />
+                      <p>{selectedPersebaranSatwa.lokasiPelepasliaran}</p>
+                    </div>
+                    <div className="w-full mt-1">
                       <Map
                         ref={mapRef}
                         mapboxAccessToken={mapboxToken}
