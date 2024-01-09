@@ -23,6 +23,7 @@ export default function Page() {
     idSatwa: "",
     statusDilindungi: "",
     statusEndemik: "",
+    lokasiPelepasliaran: "",
     koordinatPelepasliaran: "",
     image: "",
     publicId: "",
@@ -46,6 +47,7 @@ export default function Page() {
         !inputPersebaranSatwa.idSatwa ||
         !inputPersebaranSatwa.statusDilindungi ||
         !inputPersebaranSatwa.statusEndemik ||
+        !inputPersebaranSatwa.lokasiPelepasliaran ||
         !inputPersebaranSatwa.koordinatPelepasliaran
       ) {
         throw new Error("Mohon isi semua field")
@@ -90,7 +92,7 @@ export default function Page() {
               </Link>
             </div>
             <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Tambah Satwa Rehabilitasi
+              Tambah Persebaran Satwa Rehabilitasi
             </h1>
           </div>
           <form
@@ -195,6 +197,18 @@ export default function Page() {
               placeholder="Status Endemik"
               size={WidgetSizes.MEDIUM}
               value={inputPersebaranSatwa.statusEndemik}
+            />
+            <InputField
+              label="Lokasi Pelepasliaran"
+              size={WidgetSizes.MEDIUM}
+              onChange={(e) => {
+                setInputPersebaranSatwa({
+                  ...inputPersebaranSatwa,
+                  lokasiPelepasliaran: e.target.value,
+                })
+              }}
+              placeholder="Contoh: Taman Safari Indonesia"
+              value={inputPersebaranSatwa.lokasiPelepasliaran}
             />
             <InputField
               label="Koordinat Pelepasliaran"

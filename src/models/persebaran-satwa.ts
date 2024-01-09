@@ -22,6 +22,10 @@ const persebaranSatwaSchema = new Schema(
       type: String,
       required: [true, "Status endemik tidak boleh kosong"],
     },
+    lokasiPelepasliaran: {
+      type: String,
+      required: [true, "Lokasi pelepasliaran tidak boleh kosong"],
+    },
     koordinatPelepasliaran: {
       type: String,
       required: [true, "Koordinat pelepasliaran tidak boleh kosong"],

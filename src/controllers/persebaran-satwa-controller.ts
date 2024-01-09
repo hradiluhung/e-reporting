@@ -7,6 +7,7 @@ export const createPersebaranSatwa = async ({
   idSatwa,
   statusDilindungi,
   statusEndemik,
+  lokasiPelepasliaran,
   koordinatPelepasliaran,
   image,
   publicId,
@@ -16,6 +17,7 @@ export const createPersebaranSatwa = async ({
   idSatwa: string
   statusDilindungi: string
   statusEndemik: string
+  lokasiPelepasliaran: string
   koordinatPelepasliaran: string
   image?: string
   publicId?: string
@@ -27,6 +29,7 @@ export const createPersebaranSatwa = async ({
       idSatwa,
       statusDilindungi,
       statusEndemik,
+      lokasiPelepasliaran,
       koordinatPelepasliaran,
       image,
       publicId,
@@ -68,28 +71,29 @@ export const getPersebaranSatwaById = async (id: string) => {
 }
 
 // UPDATE PERSEBARAN SATWA BY ID
-export const updatePersebaranSatwaById = async (
-  id: string,
-  {
-    jenisSatwa,
-    namaIlmiah,
-    idSatwa,
-    statusDilindungi,
-    statusEndemik,
-    koordinatPelepasliaran,
-    image,
-    publicId,
-  }: {
-    jenisSatwa: string
-    namaIlmiah: string
-    idSatwa: string
-    statusDilindungi: string
-    statusEndemik: string
-    koordinatPelepasliaran: string
-    image?: string
-    publicId?: string
-  }
-) => {
+export const updatePersebaranSatwaById = async ({
+  id,
+  jenisSatwa,
+  namaIlmiah,
+  idSatwa,
+  statusDilindungi,
+  statusEndemik,
+  lokasiPelepasliaran,
+  koordinatPelepasliaran,
+  image,
+  publicId,
+}: {
+  id: string
+  jenisSatwa: string
+  namaIlmiah: string
+  idSatwa: string
+  statusDilindungi: string
+  statusEndemik: string
+  lokasiPelepasliaran: string
+  koordinatPelepasliaran: string
+  image?: string
+  publicId?: string
+}) => {
   try {
     const response = await axios.put(`/api/persebaran-satwa/${id}`, {
       jenisSatwa,
@@ -97,6 +101,7 @@ export const updatePersebaranSatwaById = async (
       idSatwa,
       statusDilindungi,
       statusEndemik,
+      lokasiPelepasliaran,
       koordinatPelepasliaran,
       image,
       publicId,

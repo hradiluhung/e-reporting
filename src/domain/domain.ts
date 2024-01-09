@@ -48,6 +48,7 @@ type PersebaranSatwa = {
   idSatwa: string
   statusDilindungi: string
   statusEndemik: string
+  lokasiPelepasliaran: string
   koordinatPelepasliaran: string
   image: string
   publicId: string

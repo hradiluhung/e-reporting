@@ -22,6 +22,7 @@ import {
   PlusCircle,
   Trash2,
   X,
+  Map as MapIcon,
 } from "react-feather"
 import {
   GeolocateControl,
@@ -152,12 +153,21 @@ export default function Home() {
               Persebaran Satwa Rehabilitasi
             </h1>
             <p className="text-base">
-              Daftar persebaran satwa yang direhabilitasi di seluruh Indonesia
+              Daftar persebaran satwa liar rehabilitasi yang telah
+              dilepasliarkan di Indonesia
             </p>
           </div>
-          <div className="flex flex-start">
-            <Link href="/admin/persebaran/add">
+          <div className="flex flex-start gap-2">
+            <Link href="/admin/persebaran/maps">
               <OutlinedButton
+                text="Peta Persebaran"
+                ButtonIcon={MapIcon}
+                type={WidgetTypes.PRIMARY}
+                size={WidgetSizes.MEDIUM}
+              />
+            </Link>
+            <Link href="/admin/persebaran/add">
+              <FilledButton
                 text="Tambah"
                 ButtonIcon={PlusCircle}
                 type={WidgetTypes.PRIMARY}
@@ -220,7 +230,10 @@ export default function Home() {
                         Endemik/Non
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        DIlindungi/Non
+                        Dilindungi/Non
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Lokasi Pelepasliaran
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Gambar
@@ -248,6 +261,9 @@ export default function Home() {
                           <td className="px-6 py-4">{satwa.statusEndemik}</td>
                           <td className="px-6 py-4">
                             {satwa.statusDilindungi}
+                          </td>
+                          <td className="px-6 py-4">
+                            {satwa.lokasiPelepasliaran}
                           </td>
                           <td className="px-6 py-4">
                             {satwa.image ? (
@@ -343,7 +359,10 @@ export default function Home() {
                         Endemik/Non
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        DIlindungi/Non
+                        Dilindungi/Non
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Lokasi Pelepasliaran
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Gambar
@@ -373,6 +392,9 @@ export default function Home() {
                             {satwa.statusDilindungi}
                           </td>
                           <td className="px-6 py-4">
+                            {satwa.lokasiPelepasliaran}
+                          </td>
+                          <td className="px-6 py-4">
                             {satwa.image ? (
                               <Image
                                 width={0}
@@ -396,6 +418,7 @@ export default function Home() {
                               />
                               <FilledButton
                                 size={WidgetSizes.SMALL}
+                                text="Lokasi"
                                 ButtonIcon={ExternalLink}
                                 onClick={() => {
                                   onOpenDetailModal(satwa)
@@ -539,7 +562,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="flex w-full justify-between gap-4">
-                <div className="w-1/2 flex flex-col gap-2">
+                <div className="w-full flex flex-col gap-2">
                   <div className="w-full">
                     <h1 className="font-semibold">Lokasi Pelepaslarian</h1>
                     <div className="w-full mt-2">
@@ -628,10 +651,10 @@ export default function Home() {
                             closeButton={false}
                           >
                             <p className="text-neutral-500 font-semibold">
-                              {selectedPersebaranSatwa.namaIlmiah}
+                              ID Satwa: {selectedPersebaranSatwa.idSatwa}
                             </p>
                             <h3 className="text-lg">
-                              {selectedPersebaranSatwa.namaIlmiah}
+                              Nama Ilmiah: {selectedPersebaranSatwa.namaIlmiah}
                             </h3>
                           </Popup>
                         ) : null}

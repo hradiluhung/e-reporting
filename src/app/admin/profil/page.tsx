@@ -98,7 +98,7 @@ export default function Page() {
           </div>
           <div className="flex flex-start">
             <Link href="/admin/profil/add">
-              <OutlinedButton
+              <FilledButton
                 text="Tambah"
                 ButtonIcon={PlusCircle}
                 type={WidgetTypes.PRIMARY}

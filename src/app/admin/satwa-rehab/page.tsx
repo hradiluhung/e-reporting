@@ -123,7 +123,7 @@ export default function Page() {
           </div>
           <div className="flex flex-start">
             <Link href="/admin/satwa-rehab/add">
-              <OutlinedButton
+              <FilledButton
                 text="Tambah"
                 ButtonIcon={PlusCircle}
                 type={WidgetTypes.PRIMARY}
