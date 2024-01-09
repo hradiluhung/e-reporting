@@ -68,7 +68,7 @@ export default function Page() {
 
       if (res.status === 201) {
         showToast(res.message, WidgetTypes.SUCCESS)
-        router.push("/admin/persebaran-satwa")
+        router.push("/admin/persebaran")
       } else {
         showToast(res.message, WidgetTypes.ERROR)
       }

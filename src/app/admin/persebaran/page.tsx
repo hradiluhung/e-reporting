@@ -551,12 +551,12 @@ export default function Home() {
                           latitude: parseFloat(
                             selectedPersebaranSatwa.koordinatPelepasliaran.split(
                               ","
-                            )[1]
+                            )[0]
                           ),
                           longitude: parseFloat(
                             selectedPersebaranSatwa.koordinatPelepasliaran.split(
                               ","
-                            )[0]
+                            )[1]
                           ),
                           zoom: 10,
                         }}
@@ -575,12 +575,12 @@ export default function Home() {
                           longitude={parseFloat(
                             selectedPersebaranSatwa.koordinatPelepasliaran.split(
                               ","
-                            )[0]
+                            )[1]
                           )}
                           latitude={parseFloat(
                             selectedPersebaranSatwa.koordinatPelepasliaran.split(
                               ","
-                            )[1]
+                            )[0]
                           )}
                         >
                           <button
@@ -592,12 +592,12 @@ export default function Home() {
                                 parseFloat(
                                   selectedPersebaranSatwa.koordinatPelepasliaran.split(
                                     ","
-                                  )[1]
+                                  )[0]
                                 ),
                                 parseFloat(
                                   selectedPersebaranSatwa.koordinatPelepasliaran.split(
                                     ","
-                                  )[0]
+                                  )[1]
                                 )
                               )
                             }}
@@ -612,12 +612,12 @@ export default function Home() {
                             latitude={parseFloat(
                               selectedPersebaranSatwa.koordinatPelepasliaran.split(
                                 ","
-                              )[1]
+                              )[0]
                             )}
                             longitude={parseFloat(
                               selectedPersebaranSatwa.koordinatPelepasliaran.split(
                                 ","
-                              )[0]
+                              )[1]
                             )}
                             onClose={() => {
                               setSelectedMarker({
