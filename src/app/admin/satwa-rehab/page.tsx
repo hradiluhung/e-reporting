@@ -90,8 +90,6 @@ export default function Page() {
     setPage(1)
   }, [searchKeyword, satwaRehabs])
 
-  const onClickDetail = () => {}
-
   const onClickDelete = async (id: string, publicId: string) => {
     try {
       setIsLoadingDelete(true)
@@ -206,7 +204,9 @@ export default function Page() {
                     .map((satwa, index) => (
                       <tbody key={index}>
                         <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                          <td className="px-6 py-4">{index + page}</td>
+                          <td className="px-6 py-4">
+                            {index + (page - 1) * itemsPerPage + 1}
+                          </td>
                           <td className="px-6 py-4">{satwa.idSatwa}</td>
                           <th
                             scope="row"
@@ -232,14 +232,18 @@ export default function Page() {
                             {satwa.statusDilindungi}
                           </td>
                           <td className="px-6 py-4">
-                            <Image
-                              width={0}
-                              height={0}
-                              sizes="100vh"
-                              src={satwa.image}
-                              alt="Logo"
-                              className="h-24 w-32 object-cover rounded-md"
-                            />
+                            {satwa.image ? (
+                              <Image
+                                width={0}
+                                height={0}
+                                sizes="100vh"
+                                src={satwa.image}
+                                alt="Gambar Satwa"
+                                className="h-24 w-32 object-cover rounded-md"
+                              />
+                            ) : (
+                              <div>-</div>
+                            )}
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex gap-2 mt-4">
@@ -263,6 +267,24 @@ export default function Page() {
                     ))}
                 </table>
               </div>
+
+              {filteredSatwaRehabs.length > itemsPerPage && (
+                <div className="flex justify-end mb-4">
+                  {new Array(totalPages).fill(null).map((_, index) => (
+                    <button
+                      key={index + 1}
+                      className={`px-3 py-1 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                        page === index + 1
+                          ? "bg-gradient-to-tr from-primary-50 to-primary-100 text-white"
+                          : "text-gray-500 hover:bg-gray-100"
+                      }`}
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+              )}
             </>
           ) : searchKeyword !== "" && filteredSatwaRehabs.length === 0 ? (
             <div className="w-full flex justify-center">
@@ -323,7 +345,9 @@ export default function Page() {
                     .map((satwa, index) => (
                       <tbody key={index}>
                         <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                          <td className="px-6 py-4">{index + page}</td>
+                          <td className="px-6 py-4">
+                            {index + (page - 1) * itemsPerPage + 1}
+                          </td>
                           <td className="px-6 py-4">{satwa.idSatwa}</td>
                           <th
                             scope="row"
@@ -349,14 +373,18 @@ export default function Page() {
                             {satwa.statusDilindungi}
                           </td>
                           <td className="px-6 py-4">
-                            <Image
-                              width={0}
-                              height={0}
-                              sizes="100vh"
-                              src={satwa.image}
-                              alt="Logo"
-                              className="h-24 w-32 object-cover rounded-md"
-                            />
+                            {satwa.image ? (
+                              <Image
+                                width={0}
+                                height={0}
+                                sizes="100vh"
+                                src={satwa.image}
+                                alt="Gambar Satwa"
+                                className="h-24 w-32 object-cover rounded-md"
+                              />
+                            ) : (
+                              <div>-</div>
+                            )}
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex gap-2 mt-4">
@@ -380,6 +408,23 @@ export default function Page() {
                     ))}
                 </table>
               </div>
+              {satwaRehabs.length > itemsPerPage && (
+                <div className="flex justify-end mt-4">
+                  {new Array(totalPages).fill(null).map((_, index) => (
+                    <button
+                      key={index + 1}
+                      className={`px-3 py-1 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                        page === index + 1
+                          ? "bg-gradient-to-tr from-primary-50 to-primary-100 text-white"
+                          : "text-gray-500 hover:bg-gray-100"
+                      }`}
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -448,11 +493,16 @@ export default function Page() {
           <div className="w-full max-h-full overflow-y-auto my-4 md:w-3/4 lg:w-2/3 bg-white rounded-lg p-4 md:p-6 lg:p-8">
             <div className="flex flex-col gap-4 items-start justify-start">
               <div className="w-full">
-                <div className="flex justify-between w-full gap-4 items-center">
-                  <div className="flex gap-2 items-center">
-                    <h1 className="font-semibold text-lg">
-                      {selectedSatwaRehab.namaIlmiah}
-                    </h1>
+                <div className="flex justify-between w-full gap-4 items-start">
+                  <div className="flex gap-2 items-start">
+                    <div>
+                      <h1 className="font-semibold text-2xl">
+                        Nama Ilmiah: {selectedSatwaRehab.namaIlmiah}
+                      </h1>
+                      <p className="text-neutral-500">
+                        ID Satwa: {selectedSatwaRehab.idSatwa}
+                      </p>
+                    </div>
                     <Link
                       href={`/admin/satwa-rehab/edit/${selectedSatwaRehab._id}`}
                     >
@@ -463,20 +513,45 @@ export default function Page() {
                     </Link>
                   </div>
                   <X
-                    onClick={() => setSelectedSatwaRehab(null)}
+                    onClick={onCloseDetailModal}
                     className="w-6 cursor-pointer"
                   />
                 </div>
-                <div className="rounded-xl mt-4 overflow-hidden flex justify-center w-full bg-neutral-900">
-                  <Image
-                    width={0}
-                    height={0}
-                    sizes="100vw"
-                    src={selectedSatwaRehab.image}
-                    alt="Logo"
-                    className="w-full lg:w-2/3 rounded-md"
-                  />
+                {selectedSatwaRehab.image && (
+                  <div className="rounded-xl mt-4 overflow-hidden flex justify-center w-full bg-neutral-900">
+                    <Image
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      src={selectedSatwaRehab.image}
+                      alt="Gambar Satwa"
+                      className="w-full lg:w-2/3 rounded-md"
+                    />
+                  </div>
+                )}
+
+                <div className="flex mt-4 gap-2">
+                  <div
+                    className={`px-2 py-1 rounded-full bg-neutral-0 text-neutral-10 font-semibold text-center text-xs ${
+                      selectedSatwaRehab.status ===
+                      StatusSatwaRehab.REHABILITASI
+                        ? "bg-gradient-to-tr from-amber-400 to-amber-500"
+                        : selectedSatwaRehab.status === StatusSatwaRehab.MATI
+                        ? "bg-gradient-to-tr from-red-400 to-red-500"
+                        : "bg-gradient-to-tr from-green-400 to-green-500"
+                    }`}
+                  >
+                    {selectedSatwaRehab.status}
+                  </div>
+
+                  <div className="px-2 py-1 rounded-full bg-neutral-200 text-neutral-100 text-xs">
+                    {selectedSatwaRehab.statusDilindungi}
+                  </div>
+                  <div className="px-2 py-1 rounded-full bg-neutral-200 text-neutral-100 text-xs">
+                    {selectedSatwaRehab.statusEndemik}
+                  </div>
                 </div>
+
                 <div className="flex flex-col gap-1 justify-start items-center mt-4 md:flex-row md:gap-4">
                   <div className="flex gap-2 text-sm text-neutral-50 items-center justify-start">
                     <div>
@@ -500,17 +575,35 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <div>
-                <h1 className="font-semibold">Keterangan</h1>
-                <p className="text-sm text-neutral-100">
-                  {selectedSatwaRehab.keterangan}
-                </p>
-              </div>
-              <div>
-                <h1 className="font-semibold">Asal Usul</h1>
-                <p className="text-sm text-neutral-100">
-                  {selectedSatwaRehab.asalUsulSatwa}
-                </p>
+              <div className="flex w-full justify-between gap-4">
+                <div className="basis-1/2 flex flex-col gap-2">
+                  <div>
+                    <h1 className="font-semibold">Jenis Satwa</h1>
+                    <p className="text-sm text-neutral-100">
+                      {selectedSatwaRehab.jenisSatwa}
+                    </p>
+                  </div>
+                  <div>
+                    <h1 className="font-semibold">Kondisi Satwa</h1>
+                    <p className="text-sm text-neutral-100">
+                      {selectedSatwaRehab.kondisiSatwa}
+                    </p>
+                  </div>
+                </div>
+                <div className="basis-1/2 flex flex-col gap-2">
+                  <div>
+                    <h1 className="font-semibold">Keterangan</h1>
+                    <p className="text-sm text-neutral-100">
+                      {selectedSatwaRehab.keterangan}
+                    </p>
+                  </div>
+                  <div>
+                    <h1 className="font-semibold">Asal Usul</h1>
+                    <p className="text-sm text-neutral-100">
+                      {selectedSatwaRehab.asalUsulSatwa}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

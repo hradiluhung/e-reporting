@@ -39,3 +39,18 @@ type SatwaRehabilitasi = {
   createdAt: string
   updatedAt: string
 }
+
+// PersebaranSatwa
+type PersebaranSatwa = {
+  _id: string
+  jenisSatwa: string
+  namaIlmiah: string
+  idSatwa: string
+  statusDilindungi: string
+  statusEndemik: string
+  koordinatPelepasliaran: string
+  image: string
+  publicId: string
+  createdAt: string
+  updatedAt: string
+}

@@ -33,6 +33,7 @@ export default function InputField({
         type={type}
         value={value}
         onChange={onChange}
+        accept={type === "file" ? "image/*" : ""}
       />
     </div>
   )

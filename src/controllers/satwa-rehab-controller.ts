@@ -115,7 +115,7 @@ export const updateSatwaRehabById = async ({
   publicId?: string
 }) => {
   try {
-    const response = await axios.put(`/api/lembaga/${id}`, {
+    const response = await axios.put(`/api/satwa-rehab/${id}`, {
       jenisSatwa,
       namaIlmiah,
       idSatwa,
