@@ -21,15 +21,12 @@ export default function Page() {
     []
   )
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
-  const [selectedMarker, setSelectedMarker] = useState<{
-    latitude: number | null
-    longitude: number | null
-  }>({
-    latitude: null,
-    longitude: null,
-  })
   const [selectedPersebaranSatwa, setSelectedPersebaranSatwa] =
     useState<PersebaranSatwa | null>(null)
+  const [selectedMarker, setSelectedMarker] = useState({
+    latitude: 0,
+    longitude: 0,
+  })
   const mapRef: any = useRef(null)
 
   const fetchAllPersebaranSatwa = async () => {
@@ -56,6 +53,18 @@ export default function Page() {
       })
     }
   }
+
+  useEffect(() => {
+    if (selectedPersebaranSatwa)
+      setSelectedMarker({
+        latitude: parseFloat(
+          selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[0]
+        ),
+        longitude: parseFloat(
+          selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[1]
+        ),
+      })
+  }, [selectedPersebaranSatwa])
 
   useEffect(() => {
     fetchAllPersebaranSatwa()
@@ -136,17 +145,10 @@ export default function Page() {
               {selectedPersebaranSatwa ? (
                 <Popup
                   offset={25}
-                  latitude={parseFloat(
-                    selectedPersebaranSatwa.lokasiPelepasliaran.split(",")[0]
-                  )}
-                  longitude={parseFloat(
-                    selectedPersebaranSatwa.lokasiPelepasliaran.split(",")[1]
-                  )}
+                  latitude={parseFloat(selectedMarker.latitude.toString())}
+                  longitude={parseFloat(selectedMarker.longitude.toString())}
                   onClose={() => {
-                    setSelectedMarker({
-                      latitude: null,
-                      longitude: null,
-                    })
+                    setSelectedPersebaranSatwa(null)
                   }}
                   closeButton={false}
                 >
