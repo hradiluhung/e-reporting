@@ -23,6 +23,7 @@ import {
   Trash2,
   X,
   Map as MapIcon,
+  Calendar,
 } from "react-feather"
 import {
   GeolocateControl,
@@ -580,7 +581,7 @@ export default function Home() {
               <div className="flex w-full justify-between gap-4">
                 <div className="w-full flex flex-col gap-2">
                   <div className="w-full">
-                    <h1 className="font-semibold">Lokasi Pelepaslarian</h1>
+                    <h1 className="font-semibold">Lokasi Pelepasliaran</h1>
                     <div className="mt-2 flex gap-1">
                       <MapPin className="w-4" />
                       <p>{selectedPersebaranSatwa.lokasiPelepasliaran}</p>
@@ -679,6 +680,17 @@ export default function Home() {
                           </Popup>
                         ) : null}
                       </Map>
+                    </div>
+                  </div>
+                  <div className="w-full mt-2">
+                    <h1 className="font-semibold">Tanggal Pelepasliaran</h1>
+                    <div className="mt-2 flex gap-1">
+                      <Calendar className="w-4" />
+                      <p>
+                        {new Date(
+                          selectedPersebaranSatwa.tanggalPelepasliaran
+                        ).toLocaleDateString("id-ID")}
+                      </p>
                     </div>
                   </div>
                 </div>
