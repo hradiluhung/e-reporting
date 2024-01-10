@@ -30,6 +30,7 @@ export default function Page({ params }: { params: { id: string } }) {
     statusEndemik: "",
     lokasiPelepasliaran: "",
     koordinatPelepasliaran: "",
+    tanggalPelepasliaran: "",
     image: "",
     publicId: "",
   })
@@ -69,7 +70,8 @@ export default function Page({ params }: { params: { id: string } }) {
         !persebaranSatwa.idSatwa ||
         !persebaranSatwa.statusDilindungi ||
         !persebaranSatwa.statusEndemik ||
-        !persebaranSatwa.koordinatPelepasliaran
+        !persebaranSatwa.koordinatPelepasliaran ||
+        !persebaranSatwa.tanggalPelepasliaran
       ) {
         throw new Error("Mohon isi semua field")
       }
@@ -85,6 +87,7 @@ export default function Page({ params }: { params: { id: string } }) {
           statusEndemik: persebaranSatwa.statusEndemik,
           lokasiPelepasliaran: persebaranSatwa.lokasiPelepasliaran,
           koordinatPelepasliaran: persebaranSatwa.koordinatPelepasliaran,
+          tanggalPelepasliaran: persebaranSatwa.tanggalPelepasliaran,
           image: "",
           publicId: "",
         })
@@ -119,6 +122,7 @@ export default function Page({ params }: { params: { id: string } }) {
         statusEndemik: persebaranSatwa.statusEndemik,
         lokasiPelepasliaran: persebaranSatwa.lokasiPelepasliaran,
         koordinatPelepasliaran: persebaranSatwa.koordinatPelepasliaran,
+        tanggalPelepasliaran: persebaranSatwa.tanggalPelepasliaran,
         image: resUploadPhoto?.data?.url || persebaranSatwa.image || "",
         publicId:
           resUploadPhoto?.data?.publicId || persebaranSatwa.publicId || "",
@@ -291,6 +295,19 @@ export default function Page({ params }: { params: { id: string } }) {
                 }}
                 placeholder="Contoh: -6.597906143849867, 106.80562781695498"
                 value={persebaranSatwa.koordinatPelepasliaran}
+              />
+              <InputField
+                label="Tanggal Pelepasliaran"
+                size={WidgetSizes.MEDIUM}
+                onChange={(e) => {
+                  setPersebaranSatwa({
+                    ...persebaranSatwa,
+                    tanggalPelepasliaran: e.target.value,
+                  })
+                }}
+                type="date"
+                placeholder="Tanggal Pelepasliaran"
+                value={persebaranSatwa.tanggalPelepasliaran}
               />
               <div className="w-full flex justify-end gap-2">
                 <OutlinedButton

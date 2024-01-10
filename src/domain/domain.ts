@@ -50,6 +50,7 @@ type PersebaranSatwa = {
   statusEndemik: string
   lokasiPelepasliaran: string
   koordinatPelepasliaran: string
+  tanggalPelepasliaran: Date
   image: string
   publicId: string
   createdAt: string

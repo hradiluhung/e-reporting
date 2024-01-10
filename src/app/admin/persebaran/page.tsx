@@ -236,6 +236,9 @@ export default function Home() {
                         Lokasi Pelepasliaran
                       </th>
                       <th scope="col" className="px-6 py-3">
+                        Tanggal Pelepasliaran
+                      </th>
+                      <th scope="col" className="px-6 py-3">
                         Gambar
                       </th>
                       <th scope="col" className="px-6 py-3">
@@ -264,6 +267,11 @@ export default function Home() {
                           </td>
                           <td className="px-6 py-4">
                             {satwa.lokasiPelepasliaran}
+                          </td>
+                          <td className="px-6 py-4">
+                            {new Date(
+                              satwa.tanggalPelepasliaran
+                            ).toLocaleDateString("id-ID")}
                           </td>
                           <td className="px-6 py-4">
                             {satwa.image ? (
@@ -365,6 +373,9 @@ export default function Home() {
                         Lokasi Pelepasliaran
                       </th>
                       <th scope="col" className="px-6 py-3">
+                        Tanggal Pelepasliaran
+                      </th>
+                      <th scope="col" className="px-6 py-3">
                         Gambar
                       </th>
                       <th scope="col" className="px-6 py-3">
@@ -393,6 +404,11 @@ export default function Home() {
                           </td>
                           <td className="px-6 py-4">
                             {satwa.lokasiPelepasliaran}
+                          </td>
+                          <td className="px-6 py-4">
+                            {new Date(
+                              satwa.tanggalPelepasliaran
+                            ).toLocaleDateString("id-ID")}
                           </td>
                           <td className="px-6 py-4">
                             {satwa.image ? (
@@ -565,8 +581,8 @@ export default function Home() {
                 <div className="w-full flex flex-col gap-2">
                   <div className="w-full">
                     <h1 className="font-semibold">Lokasi Pelepaslarian</h1>
-                    <div className="mt-2">
-                      <MapPin />
+                    <div className="mt-2 flex gap-1">
+                      <MapPin className="w-4" />
                       <p>{selectedPersebaranSatwa.lokasiPelepasliaran}</p>
                     </div>
                     <div className="w-full mt-1">

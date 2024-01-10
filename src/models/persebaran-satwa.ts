@@ -30,6 +30,10 @@ const persebaranSatwaSchema = new Schema(
       type: String,
       required: [true, "Koordinat pelepasliaran tidak boleh kosong"],
     },
+    tanggalPelepasliaran: {
+      type: Date,
+      required: [true, "Tanggal pelepasliaran tidak boleh kosong"],
+    },
     image: {
       type: String,
       default: "",

@@ -9,6 +9,7 @@ export const createPersebaranSatwa = async ({
   statusEndemik,
   lokasiPelepasliaran,
   koordinatPelepasliaran,
+  tanggalPelepasliaran,
   image,
   publicId,
 }: {
@@ -19,6 +20,7 @@ export const createPersebaranSatwa = async ({
   statusEndemik: string
   lokasiPelepasliaran: string
   koordinatPelepasliaran: string
+  tanggalPelepasliaran: string
   image?: string
   publicId?: string
 }) => {
@@ -31,6 +33,7 @@ export const createPersebaranSatwa = async ({
       statusEndemik,
       lokasiPelepasliaran,
       koordinatPelepasliaran,
+      tanggalPelepasliaran,
       image,
       publicId,
     })
@@ -80,6 +83,7 @@ export const updatePersebaranSatwaById = async ({
   statusEndemik,
   lokasiPelepasliaran,
   koordinatPelepasliaran,
+  tanggalPelepasliaran,
   image,
   publicId,
 }: {
@@ -91,6 +95,7 @@ export const updatePersebaranSatwaById = async ({
   statusEndemik: string
   lokasiPelepasliaran: string
   koordinatPelepasliaran: string
+  tanggalPelepasliaran: string
   image?: string
   publicId?: string
 }) => {
@@ -103,6 +108,7 @@ export const updatePersebaranSatwaById = async ({
       statusEndemik,
       lokasiPelepasliaran,
       koordinatPelepasliaran,
+      tanggalPelepasliaran,
       image,
       publicId,
     })

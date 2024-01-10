@@ -35,6 +35,7 @@ export async function POST(request: Request) {
       statusEndemik,
       lokasiPelepasliaran,
       koordinatPelepasliaran,
+      tanggalPelepasliaran,
       image,
       publicId,
     } = reqBody
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
       statusEndemik,
       lokasiPelepasliaran,
       koordinatPelepasliaran,
+      tanggalPelepasliaran,
       image,
       publicId,
     })

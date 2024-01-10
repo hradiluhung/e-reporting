@@ -25,6 +25,7 @@ export default function Page() {
     statusEndemik: "",
     lokasiPelepasliaran: "",
     koordinatPelepasliaran: "",
+    tanggalPelepasliaran: "",
     image: "",
     publicId: "",
   })
@@ -48,7 +49,8 @@ export default function Page() {
         !inputPersebaranSatwa.statusDilindungi ||
         !inputPersebaranSatwa.statusEndemik ||
         !inputPersebaranSatwa.lokasiPelepasliaran ||
-        !inputPersebaranSatwa.koordinatPelepasliaran
+        !inputPersebaranSatwa.koordinatPelepasliaran ||
+        !inputPersebaranSatwa.tanggalPelepasliaran
       ) {
         throw new Error("Mohon isi semua field")
       }
@@ -221,6 +223,19 @@ export default function Page() {
               }}
               placeholder="Contoh: -6.597906143849867, 106.80562781695498"
               value={inputPersebaranSatwa.koordinatPelepasliaran}
+            />
+            <InputField
+              label="Tanggal Pelepasliaran"
+              size={WidgetSizes.MEDIUM}
+              onChange={(e) => {
+                setInputPersebaranSatwa({
+                  ...inputPersebaranSatwa,
+                  tanggalPelepasliaran: e.target.value,
+                })
+              }}
+              type="date"
+              placeholder="Tanggal Pelepasliaran"
+              value={inputPersebaranSatwa.tanggalPelepasliaran}
             />
 
             <div className="w-full flex justify-end gap-2">

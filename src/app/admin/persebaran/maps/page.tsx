@@ -11,6 +11,9 @@ import {
   NavigationControl,
   Popup,
 } from "react-map-gl"
+import Link from "next/link"
+import { ArrowLeftCircle } from "react-feather"
+import Image from "next/image"
 
 export default function Page() {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -25,6 +28,8 @@ export default function Page() {
     latitude: null,
     longitude: null,
   })
+  const [selectedPersebaranSatwa, setSelectedPersebaranSatwa] =
+    useState<PersebaranSatwa | null>(null)
   const mapRef: any = useRef(null)
 
   const fetchAllPersebaranSatwa = async () => {
@@ -35,17 +40,20 @@ export default function Page() {
 
   const zoomToSelectedLoc = (
     e: React.MouseEvent<HTMLDivElement>,
-    lat: number,
-    lon: number
+    satwa: PersebaranSatwa
   ) => {
     e.stopPropagation()
-    setSelectedMarker({
-      latitude: lat,
-      longitude: lon,
-    })
+
+    setSelectedPersebaranSatwa(satwa)
 
     if (mapRef.current) {
-      mapRef.current.flyTo({ center: [lon, lat], zoom: 10 })
+      mapRef.current.flyTo({
+        center: [
+          parseFloat(satwa.koordinatPelepasliaran.split(",")[1]),
+          parseFloat(satwa.koordinatPelepasliaran.split(",")[0]),
+        ],
+        zoom: 10,
+      })
     }
   }
 
@@ -57,7 +65,12 @@ export default function Page() {
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
-          <div className="text-start">
+          <div className="flex gap-3 items-center">
+            <div>
+              <Link href="/admin/persebaran" passHref>
+                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+              </Link>
+            </div>
             <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
               Peta Persebaran Satwa Rehabilitasi
             </h1>
@@ -75,9 +88,9 @@ export default function Page() {
               mapboxAccessToken={mapboxToken}
               mapStyle="mapbox://styles/mapbox/streets-v12"
               initialViewState={{
-                latitude: -6.2075356060169185,
-                longitude: 106.8288221574222,
-                zoom: 10,
+                latitude: 0.7893,
+                longitude: 113.9213,
+                zoom: 4,
               }}
               style={{
                 width: "100%",
@@ -90,63 +103,63 @@ export default function Page() {
             >
               <GeolocateControl position="top-left" />
               <NavigationControl position="top-left" />
-              {/* <Marker
-              longitude={
-                parseFloat(
-                selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[1]
-              )}
-              latitude={parseFloat(
-                selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[0]
-              )}
-            >
-              <button
-                type="button"
-                className="cursor-pointer"
-                onClick={(e: any) => {
-                  zoomToSelectedLoc(
-                    e,
-                    parseFloat(
-                      selectedPersebaranSatwa.koordinatPelepasliaran.split(
-                        ","
-                      )[0]
-                    ),
-                    parseFloat(
-                      selectedPersebaranSatwa.koordinatPelepasliaran.split(
-                        ","
-                      )[1]
-                    )
-                  )
-                }}
-              >
-                <MapPin size={30} />
-              </button>
-            </Marker> */}
-              {/* {selectedMarker.latitude !== null &&
-            selectedMarker.longitude !== null ? (
-              <Popup
-                offset={25}
-                latitude={parseFloat(
-                  selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[0]
-                )}
-                longitude={parseFloat(
-                  selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[1]
-                )}
-                onClose={() => {
-                  setSelectedMarker({
-                    latitude: null,
-                    longitude: null,
-                  })
-                }}
-                closeButton={false}
-              >
-                <p className="text-neutral-500 font-semibold">
-                  ID Satwa: {selectedPersebaranSatwa.idSatwa}
-                </p>
-                <h3 className="text-lg">
-                  Nama Ilmiah: {selectedPersebaranSatwa.namaIlmiah}
-                </h3>
-              </Popup>
-            ) : null} */}
+
+              {persebaranSatwas.map((persebaranSatwa, index) => (
+                <Marker
+                  key={index}
+                  longitude={parseFloat(
+                    persebaranSatwa.koordinatPelepasliaran.split(",")[1]
+                  )}
+                  latitude={parseFloat(
+                    persebaranSatwa.koordinatPelepasliaran.split(",")[0]
+                  )}
+                >
+                  <button
+                    type="button"
+                    className="cursor-pointer"
+                    onClick={(e: any) => {
+                      zoomToSelectedLoc(e, persebaranSatwa)
+                    }}
+                  >
+                    <Image
+                      width={0}
+                      height={0}
+                      sizes="100vh"
+                      src="/assets/marker.png"
+                      alt="Gambar Satwa"
+                      className="w-8 h-8"
+                    />
+                  </button>
+                </Marker>
+              ))}
+
+              {selectedPersebaranSatwa ? (
+                <Popup
+                  offset={25}
+                  latitude={parseFloat(
+                    selectedPersebaranSatwa.lokasiPelepasliaran.split(",")[0]
+                  )}
+                  longitude={parseFloat(
+                    selectedPersebaranSatwa.lokasiPelepasliaran.split(",")[1]
+                  )}
+                  onClose={() => {
+                    setSelectedMarker({
+                      latitude: null,
+                      longitude: null,
+                    })
+                  }}
+                  closeButton={false}
+                >
+                  <p className="text-neutral-500 font-semibold">
+                    ID Satwa:
+                    {selectedPersebaranSatwa.idSatwa}
+                  </p>
+                  <h3 className="text-lg">
+                    Nama Ilmiah:
+                    {selectedPersebaranSatwa.namaIlmiah}
+                  </h3>
+                </Popup>
+              ) : null}
             </Map>
           )}
         </div>
