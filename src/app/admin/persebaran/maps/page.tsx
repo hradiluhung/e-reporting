@@ -95,7 +95,7 @@ export default function Page() {
             <Map
               ref={mapRef}
               mapboxAccessToken={mapboxToken}
-              mapStyle="mapbox://styles/mapbox/streets-v12"
+              mapStyle="mapbox://styles/mapbox/satellite-v9"
               initialViewState={{
                 latitude: 0.7893,
                 longitude: 113.9213,
