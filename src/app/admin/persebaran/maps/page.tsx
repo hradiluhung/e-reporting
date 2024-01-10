@@ -17,12 +17,7 @@ import Image from "next/image"
 
 export default function Page() {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-  const [persebaranSatwas, setPersebaranSatwas] = useState<PersebaranSatwa[]>(
-    []
-  )
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
-  const [selectedPersebaranSatwa, setSelectedPersebaranSatwa] =
-    useState<PersebaranSatwa | null>(null)
   const [groupedPersebaranSatwas, setGroupedPersebaranSatwas] = useState<
     [any][any]
   >([])
@@ -34,8 +29,6 @@ export default function Page() {
 
   const fetchAllPersebaranSatwa = async () => {
     const res = await getAllPersebaranSatwa()
-    setPersebaranSatwas(res.data)
-    setIsLoadingInit(false)
 
     // group persebaran satwa based on similar longitude and latitude with typescript
     const grouped = res.data.reduce((r: any, a: any) => {
@@ -44,6 +37,7 @@ export default function Page() {
     }, {})
     console.log(grouped)
     setGroupedPersebaranSatwas(grouped)
+    setIsLoadingInit(false)
   }
 
   const zoomToSelectedLoc = (
@@ -101,7 +95,7 @@ export default function Page() {
             <Map
               ref={mapRef}
               mapboxAccessToken={mapboxToken}
-              mapStyle="mapbox://styles/mapbox/satellite-v9"
+              mapStyle="mapbox://styles/mapbox/streets-v12"
               initialViewState={{
                 latitude: 0.7893,
                 longitude: 113.9213,
