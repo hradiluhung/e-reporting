@@ -23,48 +23,54 @@ export default function Page() {
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
   const [selectedPersebaranSatwa, setSelectedPersebaranSatwa] =
     useState<PersebaranSatwa | null>(null)
-  const [selectedMarker, setSelectedMarker] = useState({
-    latitude: 0,
-    longitude: 0,
-  })
+  const [groupedPersebaranSatwas, setGroupedPersebaranSatwas] = useState<
+    [any][any]
+  >([])
+  const [selectedMarker, setSelectedMarker] = useState<{
+    latitude: number
+    longitude: number
+  } | null>(null)
   const mapRef: any = useRef(null)
 
   const fetchAllPersebaranSatwa = async () => {
     const res = await getAllPersebaranSatwa()
     setPersebaranSatwas(res.data)
     setIsLoadingInit(false)
+
+    // group persebaran satwa based on similar longitude and latitude with typescript
+    const grouped = res.data.reduce((r: any, a: any) => {
+      r[a.koordinatPelepasliaran] = [...(r[a.koordinatPelepasliaran] || []), a]
+      return r
+    }, {})
+    console.log(grouped)
+    setGroupedPersebaranSatwas(grouped)
   }
 
   const zoomToSelectedLoc = (
     e: React.MouseEvent<HTMLDivElement>,
-    satwa: PersebaranSatwa
+    koordinat: string
   ) => {
     e.stopPropagation()
 
-    setSelectedPersebaranSatwa(satwa)
+    setSelectedMarker({
+      latitude: parseFloat(koordinat.split(",")[0]),
+      longitude: parseFloat(koordinat.split(",")[1]),
+    })
+
+    // get array of grouped persebaran satwa with key == koordinat
+    const persebaranSatwa = groupedPersebaranSatwas[koordinat]
+    console.log(persebaranSatwa)
 
     if (mapRef.current) {
       mapRef.current.flyTo({
         center: [
-          parseFloat(satwa.koordinatPelepasliaran.split(",")[1]),
-          parseFloat(satwa.koordinatPelepasliaran.split(",")[0]),
+          parseFloat(koordinat.split(",")[1]),
+          parseFloat(koordinat.split(",")[0]),
         ],
         zoom: 10,
       })
     }
   }
-
-  useEffect(() => {
-    if (selectedPersebaranSatwa)
-      setSelectedMarker({
-        latitude: parseFloat(
-          selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[0]
-        ),
-        longitude: parseFloat(
-          selectedPersebaranSatwa.koordinatPelepasliaran.split(",")[1]
-        ),
-      })
-  }, [selectedPersebaranSatwa])
 
   useEffect(() => {
     fetchAllPersebaranSatwa()
@@ -113,53 +119,69 @@ export default function Page() {
               <GeolocateControl position="top-left" />
               <NavigationControl position="top-left" />
 
-              {persebaranSatwas.map((persebaranSatwa, index) => (
-                <Marker
-                  key={index}
-                  longitude={parseFloat(
-                    persebaranSatwa.koordinatPelepasliaran.split(",")[1]
-                  )}
-                  latitude={parseFloat(
-                    persebaranSatwa.koordinatPelepasliaran.split(",")[0]
-                  )}
-                >
-                  <button
-                    type="button"
-                    className="cursor-pointer"
-                    onClick={(e: any) => {
-                      zoomToSelectedLoc(e, persebaranSatwa)
-                    }}
+              {Object.keys(groupedPersebaranSatwas).map(
+                (persebaranSatwa: any, index: any) => (
+                  <Marker
+                    key={index}
+                    longitude={parseFloat(persebaranSatwa.split(",")[1])}
+                    latitude={parseFloat(persebaranSatwa.split(",")[0])}
                   >
-                    <Image
-                      width={0}
-                      height={0}
-                      sizes="100vh"
-                      src="/assets/marker.png"
-                      alt="Gambar Satwa"
-                      className="w-8 h-8"
-                    />
-                  </button>
-                </Marker>
-              ))}
+                    <button
+                      type="button"
+                      className="cursor-pointer"
+                      onClick={(e: any) => {
+                        zoomToSelectedLoc(e, persebaranSatwa)
+                      }}
+                    >
+                      <Image
+                        width={0}
+                        height={0}
+                        sizes="100vh"
+                        src="/assets/marker.png"
+                        alt="Gambar Satwa"
+                        className="w-8 h-8"
+                      />
+                    </button>
+                  </Marker>
+                )
+              )}
 
-              {selectedPersebaranSatwa ? (
+              {selectedMarker ? (
                 <Popup
                   offset={25}
                   latitude={parseFloat(selectedMarker.latitude.toString())}
                   longitude={parseFloat(selectedMarker.longitude.toString())}
                   onClose={() => {
-                    setSelectedPersebaranSatwa(null)
+                    setSelectedMarker(null)
                   }}
                   closeButton={false}
                 >
-                  <p className="text-neutral-500 font-semibold">
-                    ID Satwa:
-                    {selectedPersebaranSatwa.idSatwa}
-                  </p>
-                  <h3 className="text-lg">
-                    Nama Ilmiah:
-                    {selectedPersebaranSatwa.namaIlmiah}
-                  </h3>
+                  <div
+                    style={{ maxHeight: "200px" }}
+                    className="overflow-y-scroll overflow-x-hidden p-2"
+                  >
+                    {groupedPersebaranSatwas[
+                      `${selectedMarker.latitude}, ${selectedMarker.longitude}`
+                    ].map((persebaranSatwa: any, index: any) => (
+                      <div
+                        key={index}
+                        className="flex flex-col border-b py-2 last:border-none"
+                      >
+                        <div className="grid grid-cols-2 gap-2">
+                          <p className="font-bold">Id Satwa</p>
+                          <p className="text-gray-400">
+                            {persebaranSatwa.idSatwa}
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <p className="font-bold">Nama Ilmiah</p>
+                          <p className="text-gray-400">
+                            {persebaranSatwa.namaIlmiah}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </Popup>
               ) : null}
             </Map>
