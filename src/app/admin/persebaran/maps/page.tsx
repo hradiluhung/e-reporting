@@ -162,6 +162,9 @@ export default function Page() {
                         className="flex flex-col border-b py-2 last:border-none"
                       >
                         <div className="grid grid-cols-2 gap-2">
+                          <p>{index + 1}</p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
                           <p className="font-bold">Id Satwa</p>
                           <p className="text-gray-400">
                             {persebaranSatwa.idSatwa}
