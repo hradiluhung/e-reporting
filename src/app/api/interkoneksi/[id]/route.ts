@@ -5,7 +5,10 @@ import { NextResponse } from "next/server"
 export const dynamic = "force-dynamic"
 
 // DELETE INTERKONEKSI BY ID
-export async function DELETE({ params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const id = params.id
     await startDb()
