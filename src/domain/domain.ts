@@ -56,3 +56,27 @@ type PersebaranSatwa = {
   createdAt: string
   updatedAt: string
 }
+
+// Interkoneksi
+type Interkoneksi = {
+  _id: string
+  namaPusatRehabilitasi: string
+  personInCharge: string
+  kontakHp: string
+  kontakEmail: string
+  jenisSatwa: string
+  namaIlmiah: string
+  idSatwa: string
+  statusDilindungi: string
+  statusEndemik: string
+  asalUsul: string
+  lokasiRehabilitasi: string
+  tanggalSerahTerima: Date
+  kondisiSatwa: string
+  status: string
+  keterangan: string
+  image: string
+  publicId: string
+  createdAt: string
+  updatedAt: string
+}

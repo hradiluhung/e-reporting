@@ -1,39 +1,43 @@
 import startDb from "@/db/dbConfig"
-import SatwaRehabilitasi from "@/models/satwa-rehabilitasi"
+import Interkoneksi from "@/models/interkoneksi"
 import { NextResponse } from "next/server"
 
 export const dynamic = "force-dynamic"
 
-// GET ALL SATWA REHABILITASI
+// GET ALL INTERKONEKSI
 export async function GET() {
   try {
     await startDb()
 
-    const satwaRehabs = await SatwaRehabilitasi.find()
+    const interkoneksis = await Interkoneksi.find()
 
     return NextResponse.json({
       status: 200,
-      message: "Berhasil mendapatkan data satwa rehabilitasi",
-      data: satwaRehabs,
+      message: "Berhasil mendapatkan data interkoneksi",
+      data: interkoneksis,
     })
   } catch (error: any) {
     return NextResponse.json({ status: 500, message: error.message })
   }
 }
 
-// CREATE SATWA REHABILITASI
+// CREATE INTERKONEKSI
 export async function POST(request: Request) {
-  await startDb()
-
   try {
+    await startDb()
+
     const reqBody = await request.json()
     const {
+      namaPusatRehabilitasi,
+      personInCharge,
+      kontakHp,
+      kontakEmail,
       jenisSatwa,
       namaIlmiah,
       idSatwa,
       statusDilindungi,
       statusEndemik,
-      asalUsulSatwa,
+      asalUsul,
       lokasiRehabilitasi,
       tanggalSerahTerima,
       kondisiSatwa,
@@ -43,13 +47,17 @@ export async function POST(request: Request) {
       publicId,
     } = reqBody
 
-    const satwaRehab = await SatwaRehabilitasi.create({
+    const interkoneksi = await Interkoneksi.create({
+      namaPusatRehabilitasi,
+      personInCharge,
+      kontakHp,
+      kontakEmail,
       jenisSatwa,
       namaIlmiah,
       idSatwa,
       statusDilindungi,
       statusEndemik,
-      asalUsulSatwa,
+      asalUsul,
       lokasiRehabilitasi,
       tanggalSerahTerima,
       kondisiSatwa,
@@ -61,8 +69,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       status: 201,
-      message: `Berhasil membuat satwa rehabilitasi`,
-      data: satwaRehab,
+      message: `Berhasil membuat interkoneksi`,
+      data: interkoneksi,
     })
   } catch (error: any) {
     return NextResponse.json({ status: 500, message: error.message })

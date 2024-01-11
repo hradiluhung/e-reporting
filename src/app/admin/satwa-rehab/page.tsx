@@ -98,11 +98,11 @@ export default function Page() {
       const res = await deleteSatwaRehabById(id)
 
       if (res.status === 200) {
-        showToast("Berhasil menghapus satwa rehabilitasi", WidgetTypes.SUCCESS)
+        showToast(res.message, WidgetTypes.SUCCESS)
         fetchAllSatwaRehab()
         setSelectedDeletedSatwaRehab(null)
       } else {
-        showToast("Gagal menghapus lembaga", WidgetTypes.ERROR)
+        showToast("Gagal menghapus interkoneksi satwa rehab", WidgetTypes.ERROR)
       }
     } catch (error: any) {
       showToast(error.message, WidgetTypes.ERROR)
@@ -269,7 +269,7 @@ export default function Page() {
               </div>
 
               {filteredSatwaRehabs.length > itemsPerPage && (
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-end mt-4">
                   {new Array(totalPages).fill(null).map((_, index) => (
                     <button
                       key={index + 1}

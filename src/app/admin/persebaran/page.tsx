@@ -449,7 +449,7 @@ export default function Home() {
                 </table>
               </div>
               {persebaranSatwas.length > itemsPerPage && (
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-end mt-4">
                   {new Array(totalPages).fill(null).map((_, index) => (
                     <button
                       key={index + 1}
