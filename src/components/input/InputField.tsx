@@ -8,6 +8,7 @@ type Props = {
   value: string
   type?: string
   size: WidgetSizes
+  acceptedFileTypes?: string
 }
 
 export default function InputField({
@@ -17,6 +18,7 @@ export default function InputField({
   value,
   type = "text",
   size,
+  acceptedFileTypes = "",
 }: Props) {
   return (
     <div className="w-full">
@@ -33,7 +35,7 @@ export default function InputField({
         type={type}
         value={value}
         onChange={onChange}
-        accept={type === "file" ? "image/*" : ""}
+        accept={acceptedFileTypes ? acceptedFileTypes : ""}
       />
     </div>
   )

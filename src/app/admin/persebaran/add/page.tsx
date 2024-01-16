@@ -105,6 +105,7 @@ export default function Page() {
             {!image ? (
               <InputField
                 label="Gambar"
+                acceptedFileTypes="image/*"
                 placeholder="Pilih Gambar"
                 type="file"
                 onChange={onChangeInputFile}

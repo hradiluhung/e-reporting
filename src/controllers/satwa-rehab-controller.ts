@@ -135,3 +135,13 @@ export const updateSatwaRehabById = async ({
     throw new Error(error)
   }
 }
+
+// CREATE MULTIPLE SATWA REHABILITASI
+export const createMultipleSatwaRehabilitasi = async (data: any) => {
+  try {
+    const response = await axios.post("/api/satwa-rehab/multiple", data)
+    return response.data
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}

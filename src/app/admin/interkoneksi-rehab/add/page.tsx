@@ -126,6 +126,7 @@ export default function Page() {
                 label="Gambar"
                 placeholder="Pilih Gambar"
                 type="file"
+                acceptedFileTypes="image/*"
                 onChange={onChangeInputFile}
                 size={WidgetSizes.MEDIUM}
                 value={inputInterkoneksi.image}

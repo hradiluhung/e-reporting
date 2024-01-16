@@ -184,6 +184,7 @@ export default function Page({ params }: { params: { id: string } }) {
               {image == null && satwaRehab.image == "" ? (
                 <InputField
                   label="Gambar"
+                  acceptedFileTypes="image/*"
                   placeholder="Pilih Gambar"
                   type="file"
                   onChange={onChangeInputFile}

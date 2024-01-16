@@ -164,6 +164,7 @@ export default function Page({ params }: { params: { id: string } }) {
               {image == null && lembaga.image == "" ? (
                 <InputField
                   label="Gambar"
+                  acceptedFileTypes="image/*"
                   placeholder="Pilih Gambar"
                   type="file"
                   onChange={onChangeInputFile}

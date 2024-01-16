@@ -107,170 +107,173 @@ export default function Page() {
             </Link>
           </div>
         </div>
-        <div className="w-full flex justify-start">
-          <div className="w-full md:w-64">
-            <SearchBar
-              searchKeyword={searchKeyword}
-              onSearchKeywordChange={onSearchKeywordChange}
-            />
-          </div>
-        </div>
-        <div className="w-full">
-          {isLoadingInit ? (
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <Skeleton size={WidgetSizes.MEDIUM} />
-              <Skeleton size={WidgetSizes.MEDIUM} />
-              <Skeleton size={WidgetSizes.MEDIUM} />
-              <Skeleton size={WidgetSizes.MEDIUM} />
-            </div>
-          ) : lembagas.length === 0 ? (
-            <div className="w-full flex justify-center">
-              <p className="text-center">Belum ada data lembaga</p>
-            </div>
-          ) : searchKeyword !== "" && filteredLembagas.length !== 0 ? (
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredLembagas.map((lembaga, index) => (
-                <AdminProfileCard
-                  key={index}
-                  lembaga={lembaga}
-                  onClickDetail={() => handleSelectedLembaga(lembaga)}
-                  onClickDelete={() => handleDeleteLembaga(lembaga)}
-                />
-              ))}
-            </div>
-          ) : searchKeyword !== "" && filteredLembagas.length === 0 ? (
-            <div className="w-full flex justify-center">
-              <p className="text-center">Lembaga tidak ditemukan</p>
-            </div>
-          ) : (
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {lembagas.map((lembaga, index) => (
-                <AdminProfileCard
-                  key={index}
-                  lembaga={lembaga}
-                  onClickDetail={() => handleSelectedLembaga(lembaga)}
-                  onClickDelete={() => handleDeleteLembaga(lembaga)}
-                />
-              ))}
-            </div>
-          )}
 
-          {/* SHOW MODAL DETAIL LEMBAGA */}
-          {selectedLembaga && (
-            <div
-              className={`fixed top-0 left-0 w-full h-full px-4 py-4 bg-black bg-opacity-50 flex justify-center items-center ${
-                selectedLembaga ? "fade-in-down" : "fade-out-up"
-              }`}
-            >
-              <div className="w-full max-h-full overflow-y-auto my-4 md:w-3/4 lg:w-2/3 bg-white rounded-lg p-4 md:p-6 lg:p-8">
-                <div className="flex flex-col gap-4 items-start justify-start">
-                  <div className="w-full">
-                    <div className="flex justify-between w-full gap-4 items-center">
-                      <div className="flex gap-2 items-center">
-                        <h1 className="font-semibold text-lg">
-                          {selectedLembaga?.nama}
-                        </h1>
-                        <Link
-                          href={`/admin/profil/edit/${selectedLembaga?._id}`}
-                        >
-                          <OutlinedButton
-                            size={WidgetSizes.SMALL}
-                            ButtonIcon={Edit2}
-                          />
-                        </Link>
-                      </div>
-                      <X
-                        onClick={() => setSelectedLembaga(null)}
-                        className="w-6 cursor-pointer"
-                      />
-                    </div>
-                    <div className="rounded-xl mt-4 overflow-hidden flex justify-center w-full bg-neutral-900">
-                      <Image
-                        width={0}
-                        height={0}
-                        sizes="100vw"
-                        src={selectedLembaga.image}
-                        alt="Logo"
-                        className="w-full lg:w-2/3 rounded-md"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1 justify-start items-center mt-4 md:flex-row md:gap-4">
-                      <div className="flex gap-2 text-sm text-neutral-50 items-center justify-start lg:w-1/2">
-                        <div>
-                          <MapPin className="w-4" />
-                        </div>
-                        <p>{selectedLembaga?.alamat}</p>
-                      </div>
-                      <div className="flex gap-2 text-sm text-neutral-50 items-center justify-end lg:w-1/2">
-                        <div>
-                          <Phone className="w-4" />
-                        </div>
-                        <p>
-                          {selectedLembaga?.kontak} (
-                          {selectedLembaga?.namaKontak})
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-100">
-                      {selectedLembaga?.tentang}
-                    </p>
-                  </div>
-                </div>
-              </div>
+        <div className="w-full flex flex-col gap-4">
+          <div className="w-full flex justify-start">
+            <div className="w-full md:w-64">
+              <SearchBar
+                searchKeyword={searchKeyword}
+                onSearchKeywordChange={onSearchKeywordChange}
+              />
             </div>
-          )}
-          {/* SHOW MODAL DELETE LEMBAGA */}
-          {selectedDeletedLembaga && (
-            <div
-              className={`fixed top-0 left-0 w-full h-full px-4 bg-black bg-opacity-50 flex justify-center items-center ${
-                selectedDeletedLembaga ? "fade-in-down" : "fade-out-up"
-              }`}
-            >
-              <div className="w-full md:w-1/2 lg:w-1/3 bg-white rounded-lg p-8">
-                <div className="flex flex-col gap-4 items-start justify-start">
-                  <div className="w-full">
-                    <div className="flex justify-between w-full">
-                      <h1 className="font-semibold text-lg">Hapus Lembaga</h1>
-                      <X
-                        onClick={() => setSelectedDeletedLembaga(null)}
-                        className="w-6 cursor-pointer"
-                      />
+          </div>
+          <div className="w-full">
+            {isLoadingInit ? (
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <Skeleton size={WidgetSizes.MEDIUM} />
+                <Skeleton size={WidgetSizes.MEDIUM} />
+                <Skeleton size={WidgetSizes.MEDIUM} />
+                <Skeleton size={WidgetSizes.MEDIUM} />
+              </div>
+            ) : lembagas.length === 0 ? (
+              <div className="w-full flex justify-center">
+                <p className="text-center">Belum ada data lembaga</p>
+              </div>
+            ) : searchKeyword !== "" && filteredLembagas.length !== 0 ? (
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredLembagas.map((lembaga, index) => (
+                  <AdminProfileCard
+                    key={index}
+                    lembaga={lembaga}
+                    onClickDetail={() => handleSelectedLembaga(lembaga)}
+                    onClickDelete={() => handleDeleteLembaga(lembaga)}
+                  />
+                ))}
+              </div>
+            ) : searchKeyword !== "" && filteredLembagas.length === 0 ? (
+              <div className="w-full flex justify-center">
+                <p className="text-center">Lembaga tidak ditemukan</p>
+              </div>
+            ) : (
+              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {lembagas.map((lembaga, index) => (
+                  <AdminProfileCard
+                    key={index}
+                    lembaga={lembaga}
+                    onClickDetail={() => handleSelectedLembaga(lembaga)}
+                    onClickDelete={() => handleDeleteLembaga(lembaga)}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* SHOW MODAL DETAIL LEMBAGA */}
+            {selectedLembaga && (
+              <div
+                className={`fixed top-0 left-0 w-full h-full px-4 py-4 bg-black bg-opacity-50 flex justify-center items-center ${
+                  selectedLembaga ? "fade-in-down" : "fade-out-up"
+                }`}
+              >
+                <div className="w-full max-h-full overflow-y-auto my-4 md:w-3/4 lg:w-2/3 bg-white rounded-lg p-4 md:p-6 lg:p-8">
+                  <div className="flex flex-col gap-4 items-start justify-start">
+                    <div className="w-full">
+                      <div className="flex justify-between w-full gap-4 items-center">
+                        <div className="flex gap-2 items-center">
+                          <h1 className="font-semibold text-lg">
+                            {selectedLembaga?.nama}
+                          </h1>
+                          <Link
+                            href={`/admin/profil/edit/${selectedLembaga?._id}`}
+                          >
+                            <OutlinedButton
+                              size={WidgetSizes.SMALL}
+                              ButtonIcon={Edit2}
+                            />
+                          </Link>
+                        </div>
+                        <X
+                          onClick={() => setSelectedLembaga(null)}
+                          className="w-6 cursor-pointer"
+                        />
+                      </div>
+                      <div className="rounded-xl mt-4 overflow-hidden flex justify-center w-full bg-neutral-900">
+                        <Image
+                          width={0}
+                          height={0}
+                          sizes="100vw"
+                          src={selectedLembaga.image}
+                          alt="Logo"
+                          className="w-full lg:w-2/3 rounded-md"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1 justify-start items-center mt-4 md:flex-row md:gap-4">
+                        <div className="flex gap-2 text-sm text-neutral-50 items-center justify-start lg:w-1/2">
+                          <div>
+                            <MapPin className="w-4" />
+                          </div>
+                          <p>{selectedLembaga?.alamat}</p>
+                        </div>
+                        <div className="flex gap-2 text-sm text-neutral-50 items-center justify-end lg:w-1/2">
+                          <div>
+                            <Phone className="w-4" />
+                          </div>
+                          <p>
+                            {selectedLembaga?.kontak} (
+                            {selectedLembaga?.namaKontak})
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex gap-6 items-center mt-2 justify-start ">
-                      <p>
-                        Yakin ingin menghapus{" "}
-                        <b>{selectedDeletedLembaga.nama}</b>?
+                    <div>
+                      <p className="text-sm text-neutral-100">
+                        {selectedLembaga?.tentang}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="w-full flex gap-2 mt-4">
-                  <FilledButton
-                    text="Hapus"
-                    size={WidgetSizes.SMALL}
-                    type={WidgetTypes.ERROR}
-                    ButtonIcon={Trash2}
-                    isLoading={isLoadingDelete}
-                    isDisabled={isLoadingDelete}
-                    onClick={() =>
-                      onDeleteLembaga(
-                        selectedDeletedLembaga._id,
-                        selectedDeletedLembaga.publicId
-                      )
-                    }
-                  />
-                  <OutlinedButton
-                    text="Batal"
-                    size={WidgetSizes.SMALL}
-                    ButtonIcon={X}
-                    onClick={() => setSelectedDeletedLembaga(null)}
-                  />
+              </div>
+            )}
+            {/* SHOW MODAL DELETE LEMBAGA */}
+            {selectedDeletedLembaga && (
+              <div
+                className={`fixed top-0 left-0 w-full h-full px-4 bg-black bg-opacity-50 flex justify-center items-center ${
+                  selectedDeletedLembaga ? "fade-in-down" : "fade-out-up"
+                }`}
+              >
+                <div className="w-full md:w-1/2 lg:w-1/3 bg-white rounded-lg p-8">
+                  <div className="flex flex-col gap-4 items-start justify-start">
+                    <div className="w-full">
+                      <div className="flex justify-between w-full">
+                        <h1 className="font-semibold text-lg">Hapus Lembaga</h1>
+                        <X
+                          onClick={() => setSelectedDeletedLembaga(null)}
+                          className="w-6 cursor-pointer"
+                        />
+                      </div>
+                      <div className="flex gap-6 items-center mt-2 justify-start ">
+                        <p>
+                          Yakin ingin menghapus{" "}
+                          <b>{selectedDeletedLembaga.nama}</b>?
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full flex gap-2 mt-4">
+                    <FilledButton
+                      text="Hapus"
+                      size={WidgetSizes.SMALL}
+                      type={WidgetTypes.ERROR}
+                      ButtonIcon={Trash2}
+                      isLoading={isLoadingDelete}
+                      isDisabled={isLoadingDelete}
+                      onClick={() =>
+                        onDeleteLembaga(
+                          selectedDeletedLembaga._id,
+                          selectedDeletedLembaga.publicId
+                        )
+                      }
+                    />
+                    <OutlinedButton
+                      text="Batal"
+                      size={WidgetSizes.SMALL}
+                      ButtonIcon={X}
+                      onClick={() => setSelectedDeletedLembaga(null)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

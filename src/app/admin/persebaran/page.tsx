@@ -32,6 +32,7 @@ import {
   NavigationControl,
   Popup,
 } from "react-map-gl"
+import Pagination from "@/components/pagination/Pagination"
 
 export default function Home() {
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -177,296 +178,266 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="w-full flex justify-between">
-          <div className="w-full md:w-64">
-            <SearchBar
-              searchKeyword={searchKeyword}
-              onSearchKeywordChange={onSearchKeywordChange}
-            />
+        <div className="w-full flex flex-col gap-4">
+          <div className="w-full flex justify-between">
+            <div className="w-full md:w-64">
+              <SearchBar
+                searchKeyword={searchKeyword}
+                onSearchKeywordChange={onSearchKeywordChange}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="w-full">
-          {isLoadingInit ? (
-            <div className="w-full">
-              <Skeleton size={WidgetSizes.MEDIUM} />
-            </div>
-          ) : persebaranSatwas.length === 0 ? (
-            <div className="w-full flex justify-center">
-              <p className="text-center">Belum ada data satwa rehabilitasi</p>
-            </div>
-          ) : searchKeyword !== "" && filteredPersebaranSatwas.length !== 0 ? (
-            <>
-              {filteredPersebaranSatwas.length > itemsPerPage && (
-                <div className="flex justify-end mb-4">
-                  {new Array(totalPages).fill(null).map((_, index) => (
-                    <button
-                      key={index + 1}
-                      className={`px-3 py-1 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        page === index + 1
-                          ? "bg-gradient-to-tr from-primary-50 to-primary-100 text-white"
-                          : "text-gray-500 hover:bg-gray-100"
-                      }`}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
+          <div className="w-full">
+            {isLoadingInit ? (
+              <div className="w-full">
+                <Skeleton size={WidgetSizes.MEDIUM} />
+              </div>
+            ) : persebaranSatwas.length === 0 ? (
+              <div className="w-full flex justify-center">
+                <p className="text-center">Belum ada data satwa rehabilitasi</p>
+              </div>
+            ) : searchKeyword !== "" &&
+              filteredPersebaranSatwas.length !== 0 ? (
+              <>
+                <div className="mb-4">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                    maxPageNumbersToShow={5}
+                  />
                 </div>
-              )}
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500 ">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        No
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        ID Satwa
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Nama Ilmiah
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Endemik/Non
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Dilindungi/Non
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Lokasi Pelepasliaran
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Tanggal Pelepasliaran
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Gambar
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Aksi
-                      </th>
-                    </tr>
-                  </thead>
-                  {filteredPersebaranSatwas
-                    .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-                    .map((satwa, index) => (
-                      <tbody key={index}>
-                        <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                          <td className="px-6 py-4">
-                            {index + (page - 1) * itemsPerPage + 1}
-                          </td>
-                          <td className="px-6 py-4">{satwa.idSatwa}</td>
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900"
-                          >
-                            {satwa.namaIlmiah}
-                          </th>
-                          <td className="px-6 py-4">{satwa.statusEndemik}</td>
-                          <td className="px-6 py-4">
-                            {satwa.statusDilindungi}
-                          </td>
-                          <td className="px-6 py-4">
-                            {satwa.lokasiPelepasliaran}
-                          </td>
-                          <td className="px-6 py-4">
-                            {new Date(
-                              satwa.tanggalPelepasliaran
-                            ).toLocaleDateString("id-ID")}
-                          </td>
-                          <td className="px-6 py-4">
-                            {satwa.image ? (
-                              <Image
-                                width={0}
-                                height={0}
-                                sizes="100vh"
-                                src={satwa.image}
-                                alt="Gambar Satwa"
-                                className="h-24 w-32 object-cover rounded-md"
-                              />
-                            ) : (
-                              <div>-</div>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex gap-2 mt-4">
-                              <OutlinedButton
-                                ButtonIcon={Trash2}
-                                size={WidgetSizes.SMALL}
-                                type={WidgetTypes.ERROR}
-                                onClick={() => onOpenDeleteModal(satwa)}
-                              />
-                              <FilledButton
-                                size={WidgetSizes.SMALL}
-                                ButtonIcon={ExternalLink}
-                                onClick={() => {
-                                  onOpenDetailModal(satwa)
-                                }}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    ))}
-                  {filteredPersebaranSatwas.length > itemsPerPage && (
-                    <div className="flex justify-end mb-4">
-                      {new Array(totalPages).fill(null).map((_, index) => (
-                        <button
-                          key={index + 1}
-                          className={`px-3 py-1 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                            page === index + 1
-                              ? "bg-gradient-to-tr from-primary-50 to-primary-100 text-white"
-                              : "text-gray-500 hover:bg-gray-100"
-                          }`}
-                          onClick={() => handlePageChange(index + 1)}
-                        >
-                          {index + 1}
-                        </button>
+                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                  <table className="w-full text-sm text-left text-gray-500 ">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
+                      <tr>
+                        <th scope="col" className="px-6 py-3">
+                          No
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          ID Satwa
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Nama Ilmiah
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Endemik/Non
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Dilindungi/Non
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Lokasi Pelepasliaran
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Tanggal Pelepasliaran
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Gambar
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Aksi
+                        </th>
+                      </tr>
+                    </thead>
+                    {filteredPersebaranSatwas
+                      .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                      .map((satwa, index) => (
+                        <tbody key={index}>
+                          <tr className="odd:bg-white even:bg-gray-50 border-b ">
+                            <td className="px-6 py-4">
+                              {index + (page - 1) * itemsPerPage + 1}
+                            </td>
+                            <td className="px-6 py-4">{satwa.idSatwa}</td>
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900"
+                            >
+                              {satwa.namaIlmiah}
+                            </th>
+                            <td className="px-6 py-4">{satwa.statusEndemik}</td>
+                            <td className="px-6 py-4">
+                              {satwa.statusDilindungi}
+                            </td>
+                            <td className="px-6 py-4">
+                              {satwa.lokasiPelepasliaran}
+                            </td>
+                            <td className="px-6 py-4">
+                              {new Date(
+                                satwa.tanggalPelepasliaran
+                              ).toLocaleDateString("id-ID")}
+                            </td>
+                            <td className="px-6 py-4">
+                              {satwa.image ? (
+                                <Image
+                                  width={0}
+                                  height={0}
+                                  sizes="100vh"
+                                  src={satwa.image}
+                                  alt="Gambar Satwa"
+                                  className="h-24 w-32 object-cover rounded-md"
+                                />
+                              ) : (
+                                <div>-</div>
+                              )}
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex gap-2 mt-4">
+                                <OutlinedButton
+                                  ButtonIcon={Trash2}
+                                  size={WidgetSizes.SMALL}
+                                  type={WidgetTypes.ERROR}
+                                  onClick={() => onOpenDeleteModal(satwa)}
+                                />
+                                <FilledButton
+                                  size={WidgetSizes.SMALL}
+                                  ButtonIcon={ExternalLink}
+                                  onClick={() => {
+                                    onOpenDetailModal(satwa)
+                                  }}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
                       ))}
-                    </div>
-                  )}
-                </table>
-              </div>
-            </>
-          ) : searchKeyword !== "" && filteredPersebaranSatwas.length === 0 ? (
-            <div className="w-full flex justify-center">
-              <p className="text-center">Satwa rehabilitasi tidak ditemukan</p>
-            </div>
-          ) : (
-            <>
-              {persebaranSatwas.length > itemsPerPage && (
-                <div className="flex justify-end mb-4">
-                  {new Array(totalPages).fill(null).map((_, index) => (
-                    <button
-                      key={index + 1}
-                      className={`px-3 py-1 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        page === index + 1
-                          ? "bg-gradient-to-tr from-primary-50 to-primary-100 text-white"
-                          : "text-gray-500 hover:bg-gray-100"
-                      }`}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
+                  </table>
+                  <div className="mt-4">
+                    <Pagination
+                      currentPage={page}
+                      setCurrentPage={handlePageChange}
+                      totalPages={totalPages}
+                      maxPageNumbersToShow={5}
+                    />
+                  </div>
                 </div>
-              )}
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500 ">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
-                    <tr>
-                      <th scope="col" className="px-6 py-3">
-                        No
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        ID Satwa
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Nama Ilmiah
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Endemik/Non
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Dilindungi/Non
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Lokasi Pelepasliaran
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Tanggal Pelepasliaran
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Gambar
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Aksi
-                      </th>
-                    </tr>
-                  </thead>
-                  {persebaranSatwas
-                    .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-                    .map((satwa, index) => (
-                      <tbody key={index}>
-                        <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                          <td className="px-6 py-4">
-                            {index + (page - 1) * itemsPerPage + 1}
-                          </td>
-                          <td className="px-6 py-4">{satwa.idSatwa}</td>
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900"
-                          >
-                            {satwa.namaIlmiah}
-                          </th>
-                          <td className="px-6 py-4">{satwa.statusEndemik}</td>
-                          <td className="px-6 py-4">
-                            {satwa.statusDilindungi}
-                          </td>
-                          <td className="px-6 py-4">
-                            {satwa.lokasiPelepasliaran}
-                          </td>
-                          <td className="px-6 py-4">
-                            {new Date(
-                              satwa.tanggalPelepasliaran
-                            ).toLocaleDateString("id-ID")}
-                          </td>
-                          <td className="px-6 py-4">
-                            {satwa.image ? (
-                              <Image
-                                width={0}
-                                height={0}
-                                sizes="100vh"
-                                src={satwa.image}
-                                alt="Gambar Satwa"
-                                className="h-24 w-32 object-cover rounded-md"
-                              />
-                            ) : (
-                              <div>-</div>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex gap-2 mt-4">
-                              <OutlinedButton
-                                ButtonIcon={Trash2}
-                                size={WidgetSizes.SMALL}
-                                type={WidgetTypes.ERROR}
-                                onClick={() => onOpenDeleteModal(satwa)}
-                              />
-                              <FilledButton
-                                size={WidgetSizes.SMALL}
-                                text="Lokasi"
-                                ButtonIcon={ExternalLink}
-                                onClick={() => {
-                                  onOpenDetailModal(satwa)
-                                }}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    ))}
-                </table>
+              </>
+            ) : searchKeyword !== "" &&
+              filteredPersebaranSatwas.length === 0 ? (
+              <div className="w-full flex justify-center">
+                <p className="text-center">
+                  Satwa rehabilitasi tidak ditemukan
+                </p>
               </div>
-              {persebaranSatwas.length > itemsPerPage && (
-                <div className="flex justify-end mt-4">
-                  {new Array(totalPages).fill(null).map((_, index) => (
-                    <button
-                      key={index + 1}
-                      className={`px-3 py-1 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        page === index + 1
-                          ? "bg-gradient-to-tr from-primary-50 to-primary-100 text-white"
-                          : "text-gray-500 hover:bg-gray-100"
-                      }`}
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
+            ) : (
+              <>
+                <div className="mb-4">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                    maxPageNumbersToShow={5}
+                  />
                 </div>
-              )}
-            </>
-          )}
+                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                  <table className="w-full text-sm text-left text-gray-500 ">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
+                      <tr>
+                        <th scope="col" className="px-6 py-3">
+                          No
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          ID Satwa
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Nama Ilmiah
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Endemik/Non
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Dilindungi/Non
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Lokasi Pelepasliaran
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Tanggal Pelepasliaran
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Gambar
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Aksi
+                        </th>
+                      </tr>
+                    </thead>
+                    {persebaranSatwas
+                      .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                      .map((satwa, index) => (
+                        <tbody key={index}>
+                          <tr className="odd:bg-white even:bg-gray-50 border-b ">
+                            <td className="px-6 py-4">
+                              {index + (page - 1) * itemsPerPage + 1}
+                            </td>
+                            <td className="px-6 py-4">{satwa.idSatwa}</td>
+                            <th
+                              scope="row"
+                              className="px-6 py-4 font-medium text-gray-900"
+                            >
+                              {satwa.namaIlmiah}
+                            </th>
+                            <td className="px-6 py-4">{satwa.statusEndemik}</td>
+                            <td className="px-6 py-4">
+                              {satwa.statusDilindungi}
+                            </td>
+                            <td className="px-6 py-4">
+                              {satwa.lokasiPelepasliaran}
+                            </td>
+                            <td className="px-6 py-4">
+                              {new Date(
+                                satwa.tanggalPelepasliaran
+                              ).toLocaleDateString("id-ID")}
+                            </td>
+                            <td className="px-6 py-4">
+                              {satwa.image ? (
+                                <Image
+                                  width={0}
+                                  height={0}
+                                  sizes="100vh"
+                                  src={satwa.image}
+                                  alt="Gambar Satwa"
+                                  className="h-24 w-32 object-cover rounded-md"
+                                />
+                              ) : (
+                                <div>-</div>
+                              )}
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex gap-2 mt-4">
+                                <OutlinedButton
+                                  ButtonIcon={Trash2}
+                                  size={WidgetSizes.SMALL}
+                                  type={WidgetTypes.ERROR}
+                                  onClick={() => onOpenDeleteModal(satwa)}
+                                />
+                                <FilledButton
+                                  size={WidgetSizes.SMALL}
+                                  text="Lokasi"
+                                  ButtonIcon={ExternalLink}
+                                  onClick={() => {
+                                    onOpenDetailModal(satwa)
+                                  }}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      ))}
+                  </table>
+                </div>
+                <div className="mt-4">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                    maxPageNumbersToShow={5}
+                  />
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
