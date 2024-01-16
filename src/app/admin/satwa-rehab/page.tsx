@@ -158,12 +158,11 @@ export default function Page() {
               </div>
             ) : searchKeyword !== "" && filteredSatwaRehabs.length !== 0 ? (
               <>
-                <div className="mb-4">
+                <div className="mb-4 flex justify-center w-full md:justify-end">
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
                     totalPages={totalPages}
-                    maxPageNumbersToShow={5}
                   />
                 </div>
 
@@ -277,12 +276,11 @@ export default function Page() {
                   </table>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 flex justify-center w-full md:justify-end">
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
                     totalPages={totalPages}
-                    maxPageNumbersToShow={5}
                   />
                 </div>
               </>
@@ -294,12 +292,11 @@ export default function Page() {
               </div>
             ) : (
               <>
-                <div className="mb-4">
+                <div className="mb-4 flex justify-center w-full md:justify-end">
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
                     totalPages={totalPages}
-                    maxPageNumbersToShow={5}
                   />
                 </div>
 
@@ -413,12 +410,11 @@ export default function Page() {
                   </table>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 flex justify-center w-full md:justify-end">
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
                     totalPages={totalPages}
-                    maxPageNumbersToShow={5}
                   />
                 </div>
               </>

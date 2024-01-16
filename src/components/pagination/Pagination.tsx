@@ -1,4 +1,5 @@
 "use client"
+import { useMobileSize } from "@/hooks/useWindowSize"
 import {
   ChevronLeft,
   ChevronRight,
@@ -10,16 +11,17 @@ type props = {
   currentPage: number
   setCurrentPage: (page: number) => void
   totalPages: number
-  maxPageNumbersToShow: number
 }
 
 export default function Pagination({
   currentPage,
   setCurrentPage,
   totalPages,
-  maxPageNumbersToShow,
 }: props) {
   // Calculate the range of page numbers to show
+  const isMobileSize = useMobileSize()
+  const maxPageNumbersToShow = isMobileSize ? 3 : 5
+
   let startPage = Math.max(
     currentPage - Math.floor(maxPageNumbersToShow / 2),
     1

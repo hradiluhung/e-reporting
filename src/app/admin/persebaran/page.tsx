@@ -200,12 +200,11 @@ export default function Home() {
             ) : searchKeyword !== "" &&
               filteredPersebaranSatwas.length !== 0 ? (
               <>
-                <div className="mb-4">
+                <div className="mb-4 flex justify-center w-full md:justify-end">
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
                     totalPages={totalPages}
-                    maxPageNumbersToShow={5}
                   />
                 </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -308,7 +307,6 @@ export default function Home() {
                       currentPage={page}
                       setCurrentPage={handlePageChange}
                       totalPages={totalPages}
-                      maxPageNumbersToShow={5}
                     />
                   </div>
                 </div>
@@ -322,12 +320,11 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <div className="mb-4">
+                <div className="mb-4 flex justify-center w-full md:justify-end">
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
                     totalPages={totalPages}
-                    maxPageNumbersToShow={5}
                   />
                 </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -427,12 +424,11 @@ export default function Home() {
                       ))}
                   </table>
                 </div>
-                <div className="mt-4">
+                <div className="mt-4 flex justify-center w-full md:justify-end">
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
                     totalPages={totalPages}
-                    maxPageNumbersToShow={5}
                   />
                 </div>
               </>
