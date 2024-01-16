@@ -11,11 +11,6 @@ export async function GET() {
 
     const satwaRehabs = await SatwaRehabilitasi.find()
 
-    // sort by created date
-    satwaRehabs.sort((a, b) => {
-      return b.createdAt.getTime() - a.createdAt.getTime()
-    })
-
     return NextResponse.json({
       status: 200,
       message: "Berhasil mendapatkan data satwa rehabilitasi",
