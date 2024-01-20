@@ -36,8 +36,7 @@ export default function Page() {
   const [inputInterkoneksi, setInputInterkoneksi] = useState({
     namaPusatRehabilitasi: "",
     personInCharge: "",
-    kontakHp: "",
-    kontakEmail: "",
+    kontakPIC: "",
     jenisSatwa: "",
     namaIlmiah: "",
     idSatwa: "",
@@ -78,8 +77,7 @@ export default function Page() {
       if (
         !inputInterkoneksi.namaPusatRehabilitasi ||
         !inputInterkoneksi.personInCharge ||
-        !inputInterkoneksi.kontakHp ||
-        !inputInterkoneksi.kontakEmail ||
+        !inputInterkoneksi.kontakPIC ||
         !inputInterkoneksi.jenisSatwa ||
         !inputInterkoneksi.namaIlmiah ||
         !inputInterkoneksi.idSatwa ||
@@ -338,23 +336,11 @@ export default function Page() {
                 onChange={(e) => {
                   setInputInterkoneksi({
                     ...inputInterkoneksi,
-                    kontakHp: e.target.value,
+                    kontakPIC: e.target.value,
                   })
                 }}
                 placeholder="Contoh: 081234567890"
-                value={inputInterkoneksi.kontakHp}
-              />
-              <InputField
-                label="Kontak Email"
-                size={WidgetSizes.MEDIUM}
-                onChange={(e) => {
-                  setInputInterkoneksi({
-                    ...inputInterkoneksi,
-                    kontakEmail: e.target.value,
-                  })
-                }}
-                placeholder="Contoh: contoh@mail.com"
-                value={inputInterkoneksi.kontakEmail}
+                value={inputInterkoneksi.kontakPIC}
               />
               <InputField
                 label="Jenis Satwa"

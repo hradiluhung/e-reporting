@@ -4,8 +4,7 @@ import axios from "axios"
 export const createInterkoneksi = async ({
   namaPusatRehabilitasi,
   personInCharge,
-  kontakHp,
-  kontakEmail,
+  kontakPIC,
   jenisSatwa,
   namaIlmiah,
   idSatwa,
@@ -22,8 +21,7 @@ export const createInterkoneksi = async ({
 }: {
   namaPusatRehabilitasi: string
   personInCharge: string
-  kontakHp: string
-  kontakEmail: string
+  kontakPIC: string
   jenisSatwa: string
   namaIlmiah: string
   idSatwa: string
@@ -42,8 +40,7 @@ export const createInterkoneksi = async ({
     const response = await axios.post("/api/interkoneksi", {
       namaPusatRehabilitasi,
       personInCharge,
-      kontakHp,
-      kontakEmail,
+      kontakPIC,
       jenisSatwa,
       namaIlmiah,
       idSatwa,
