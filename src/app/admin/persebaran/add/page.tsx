@@ -111,6 +111,7 @@ export default function Page() {
                 onChange={onChangeInputFile}
                 size={WidgetSizes.MEDIUM}
                 value={inputPersebaranSatwa.image}
+                isRequired={false}
               />
             ) : (
               <div className="w-full">

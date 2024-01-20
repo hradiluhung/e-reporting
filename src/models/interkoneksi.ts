@@ -10,13 +10,9 @@ const interkoneksiSchema = new Schema(
       type: String,
       required: [true, "Person in charge tidak boleh kosong"],
     },
-    kontakHp: {
+    kontakPIC: {
       type: String,
-      required: [true, "Kontak hp tidak boleh kosong"],
-    },
-    kontakEmail: {
-      type: String,
-      required: [true, "Kontak email tidak boleh kosong"],
+      required: [true, "Kontak PIC tidak boleh kosong"],
     },
     jenisSatwa: {
       type: String,

@@ -182,6 +182,7 @@ export default function Home() {
           <div className="w-full flex justify-between">
             <div className="w-full md:w-64">
               <SearchBar
+                prompt="Cari Nama Ilmiah"
                 searchKeyword={searchKeyword}
                 onSearchKeywordChange={onSearchKeywordChange}
               />

@@ -62,8 +62,7 @@ type Interkoneksi = {
   _id: string
   namaPusatRehabilitasi: string
   personInCharge: string
-  kontakHp: string
-  kontakEmail: string
+  kontakPIC: string
   jenisSatwa: string
   namaIlmiah: string
   idSatwa: string
@@ -75,6 +74,19 @@ type Interkoneksi = {
   kondisiSatwa: string
   status: string
   keterangan: string
+  image: string
+  publicId: string
+  createdAt: string
+  updatedAt: string
+}
+
+// Publikasi
+type Publikasi = {
+  _id: string
+  judul: string
+  penulis: string
+  tahun: string
+  isi: string
   image: string
   publicId: string
   createdAt: string

@@ -371,7 +371,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   onClick={() => router.back()}
                 />
                 <FilledButton
-                  text="Tambah"
+                  text="Simpan"
                   ButtonIcon={PlusCircle}
                   isSubmit={true}
                   size={WidgetSizes.MEDIUM}

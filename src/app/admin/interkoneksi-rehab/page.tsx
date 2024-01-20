@@ -123,7 +123,9 @@ export default function Page() {
             <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
               Interkoneksi Satwa Rehabilitasi
             </h1>
-            <p className="text-base">Rehabilitasi satwa untuk pemulihan alam</p>
+            <p className="text-base">
+              integrasi satu data satwa liar rehabilitasi di Indonesia
+            </p>
           </div>
           <div className="flex flex-start">
             <Link href="/admin/interkoneksi-rehab/add">
@@ -140,6 +142,7 @@ export default function Page() {
           <div className="w-full flex justify-between">
             <div className="w-full md:w-64">
               <SearchBar
+                prompt="Cari Nama Ilmiah"
                 searchKeyword={searchKeyword}
                 onSearchKeywordChange={onSearchKeywordChange}
               />
@@ -550,8 +553,7 @@ export default function Page() {
                     </div>
                     <p>
                       PIC: {selectedInterkoneksiSatwa.personInCharge} (
-                      {selectedInterkoneksiSatwa.kontakHp}/
-                      {selectedInterkoneksiSatwa.kontakEmail})
+                      {selectedInterkoneksiSatwa.kontakPIC})
                     </p>
                   </div>
                 </div>

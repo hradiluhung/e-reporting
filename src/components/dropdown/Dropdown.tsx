@@ -9,6 +9,7 @@ type Props = {
   value: string
   size: WidgetSizes
   options: string[] | number[]
+  isRequired?: boolean
 }
 
 export default function Dropdown({
@@ -19,10 +20,14 @@ export default function Dropdown({
   value,
   size,
   options,
+  isRequired = true,
 }: Props) {
   return (
     <div className="w-full">
-      <label className="text-neutral-500 text-sm">{label}</label>
+      <label className="text-neutral-500 text-sm">
+        {label}
+        {isRequired && <span className="ms-1 text-red-500">*</span>}
+      </label>
       <select
         className={`w-full border border-neutral-50 rounded-xl ${
           size === WidgetSizes.SMALL

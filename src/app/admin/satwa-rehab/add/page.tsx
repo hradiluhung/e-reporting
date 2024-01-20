@@ -193,7 +193,10 @@ export default function Page() {
               }}
             >
               <div>
-                <p className="text-neutral-500 text-sm">Export File Excel</p>
+                <p className="text-neutral-500 text-sm">
+                  Export File Excel
+                  <span className="ms-1 text-red-500">*</span>
+                </p>
                 <div className="mt-2">
                   <Callout
                     text="Pastikan header hanya 1 baris dan urutan kolom seperti berikut: No, ID Satwa, Nama Ilmiah, Status, Status Endemik, Status Dilindungi, Kondisi Satwa, Tanggal Serah Terima, Asal Usul Satwa, Keterangan"
@@ -274,6 +277,7 @@ export default function Page() {
                   onChange={onChangeInputFile}
                   size={WidgetSizes.MEDIUM}
                   value={inputSatwaRehab.image}
+                  isRequired={false}
                 />
               ) : (
                 <div className="w-full">

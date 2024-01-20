@@ -51,10 +51,10 @@ export default function Page() {
             <Image
               width={0}
               height={0}
-              sizes="100vw"
+              sizes="100vh"
               src="/assets/home_animals.png"
               alt="Logo"
-              className="w-96"
+              className="h-96 w-auto rounded-2xl overflow-hidden"
             />
           </div>
         </div>

@@ -74,15 +74,21 @@ export default function Page() {
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
-          <div className="flex gap-3 items-center">
-            <div>
-              <Link href="/admin/persebaran" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
-              </Link>
+          <div className="">
+            <div className="flex gap-3 items-center text-start">
+              <div className="">
+                <Link href="/admin/persebaran" passHref>
+                  <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                </Link>
+              </div>
+              <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
+                Peta Persebaran Satwa Rehabilitasi
+              </h1>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Peta Persebaran Satwa Rehabilitasi
-            </h1>
+            <p className="text-base mt-2">
+              Peta Persebaran Satwa Liar Rehabilitasi yang telah dilepasliarkan
+              di Indonesia
+            </p>
           </div>
         </div>
 

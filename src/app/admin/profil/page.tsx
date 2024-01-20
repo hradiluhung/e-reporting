@@ -112,6 +112,7 @@ export default function Page() {
           <div className="w-full flex justify-start">
             <div className="w-full md:w-64">
               <SearchBar
+                prompt="Cari Nama Lembaga"
                 searchKeyword={searchKeyword}
                 onSearchKeywordChange={onSearchKeywordChange}
               />

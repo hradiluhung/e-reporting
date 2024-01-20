@@ -71,6 +71,60 @@ body {
   background: var(--neutral-0);
 }
 
+.publikasi-content__card p:first-of-type {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.publikasi-content p {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  text-align: justify;
+}
+
+.publikasi-content ul {
+  margin-top: 1rem;
+  list-style: square;
+}
+
+.publikasi-content ul li {
+  margin-left: 1.5rem;
+}
+
+.publikasi-content ul li::marker {
+  color: var(--primary-100);
+}
+
+.publikasi-content h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.publikasi-content h2 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.publikasi-content h3 {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* publikasi content link */
+.publikasi-content a {
+  color: var(--primary-100);
+  text-decoration: none;
+  font-weight: 600;
+}
+
 /* Fixed Navbar */
 @keyframes fadeInDown {
   from {

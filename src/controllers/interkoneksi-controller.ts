@@ -159,3 +159,13 @@ export const updateInterkoneksiById = async ({
     throw new Error(error)
   }
 }
+
+// CREATE MULTIPLE INTERKONEKSI SATWA
+export const createMultipleInterkoneksi = async (data: any) => {
+  try {
+    const response = await axios.post("/api/interkoneksi/multiple", data)
+    return response.data
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}

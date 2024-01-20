@@ -2,31 +2,51 @@
 import FilledButton from "@/components/buttons/FilledButton"
 import OutlinedButton from "@/components/buttons/OutlinedButton"
 import InputField from "@/components/input/InputField"
-import TextArea from "@/components/input/TextArea"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
-import { createLembaga } from "@/controllers/lembaga-controller"
+import { createPublikasi } from "@/controllers/publikasi-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
 import { uploadPhoto } from "@/helpers/uploadPhotos"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { FormEvent, useState } from "react"
+import React, { FormEvent, useState } from "react"
 import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 
 export default function Page() {
   const router = useRouter()
-  const [inputLembaga, setInputLembaga] = useState({
-    nama: "",
-    tentang: "",
-    alamat: "",
-    kontak: "",
-    namaKontak: "",
+  const [inputPublikasi, setInputPublikasi] = useState({
+    judul: "",
+    penulis: "",
+    tahun: "",
+    isi: "",
     image: "",
     publicId: "",
   })
   const [image, setImage] = useState<File | null>(null)
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
+
+  const modules = {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }, { header: "3" }, { font: [] }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link"],
+      ["clean"],
+    ],
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false,
+    },
+  }
 
   const onChangeInputFile = async (e: any) => {
     const file = e.target.files[0]
@@ -37,39 +57,36 @@ export default function Page() {
     e.preventDefault()
     try {
       setIsLoadingSubmit(true)
-
       if (
-        !inputLembaga.nama ||
-        !inputLembaga.tentang ||
-        !inputLembaga.alamat ||
-        !inputLembaga.kontak ||
-        !inputLembaga.namaKontak
+        !inputPublikasi.judul ||
+        !inputPublikasi.penulis ||
+        !inputPublikasi.tahun ||
+        !inputPublikasi.isi
       ) {
         throw new Error("Mohon isi semua field")
       }
 
       const formData = new FormData()
-      let resUploadImage = null
+      let resUploadPhoto = null
 
       if (image !== null) {
         const compressedImage = await compressFile(image)
         formData.append("file", compressedImage)
-        resUploadImage = await uploadPhoto(formData)
+        resUploadPhoto = await uploadPhoto(formData)
       }
 
-      const res = await createLembaga({
-        nama: inputLembaga.nama,
-        tentang: inputLembaga.tentang,
-        alamat: inputLembaga.alamat,
-        kontak: inputLembaga.kontak,
-        namaKontak: inputLembaga.namaKontak,
-        image: resUploadImage?.data?.url || "",
-        publicId: resUploadImage?.data?.publicId || "",
+      const res = await createPublikasi({
+        judul: inputPublikasi.judul,
+        penulis: inputPublikasi.penulis,
+        tahun: inputPublikasi.tahun,
+        isi: inputPublikasi.isi,
+        image: resUploadPhoto?.data?.url || "",
+        publicId: resUploadPhoto?.data?.publicId || "",
       })
 
       if (res.status === 201) {
         showToast(res.message, WidgetTypes.SUCCESS)
-        router.push("/admin/profil")
+        router.push("/admin/publikasi")
       } else {
         showToast(res.message, WidgetTypes.ERROR)
       }
@@ -91,9 +108,11 @@ export default function Page() {
               </Link>
             </div>
             <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Tambah Lembaga
+              Tambah Publikasi
             </h1>
           </div>
+
+          {/* Form */}
           <form
             method="POST"
             onSubmit={onSubmit}
@@ -107,7 +126,7 @@ export default function Page() {
                 type="file"
                 onChange={onChangeInputFile}
                 size={WidgetSizes.MEDIUM}
-                value={inputLembaga.image}
+                value={inputPublikasi.image}
                 isRequired={false}
               />
             ) : (
@@ -135,51 +154,55 @@ export default function Page() {
               </div>
             )}
             <InputField
-              label="Nama Lembaga"
+              label="Judul"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
-                setInputLembaga({ ...inputLembaga, nama: e.target.value })
+                setInputPublikasi({ ...inputPublikasi, judul: e.target.value })
               }}
-              placeholder="Isi nama lembaga"
-              value={inputLembaga.nama}
-            />
-            <TextArea
-              label="Deskripsi"
-              size={WidgetSizes.MEDIUM}
-              onChange={(e) => {
-                setInputLembaga({ ...inputLembaga, tentang: e.target.value })
-              }}
-              placeholder="Isi deskripsi lembaga"
-              value={inputLembaga.tentang}
-            />
-            <TextArea
-              label="Alamat"
-              size={WidgetSizes.MEDIUM}
-              onChange={(e) => {
-                setInputLembaga({ ...inputLembaga, alamat: e.target.value })
-              }}
-              placeholder="Isi alamat"
-              value={inputLembaga.alamat}
+              placeholder="Isi judul"
+              value={inputPublikasi.judul}
             />
             <InputField
-              label="Kontak"
+              label="Penulis"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
-                setInputLembaga({ ...inputLembaga, kontak: e.target.value })
+                setInputPublikasi({
+                  ...inputPublikasi,
+                  penulis: e.target.value,
+                })
               }}
-              placeholder="08xxxxxxxxxx"
-              value={inputLembaga.kontak}
-              type="tel"
+              placeholder="Isi penulis"
+              value={inputPublikasi.penulis}
             />
             <InputField
-              label="Nama Kontak"
+              label="Tahun"
+              type="number"
               size={WidgetSizes.MEDIUM}
               onChange={(e) => {
-                setInputLembaga({ ...inputLembaga, namaKontak: e.target.value })
+                setInputPublikasi({
+                  ...inputPublikasi,
+                  tahun: e.target.value,
+                })
               }}
-              placeholder="Nama Kontak"
-              value={inputLembaga.namaKontak}
+              placeholder="Isi tahun"
+              value={inputPublikasi.tahun}
             />
+            <div>
+              <label className="text-neutral-500 text-sm">
+                Isi
+                <span className="ms-1 text-red-500">*</span>
+              </label>
+              <div className="bg-neutral-0">
+                <ReactQuill
+                  theme="snow"
+                  value={inputPublikasi.isi}
+                  onChange={(value) =>
+                    setInputPublikasi({ ...inputPublikasi, isi: value })
+                  }
+                  modules={modules}
+                />
+              </div>
+            </div>
             <div className="w-full flex justify-end gap-2">
               <OutlinedButton
                 text="Batal"
