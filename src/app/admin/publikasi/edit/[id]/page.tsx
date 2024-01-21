@@ -11,16 +11,26 @@ import {
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
 import { deletePhoto, uploadPhoto } from "@/helpers/uploadPhotos"
+import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import React, { FormEvent, useCallback, useEffect, useState } from "react"
+import React, {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
-import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
+  const ReactQuill = useMemo(
+    () => dynamic(() => import("react-quill"), { ssr: false }),
+    []
+  )
   const [publikasi, setPublikasi] = useState<Publikasi | null>(null)
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
   const [image, setImage] = useState<File | null>(null)
