@@ -153,7 +153,7 @@ export default function Page({ params }: { params: { id: string } }) {
               </Link>
             </div>
             <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Tambah Publikasi
+              Edit Publikasi
             </h1>
           </div>
 
