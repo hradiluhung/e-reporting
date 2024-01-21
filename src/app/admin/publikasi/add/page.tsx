@@ -12,6 +12,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React, { FormEvent, useState } from "react"
 import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
+import ReactQuill from "react-quill"
 
 export default function Page() {
   const router = useRouter()
@@ -185,6 +186,23 @@ export default function Page() {
             placeholder="Isi tahun"
             value={inputPublikasi.tahun}
           />
+
+          <div>
+            <label className="text-neutral-500 text-sm">
+              Isi
+              <span className="ms-1 text-red-500">*</span>
+            </label>
+            <div className="bg-neutral-0">
+              <ReactQuill
+                theme="snow"
+                value={inputPublikasi.isi}
+                onChange={(value) =>
+                  setInputPublikasi({ ...inputPublikasi, isi: value })
+                }
+                modules={modules}
+              />
+            </div>
+          </div>
 
           <div className="w-full flex justify-end gap-2">
             <OutlinedButton
