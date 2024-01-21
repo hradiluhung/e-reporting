@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation"
 import React, { FormEvent, useState } from "react"
 import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
 import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 
 export default function Page() {
   const router = useRouter()
