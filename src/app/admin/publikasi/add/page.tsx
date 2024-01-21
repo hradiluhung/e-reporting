@@ -7,16 +7,22 @@ import { createPublikasi } from "@/controllers/publikasi-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
 import { uploadPhoto } from "@/helpers/uploadPhotos"
+import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import React, { FormEvent, useState } from "react"
+import React, { FormEvent, useMemo, useState } from "react"
 import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
-import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 
 export default function Page() {
   const router = useRouter()
+
+  const ReactQuill = useMemo(
+    () => dynamic(() => import("react-quill"), { ssr: false }),
+    []
+  )
+  
   const [inputPublikasi, setInputPublikasi] = useState({
     judul: "",
     penulis: "",
