@@ -1,5 +1,6 @@
 "use client"
 import FilledButton from "@/components/buttons/FilledButton"
+import OutlinedButton from "@/components/buttons/OutlinedButton"
 import InputField from "@/components/input/InputField"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { createPublikasi } from "@/controllers/publikasi-controller"
@@ -10,7 +11,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React, { FormEvent, useState } from "react"
-import { ArrowLeftCircle, Trash2 } from "react-feather"
+import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
 
 export default function Page() {
   const router = useRouter()
@@ -150,6 +151,56 @@ export default function Page() {
               </div>
             )}
           </form>
+          <InputField
+            label="Judul"
+            size={WidgetSizes.MEDIUM}
+            onChange={(e) => {
+              setInputPublikasi({ ...inputPublikasi, judul: e.target.value })
+            }}
+            placeholder="Isi judul"
+            value={inputPublikasi.judul}
+          />
+          <InputField
+            label="Penulis"
+            size={WidgetSizes.MEDIUM}
+            onChange={(e) => {
+              setInputPublikasi({
+                ...inputPublikasi,
+                penulis: e.target.value,
+              })
+            }}
+            placeholder="Isi penulis"
+            value={inputPublikasi.penulis}
+          />
+          <InputField
+            label="Tahun"
+            type="number"
+            size={WidgetSizes.MEDIUM}
+            onChange={(e) => {
+              setInputPublikasi({
+                ...inputPublikasi,
+                tahun: e.target.value,
+              })
+            }}
+            placeholder="Isi tahun"
+            value={inputPublikasi.tahun}
+          />
+
+          <div className="w-full flex justify-end gap-2">
+            <OutlinedButton
+              text="Batal"
+              size={WidgetSizes.MEDIUM}
+              onClick={() => router.back()}
+            />
+            <FilledButton
+              text="Tambah"
+              ButtonIcon={PlusCircle}
+              isSubmit={true}
+              size={WidgetSizes.MEDIUM}
+              isLoading={isLoadingSubmit}
+              isDisabled={isLoadingSubmit}
+            />
+          </div>
         </div>
       </div>
     </div>
