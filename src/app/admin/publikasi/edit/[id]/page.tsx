@@ -1,6 +1,7 @@
 "use client"
 import FilledButton from "@/components/buttons/FilledButton"
 import OutlinedButton from "@/components/buttons/OutlinedButton"
+import Callout from "@/components/callout/Callout"
 import InputField from "@/components/input/InputField"
 import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
@@ -10,7 +11,7 @@ import {
 } from "@/controllers/publikasi-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, uploadPhoto } from "@/helpers/uploadFiles"
+import { deleteMedia, uploadPhoto } from "@/helpers/uploadFiles"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
@@ -22,7 +23,13 @@ import React, {
   useMemo,
   useState,
 } from "react"
-import { ArrowLeftCircle, PlusCircle, Trash2 } from "react-feather"
+import {
+  ArrowLeftCircle,
+  Info,
+  PlusCircle,
+  Trash2,
+  XCircle,
+} from "react-feather"
 import "react-quill/dist/quill.snow.css"
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -33,7 +40,7 @@ export default function Page({ params }: { params: { id: string } }) {
   )
   const [publikasi, setPublikasi] = useState<Publikasi | null>(null)
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
-  const [image, setImage] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null)
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
 
   const modules = {
@@ -58,7 +65,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const onChangeInputFile = async (e: any) => {
     const file = e.target.files[0]
-    setImage(file)
+    setFile(file)
   }
 
   const fetchPublikasi = useCallback(async () => {
@@ -90,14 +97,13 @@ export default function Page({ params }: { params: { id: string } }) {
           throw new Error("Mohon isi semua field")
         }
 
-        if (image !== null) {
-          const compressedImage = await compressFile(image)
-          formData.append("file", compressedImage)
+        if (file !== null) {
+          formData.append("file", file)
           resUploadPhoto = await uploadPhoto(formData)
         }
 
-        if (image == null && publikasi.file == "") {
-          await deletePhoto(publikasi.publicId)
+        if (file == null && publikasi.file == "") {
+          await deleteMedia(publikasi.publicId)
           const res = await updatePublikasiById({
             id: publikasi._id,
             judul: publikasi.judul,
@@ -120,12 +126,15 @@ export default function Page({ params }: { params: { id: string } }) {
         }
 
         if (publikasi.file == "") {
-          await deletePhoto(publikasi.publicId)
+          await deleteMedia(publikasi.publicId)
         }
 
-        if (image != null) {
-          const compressedImage = await compressFile(image)
-          formData.append("file", compressedImage)
+        if (file != null) {
+          if (file.size >= 10485760) {
+            throw new Error("Ukuran file terlalu besar")
+          }
+
+          formData.append("file", file)
           resUploadPhoto = await uploadPhoto(formData)
         }
 
@@ -136,7 +145,7 @@ export default function Page({ params }: { params: { id: string } }) {
           tahun: publikasi.tahun,
           isi: publikasi.isi,
           file: resUploadPhoto?.data?.url || publikasi.file || "",
-          fileName: image?.name || "",
+          fileName: file?.name || "",
           publicId: resUploadPhoto?.data?.publicId || publikasi.publicId || "",
         })
 
@@ -181,45 +190,65 @@ export default function Page({ params }: { params: { id: string } }) {
                 onSubmit={onSubmit}
                 className="flex flex-col gap-3 w-full"
               >
-                {image == null && publikasi.file == "" ? (
-                  <InputField
-                    label="Gambar"
-                    acceptedFileTypes="image/*"
-                    placeholder="Pilih Gambar"
-                    type="file"
-                    onChange={onChangeInputFile}
-                    size={WidgetSizes.MEDIUM}
-                    value={publikasi.file}
-                    isRequired={false}
+                <div>
+                  <p className="text-neutral-500 text-sm">Dokumen</p>
+                  <Callout
+                    text="Format Dokumen .pdf dengan ukuran maksimal 10 MB"
+                    CalloutIcon={Info}
                   />
-                ) : (
-                  <div className="w-full">
-                    <label className="text-neutral-500 text-sm">Gambar</label>
-                    <div className="relative w-full rounded-md border border-neutral-50 bg-neutral-0">
+                  {file == null && publikasi.file == "" ? (
+                    <label
+                      htmlFor="excel-file"
+                      className={`w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 hover:bg-red-500 hover:bg-opacity-40 cursor-pointer transition-all items-center justify-start gap-2`}
+                    >
+                      <input
+                        id="excel-file"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e: any) => {
+                          onChangeInputFile(e)
+                        }}
+                        hidden
+                      />
                       <Image
                         width={0}
                         height={0}
                         sizes="100vw"
-                        src={
-                          image != null
-                            ? URL.createObjectURL(image)
-                            : publikasi.file
-                        }
-                        alt="Cover Mata Kuliah"
-                        className="w-full object-cover rounded-md"
+                        className="w-6"
+                        src="/assets/pdf.png"
+                        alt="icon pdf"
                       />
-
-                      <div className="absolute top-2 right-2">
-                        <FilledButton
-                          ButtonIcon={Trash2}
-                          onClick={() => setImage(null)}
-                          size={WidgetSizes.MEDIUM}
-                          type={WidgetTypes.ERROR}
+                      <span className="ml-2">Pilih Dokumen</span>
+                    </label>
+                  ) : (
+                    <div className="w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 transition-all items-center justify-start gap-2">
+                      <Image
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        className="w-6"
+                        src="/assets/pdf.png"
+                        alt="icon pdf"
+                      />
+                      <div className="flex w-full justify-between items-center">
+                        <span className="ml-2">
+                          {file != null ? file.name : publikasi.fileName}
+                        </span>
+                        <XCircle
+                          className="w-6 stroke-red-500 cursor-pointer"
+                          onClick={() => {
+                            setFile(null)
+                            setPublikasi({
+                              ...publikasi,
+                              file: "",
+                            })
+                          }}
                         />
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+
                 <InputField
                   label="Judul"
                   size={WidgetSizes.MEDIUM}

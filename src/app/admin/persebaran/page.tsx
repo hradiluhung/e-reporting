@@ -11,7 +11,7 @@ import {
   getAllPersebaranSatwa,
 } from "@/controllers/persebaran-satwa-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto } from "@/helpers/uploadFiles"
+import { deleteMedia } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
@@ -99,7 +99,7 @@ export default function Home() {
     try {
       setIsLoadingDelete(true)
 
-      await deletePhoto(publicId)
+      await deleteMedia(publicId)
       const res = await deletePersebaranSatwaById(id)
 
       if (res.status === 200) {

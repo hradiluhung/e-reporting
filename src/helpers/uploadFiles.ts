@@ -52,7 +52,7 @@ export async function uploadPhoto(formData: any) {
   }
 }
 
-export async function deletePhoto(publicId: string) {
+export async function deleteMedia(publicId: string) {
   try {
     await cloudinary.uploader.destroy(publicId)
 

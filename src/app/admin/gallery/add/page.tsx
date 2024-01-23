@@ -5,11 +5,11 @@ import Dropdown from "@/components/dropdown/Dropdown"
 import InputField from "@/components/input/InputField"
 import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
+import { MediaType } from "@/constants/media-type"
 import { createGallery } from "@/controllers/gallery-controller"
 import { getAllLembaga } from "@/controllers/lembaga-controller"
-import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, uploadPhoto, uploadVideo } from "@/helpers/uploadFiles"
+import { uploadPhoto, uploadVideo } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -55,19 +55,22 @@ export default function Page() {
       if (file !== null) {
         // const compressedImage = await compressFile(file)
         formData.append("file", file)
-        resUploadImage = await uploadVideo(formData)
+
+        if (file.type.includes("image"))
+          resUploadImage = await uploadPhoto(formData)
+        else resUploadImage = await uploadVideo(formData)
       }
 
       const res = await createGallery({
         idLembaga: inputGallery.idLembaga,
-        type: file.type.includes("image") ? "image" : "video",
+        type: file.type.includes("image") ? MediaType.IMAGE : MediaType.VIDEO,
         media: resUploadImage?.data?.url || "",
         publicId: resUploadImage?.data?.publicId || "",
       })
 
       if (res.status === 201) {
         showToast(res.message, WidgetTypes.SUCCESS)
-        router.push("/admin/profil")
+        router.push("/admin/gallery")
       } else {
         showToast(res.message, WidgetTypes.ERROR)
       }
@@ -107,6 +110,17 @@ export default function Page() {
             <div className="w-full">
               <Skeleton size={WidgetSizes.LARGE} />
             </div>
+          ) : listLembaga.length <= 0 ? (
+            <div className="bg-white p-6 flex flex-col shadow-md rounded-lg gap-4 items-center justify-center">
+              <p>Belum ada lembaga. Silakan tambah lembaga terlebih dahulu</p>
+              <Link href="/admin/profil/add" passHref>
+                <FilledButton
+                  text="Tambah Lembaga"
+                  ButtonIcon={PlusCircle}
+                  size={WidgetSizes.MEDIUM}
+                />
+              </Link>
+            </div>
           ) : (
             <form
               method="POST"
@@ -125,7 +139,9 @@ export default function Page() {
                 />
               ) : file.type.includes("image") ? (
                 <div className="w-full">
-                  <label className="text-neutral-500 text-sm">Gambar</label>
+                  <label className="text-neutral-500 text-sm">
+                    Gambar/Video<span className="ms-1 text-red-500">*</span>
+                  </label>
                   <div className="relative w-full rounded-md border border-neutral-50 bg-neutral-0">
                     <Image
                       width={0}
@@ -150,7 +166,7 @@ export default function Page() {
                 <div className="w-full">
                   <label className="text-neutral-500 text-sm">Gambar</label>
                   <div className="relative w-full rounded-md border border-neutral-50 bg-neutral-0">
-                    <video controls className="-full object-cover rounded-md">
+                    <video controls className="w-full object-cover rounded-md">
                       <source
                         src={URL.createObjectURL(file)}
                         type={file.type}
@@ -169,8 +185,9 @@ export default function Page() {
                 </div>
               )}
               <Dropdown
-                label="lembaga"
-                options={listLembaga.map((lembaga) => lembaga.nama)}
+                label="Lembaga"
+                options={listLembaga.map((lembaga) => lembaga._id)}
+                optionsText={listLembaga.map((lembaga) => lembaga.nama)}
                 defaultValue="Lembaga"
                 onChange={(e) => {
                   setInputGallery({

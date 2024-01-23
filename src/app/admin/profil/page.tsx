@@ -10,7 +10,7 @@ import {
   getAllLembaga,
 } from "@/controllers/lembaga-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto } from "@/helpers/uploadFiles"
+import { deleteMedia } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -57,15 +57,15 @@ export default function Page() {
     try {
       setIsLoadingDelete(true)
 
-      await deletePhoto(publicId)
+      await deleteMedia(publicId)
       const res = await deleteLembagaById(id)
 
       if (res.status === 200) {
-        showToast("Berhasil menghapus lembaga", WidgetTypes.SUCCESS)
+        showToast(res.message, WidgetTypes.SUCCESS)
         fetchAllLembaga()
         setSelectedDeletedLembaga(null)
       } else {
-        showToast("Gagal menghapus lembaga", WidgetTypes.ERROR)
+        showToast(res.message, WidgetTypes.ERROR)
       }
     } catch (error: any) {
       showToast(error.message, WidgetTypes.ERROR)

@@ -2,13 +2,14 @@ import { WidgetSizes } from "@/constants/button-types"
 import React from "react"
 
 type Props = {
-  label: string
+  label?: string
   placeholder: string
   defaultValue: string
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
   value: string
   size: WidgetSizes
   options: string[] | number[]
+  optionsText?: string[] | number[]
   isRequired?: boolean
 }
 
@@ -20,14 +21,17 @@ export default function Dropdown({
   value,
   size,
   options,
+  optionsText,
   isRequired = true,
 }: Props) {
   return (
     <div className="w-full">
-      <label className="text-neutral-500 text-sm">
-        {label}
-        {isRequired && <span className="ms-1 text-red-500">*</span>}
-      </label>
+      {label && (
+        <label className="text-neutral-500 text-sm">
+          {label}
+          {isRequired && <span className="ms-1 text-red-500">*</span>}
+        </label>
+      )}
       <select
         className={`w-full border border-neutral-50 rounded-xl ${
           size === WidgetSizes.SMALL
@@ -41,7 +45,7 @@ export default function Dropdown({
         value={value}
       >
         <option value="" className="w-full text-neutral-50">
-          {defaultValue}
+          {placeholder}
         </option>
         {options.map((option, index) => (
           <option
@@ -49,7 +53,7 @@ export default function Dropdown({
             value={option}
             className="w-full text-neutral-100"
           >
-            {option}
+            {optionsText ? optionsText[index] : option}
           </option>
         ))}
       </select>

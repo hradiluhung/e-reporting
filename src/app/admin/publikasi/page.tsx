@@ -9,7 +9,7 @@ import {
   getPublikasiById,
 } from "@/controllers/publikasi-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, downloadDocument } from "@/helpers/uploadFiles"
+import { deleteMedia, downloadDocument } from "@/helpers/uploadFiles"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import { Loader, PlusCircle } from "react-feather"
@@ -77,7 +77,7 @@ export default function Page() {
     try {
       setIsLoadingDelete(true)
 
-      await deletePhoto(publidId)
+      await deleteMedia(publidId)
 
       const res = await deletePublikasiById(id)
       if (res.status === 200) {
@@ -173,7 +173,9 @@ export default function Page() {
                             className="hover:text-primary-100"
                             href={`/admin/publikasi/${publikasi._id}`}
                           >
-                            <h1 className="text-2xl">{publikasi.judul}</h1>
+                            <h1 className="text-2xl underline">
+                              {publikasi.judul}
+                            </h1>
                           </Link>
                           <div className="mt-2 flex gap-4">
                             <p className="text-sm text-neutral-50">
@@ -212,7 +214,7 @@ export default function Page() {
                                   height={36}
                                   alt="Excel Icon"
                                 />
-                                <p className="mt-2 text-xs">
+                                <p className="mt-2 text-xs text-center">
                                   {publikasi.fileName}
                                 </p>
                               </>
@@ -251,7 +253,9 @@ export default function Page() {
                             className="hover:text-primary-100"
                             href={`/admin/publikasi/${publikasi._id}`}
                           >
-                            <h1 className="text-2xl">{publikasi.judul}</h1>
+                            <h1 className="text-2xl underline">
+                              {publikasi.judul}
+                            </h1>
                           </Link>
                           <div className="mt-2 flex gap-4">
                             <p className="text-sm text-neutral-50">
@@ -290,7 +294,7 @@ export default function Page() {
                                   height={36}
                                   alt="Excel Icon"
                                 />
-                                <p className="mt-2 text-xs">
+                                <p className="mt-2 text-xs text-center">
                                   {publikasi.fileName}
                                 </p>
                               </>

@@ -11,7 +11,7 @@ import {
 } from "@/controllers/lembaga-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, uploadPhoto } from "@/helpers/uploadFiles"
+import { deleteMedia, uploadPhoto } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -81,7 +81,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (image == null && lembaga.image == "") {
-        await deletePhoto(lembaga.publicId)
+        await deleteMedia(lembaga.publicId)
         const res = await updateLembagaById({
           id: lembaga._id,
           nama: lembaga.nama,
@@ -104,7 +104,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (lembaga.image == "") {
-        await deletePhoto(lembaga.publicId)
+        await deleteMedia(lembaga.publicId)
       }
 
       if (image != null) {

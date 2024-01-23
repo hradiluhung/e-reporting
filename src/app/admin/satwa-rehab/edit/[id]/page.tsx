@@ -17,7 +17,7 @@ import {
 } from "@/controllers/satwa-rehab-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, uploadPhoto } from "@/helpers/uploadFiles"
+import { deleteMedia, uploadPhoto } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -89,7 +89,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (image == null && satwaRehab.image == "") {
-        await deletePhoto(satwaRehab.publicId)
+        await deleteMedia(satwaRehab.publicId)
         const res = await updateSatwaRehabById({
           id: satwaRehab._id,
           jenisSatwa: satwaRehab.jenisSatwa,
@@ -118,7 +118,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (satwaRehab.image == "") {
-        await deletePhoto(satwaRehab.publicId)
+        await deleteMedia(satwaRehab.publicId)
       }
 
       if (image != null) {

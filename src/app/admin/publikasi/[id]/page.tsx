@@ -8,7 +8,7 @@ import {
   getPublikasiById,
 } from "@/controllers/publikasi-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, downloadDocument } from "@/helpers/uploadFiles"
+import { deleteMedia, downloadDocument } from "@/helpers/uploadFiles"
 import parse from "html-react-parser"
 import Image from "next/image"
 import Link from "next/link"
@@ -35,7 +35,7 @@ export default function Page({ params }: { params: { id: string } }) {
     try {
       setIsLoadingDelete(true)
 
-      await deletePhoto(publidId)
+      await deleteMedia(publidId)
       const res = await deletePublikasiById(id)
 
       if (res.status === 200) {

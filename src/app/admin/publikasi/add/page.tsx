@@ -1,6 +1,7 @@
 "use client"
 import FilledButton from "@/components/buttons/FilledButton"
 import OutlinedButton from "@/components/buttons/OutlinedButton"
+import Callout from "@/components/callout/Callout"
 import InputField from "@/components/input/InputField"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import {
@@ -10,10 +11,17 @@ import {
 import { showToast } from "@/helpers/showToast"
 import { downloadDocument, uploadDocument } from "@/helpers/uploadFiles"
 import dynamic from "next/dynamic"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FormEvent, useEffect, useMemo, useState } from "react"
-import { ArrowLeftCircle, FileText, PlusCircle, XCircle } from "react-feather"
+import {
+  ArrowLeftCircle,
+  FileText,
+  Info,
+  PlusCircle,
+  XCircle,
+} from "react-feather"
 import "react-quill/dist/quill.snow.css"
 
 export default function Page() {
@@ -68,6 +76,7 @@ export default function Page() {
     e.preventDefault()
     try {
       setIsLoadingSubmit(true)
+
       if (
         !inputPublikasi.judul ||
         !inputPublikasi.penulis ||
@@ -81,6 +90,10 @@ export default function Page() {
       let resUploadPhoto = null
 
       if (file !== null) {
+        if (file.size >= 10485760) {
+          throw new Error("Ukuran file terlalu besar")
+        }
+
         formData.append("file", file)
         resUploadPhoto = await uploadDocument(formData)
       }
@@ -131,13 +144,24 @@ export default function Page() {
             <div>
               <p className="text-neutral-500 text-sm">Dokumen</p>
               <div className="mt-2">
+                <Callout
+                  text="Format Dokumen .pdf dengan ukuran maksimal 10 MB"
+                  CalloutIcon={Info}
+                />
                 {file ? (
-                  <div className="w-full rounded-xl flex p-6 mt-1 bg-primary-10 border border-primary-50 transition-all items-center justify-start gap-2">
-                    <FileText className="w-6 stroke-primary-100" />
+                  <div className="w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 transition-all items-center justify-start gap-2">
+                    <Image
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="w-6"
+                      src="/assets/pdf.png"
+                      alt="icon pdf"
+                    />
                     <div className="flex w-full justify-between items-center">
                       <span className="ml-2">{file.name}</span>
                       <XCircle
-                        className="w-6 stroke-primary-100 cursor-pointer"
+                        className="w-6 stroke-red-500 cursor-pointer"
                         onClick={() => setFile(null)}
                       />
                     </div>
@@ -145,18 +169,25 @@ export default function Page() {
                 ) : (
                   <label
                     htmlFor="excel-file"
-                    className={`w-full rounded-xl flex p-6 mt-1 bg-primary-10 border border-primary-50 hover:bg-primary-50 hover:bg-opacity-40 cursor-pointer transition-all items-center justify-start gap-2`}
+                    className={`w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 hover:bg-red-500 hover:bg-opacity-40 cursor-pointer transition-all items-center justify-start gap-2`}
                   >
                     <input
                       id="excel-file"
                       type="file"
-                      accept="application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                      accept="application/pdf"
                       onChange={(e: any) => {
                         onChangeInputFile(e)
                       }}
                       hidden
                     />
-                    <FileText className="w-6 stroke-primary-100" />
+                    <Image
+                      width={0}
+                      height={0}
+                      sizes="100vw"
+                      className="w-6"
+                      src="/assets/pdf.png"
+                      alt="icon pdf"
+                    />
                     <span className="ml-2">Pilih Dokumen</span>
                   </label>
                 )}

@@ -11,7 +11,7 @@ import {
   getAllSatwaRehabilitasi,
 } from "@/controllers/satwa-rehab-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto } from "@/helpers/uploadFiles"
+import { deleteMedia } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
@@ -99,7 +99,7 @@ export default function Page() {
     try {
       setIsLoadingDelete(true)
 
-      await deletePhoto(publicId)
+      await deleteMedia(publicId)
       const res = await deleteSatwaRehabById(id)
 
       if (res.status === 200) {

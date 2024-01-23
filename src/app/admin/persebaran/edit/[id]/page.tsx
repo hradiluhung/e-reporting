@@ -12,7 +12,7 @@ import {
 } from "@/controllers/persebaran-satwa-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, uploadPhoto } from "@/helpers/uploadFiles"
+import { deleteMedia, uploadPhoto } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -77,7 +77,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (image == null && persebaranSatwa.image == "") {
-        await deletePhoto(persebaranSatwa.publicId)
+        await deleteMedia(persebaranSatwa.publicId)
         const res = await updatePersebaranSatwaById({
           id: persebaranSatwa._id,
           jenisSatwa: persebaranSatwa.jenisSatwa,
@@ -104,7 +104,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (persebaranSatwa.image == "") {
-        await deletePhoto(persebaranSatwa.publicId)
+        await deleteMedia(persebaranSatwa.publicId)
       }
 
       if (image != null) {

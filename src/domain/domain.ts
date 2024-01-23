@@ -93,3 +93,14 @@ type Publikasi = {
   createdAt: string
   updatedAt: string
 }
+
+// Gallery
+type Gallery = {
+  _id: string
+  media: string
+  publicId: string
+  type: string
+  lembaga: Lembaga
+  createdAt: string
+  updatedAt: string
+}

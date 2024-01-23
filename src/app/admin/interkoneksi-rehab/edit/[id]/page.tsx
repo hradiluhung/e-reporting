@@ -17,7 +17,7 @@ import {
 } from "@/controllers/interkoneksi-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, uploadPhoto } from "@/helpers/uploadFiles"
+import { deleteMedia, uploadPhoto } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -98,7 +98,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (image == null && interkoneksiSatwa.image == "") {
-        await deletePhoto(interkoneksiSatwa.publicId)
+        await deleteMedia(interkoneksiSatwa.publicId)
         const res = await updateInterkoneksiById({
           id: interkoneksiSatwa._id,
           namaPusatRehabilitasi: interkoneksiSatwa.namaPusatRehabilitasi,
@@ -131,7 +131,7 @@ export default function Page({ params }: { params: { id: string } }) {
       }
 
       if (interkoneksiSatwa.image == "") {
-        await deletePhoto(interkoneksiSatwa.publicId)
+        await deleteMedia(interkoneksiSatwa.publicId)
       }
 
       if (image != null) {
