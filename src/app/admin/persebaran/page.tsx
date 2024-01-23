@@ -11,7 +11,7 @@ import {
   getAllPersebaranSatwa,
 } from "@/controllers/persebaran-satwa-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto } from "@/helpers/uploadPhotos"
+import { deletePhoto } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"

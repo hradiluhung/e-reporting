@@ -18,7 +18,11 @@ const publikasiSchema = new Schema(
       type: String,
       required: [true, "Isi tidak boleh kosong"],
     },
-    image: {
+    file: {
+      type: String,
+      default: "",
+    },
+    fileName: {
       type: String,
       default: "",
     },

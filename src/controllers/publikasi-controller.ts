@@ -16,14 +16,16 @@ export const createPublikasi = async ({
   penulis,
   tahun,
   isi,
-  image,
+  file,
+  fileName,
   publicId,
 }: {
   judul: string
   penulis: string
   tahun: string
   isi: string
-  image: string
+  file: string
+  fileName: string
   publicId: string
 }) => {
   try {
@@ -32,7 +34,8 @@ export const createPublikasi = async ({
       penulis,
       tahun,
       isi,
-      image,
+      file,
+      fileName,
       publicId,
     })
     return response.data
@@ -68,7 +71,8 @@ export const updatePublikasiById = async ({
   penulis,
   tahun,
   isi,
-  image,
+  file,
+  fileName,
   publicId,
 }: {
   id: string
@@ -76,7 +80,8 @@ export const updatePublikasiById = async ({
   penulis: string
   tahun: string
   isi: string
-  image: string
+  file: string
+  fileName: string
   publicId: string
 }) => {
   try {
@@ -85,7 +90,8 @@ export const updatePublikasiById = async ({
       penulis,
       tahun,
       isi,
-      image,
+      file,
+      fileName,
       publicId,
     })
     return response.data

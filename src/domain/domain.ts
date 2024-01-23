@@ -87,7 +87,8 @@ type Publikasi = {
   penulis: string
   tahun: string
   isi: string
-  image: string
+  file: string
+  fileName: string
   publicId: string
   createdAt: string
   updatedAt: string

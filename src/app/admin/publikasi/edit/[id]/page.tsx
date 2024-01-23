@@ -10,7 +10,7 @@ import {
 } from "@/controllers/publikasi-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto, uploadPhoto } from "@/helpers/uploadPhotos"
+import { deletePhoto, uploadPhoto } from "@/helpers/uploadFiles"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
@@ -96,7 +96,7 @@ export default function Page({ params }: { params: { id: string } }) {
           resUploadPhoto = await uploadPhoto(formData)
         }
 
-        if (image == null && publikasi.image == "") {
+        if (image == null && publikasi.file == "") {
           await deletePhoto(publikasi.publicId)
           const res = await updatePublikasiById({
             id: publikasi._id,
@@ -104,7 +104,8 @@ export default function Page({ params }: { params: { id: string } }) {
             penulis: publikasi.penulis,
             tahun: publikasi.tahun,
             isi: publikasi.isi,
-            image: "",
+            file: "",
+            fileName: "",
             publicId: "",
           })
 
@@ -118,7 +119,7 @@ export default function Page({ params }: { params: { id: string } }) {
           return
         }
 
-        if (publikasi.image == "") {
+        if (publikasi.file == "") {
           await deletePhoto(publikasi.publicId)
         }
 
@@ -134,7 +135,8 @@ export default function Page({ params }: { params: { id: string } }) {
           penulis: publikasi.penulis,
           tahun: publikasi.tahun,
           isi: publikasi.isi,
-          image: resUploadPhoto?.data?.url || publikasi.image || "",
+          file: resUploadPhoto?.data?.url || publikasi.file || "",
+          fileName: image?.name || "",
           publicId: resUploadPhoto?.data?.publicId || publikasi.publicId || "",
         })
 
@@ -179,7 +181,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 onSubmit={onSubmit}
                 className="flex flex-col gap-3 w-full"
               >
-                {image == null && publikasi.image == "" ? (
+                {image == null && publikasi.file == "" ? (
                   <InputField
                     label="Gambar"
                     acceptedFileTypes="image/*"
@@ -187,7 +189,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     type="file"
                     onChange={onChangeInputFile}
                     size={WidgetSizes.MEDIUM}
-                    value={publikasi.image}
+                    value={publikasi.file}
                     isRequired={false}
                   />
                 ) : (
@@ -201,7 +203,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         src={
                           image != null
                             ? URL.createObjectURL(image)
-                            : publikasi.image
+                            : publikasi.file
                         }
                         alt="Cover Mata Kuliah"
                         className="w-full object-cover rounded-md"

@@ -6,12 +6,13 @@ import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import {
   deletePublikasiById,
   getAllPublikasi,
+  getPublikasiById,
 } from "@/controllers/publikasi-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto } from "@/helpers/uploadPhotos"
+import { deletePhoto, downloadDocument } from "@/helpers/uploadFiles"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
-import { PlusCircle } from "react-feather"
+import { Loader, PlusCircle } from "react-feather"
 import parse from "html-react-parser"
 import Image from "next/image"
 
@@ -26,24 +27,50 @@ export default function Page() {
     useState<Publikasi | null>(null)
   const [searchKeyword, setSearchKeyword] = useState<string>("")
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false)
+  const [listIsLoadingDownload, setListIsLoadingDownload] = useState<boolean[]>(
+    []
+  )
 
   const onSearchKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     setSearchKeyword(e.target.value)
   }
 
+  const onDownloadFile = async (publikasiId: string, index: number) => {
+    try {
+      setListIsLoadingDownload((prevState) => {
+        const newState = [...prevState]
+        newState[index] = true
+        return newState
+      })
+      const publikasi = await getPublikasiById(publikasiId)
+      const res = await downloadDocument(publikasi.data.publicId)
+
+      const response = await fetch(res.data?.url)
+      const blob = await response.blob()
+      const urlBlob = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = urlBlob
+      link.download = publikasi.data.fileName
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } catch (error: any) {
+      showToast(error.message, WidgetTypes.ERROR)
+    } finally {
+      setListIsLoadingDownload((prevState) => {
+        const newState = [...prevState]
+        newState[index] = false
+        return newState
+      })
+    }
+  }
+
   const fetchAllPublikasis = async () => {
     const res = await getAllPublikasi()
     setPublikasis(res.data)
     setIsLoadingInit(false)
-  }
-
-  const handleSelectedPublikasi = (publikasi: Publikasi) => {
-    setSelectedPublikasi(publikasi)
-  }
-
-  const handleSelectedDeletedPublikasi = (publikasi: Publikasi) => {
-    setSelectedDeletedPublikasi(publikasi)
+    setListIsLoadingDownload(new Array(res.data.length).fill(false))
   }
 
   const onDeletePublikasi = async (id: string, publidId: string) => {
@@ -137,7 +164,11 @@ export default function Page() {
                       }`}
                     >
                       <div className="w-full grid grid-cols-4 gap-6 items-center">
-                        <div className="w-full col-span-3">
+                        <div
+                          className={`w-full col-span-3 ${
+                            publikasi.file ? "col-span-3" : "col-span-4"
+                          }`}
+                        >
                           <Link
                             className="hover:text-primary-100"
                             href={`/admin/publikasi/${publikasi._id}`}
@@ -160,16 +191,32 @@ export default function Page() {
                           </div>
                         </div>
 
-                        {publikasi.image && (
-                          <div className="col-span-1 rounded-md overflow-hidden">
-                            <Image
-                              width={0}
-                              height={0}
-                              sizes="100vw"
-                              src={publikasi.image}
-                              alt="Logo"
-                              className="w-full"
-                            />
+                        {publikasi.file && (
+                          <div
+                            className="col-span-1 hover:bg-primary-10 transition-all overflow-hidden flex items-center justify-center flex-col cursor-pointer border border-neutral-50 rounded-lg h-full"
+                            onClick={() => onDownloadFile(publikasi._id, index)}
+                          >
+                            {listIsLoadingDownload[index] ? (
+                              <Loader className="animate-spin w-4" />
+                            ) : (
+                              <>
+                                <Image
+                                  src={`/assets/${
+                                    publikasi.fileName.includes(".pdf")
+                                      ? "pdf.png"
+                                      : publikasi.fileName.includes(".xlsx")
+                                      ? "xlsx.png"
+                                      : "docx.png"
+                                  }`}
+                                  width={36}
+                                  height={36}
+                                  alt="Excel Icon"
+                                />
+                                <p className="mt-2 text-xs">
+                                  {publikasi.fileName}
+                                </p>
+                              </>
+                            )}
                           </div>
                         )}
                       </div>
@@ -195,7 +242,11 @@ export default function Page() {
                       }`}
                     >
                       <div className="w-full grid grid-cols-4 gap-6 items-center">
-                        <div className="w-full col-span-3">
+                        <div
+                          className={`w-full col-span-3 ${
+                            publikasi.file ? "col-span-3" : "col-span-4"
+                          }`}
+                        >
                           <Link
                             className="hover:text-primary-100"
                             href={`/admin/publikasi/${publikasi._id}`}
@@ -218,16 +269,32 @@ export default function Page() {
                           </div>
                         </div>
 
-                        {publikasi.image && (
-                          <div className="col-span-1 rounded-md overflow-hidden">
-                            <Image
-                              width={0}
-                              height={0}
-                              sizes="100vw"
-                              src={publikasi.image}
-                              alt="Logo"
-                              className="w-full"
-                            />
+                        {publikasi.file && (
+                          <div
+                            className="col-span-1 hover:bg-primary-10 transition-all overflow-hidden flex items-center justify-center flex-col cursor-pointer border border-neutral-50 rounded-lg h-full"
+                            onClick={() => onDownloadFile(publikasi._id, index)}
+                          >
+                            {listIsLoadingDownload[index] ? (
+                              <Loader className="animate-spin w-4" />
+                            ) : (
+                              <>
+                                <Image
+                                  src={`/assets/${
+                                    publikasi.fileName.includes(".pdf")
+                                      ? "pdf.png"
+                                      : publikasi.fileName.includes(".xlsx")
+                                      ? "xlsx.png"
+                                      : "docx.png"
+                                  }`}
+                                  width={36}
+                                  height={36}
+                                  alt="Excel Icon"
+                                />
+                                <p className="mt-2 text-xs">
+                                  {publikasi.fileName}
+                                </p>
+                              </>
+                            )}
                           </div>
                         )}
                       </div>

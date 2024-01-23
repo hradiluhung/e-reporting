@@ -17,7 +17,7 @@ import {
 } from "@/controllers/satwa-rehab-controller"
 import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
-import { uploadPhoto } from "@/helpers/uploadPhotos"
+import { uploadPhoto } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"

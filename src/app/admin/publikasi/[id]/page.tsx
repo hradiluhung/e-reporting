@@ -8,13 +8,13 @@ import {
   getPublikasiById,
 } from "@/controllers/publikasi-controller"
 import { showToast } from "@/helpers/showToast"
-import { deletePhoto } from "@/helpers/uploadPhotos"
+import { deletePhoto, downloadDocument } from "@/helpers/uploadFiles"
 import parse from "html-react-parser"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React, { useCallback, useEffect, useState } from "react"
-import { ArrowLeftCircle, Edit2, Trash2, X } from "react-feather"
+import { ArrowLeftCircle, Edit2, Loader, Trash2, X } from "react-feather"
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -22,6 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false)
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false)
+  const [isLoadingDownload, setIsLoadingDownload] = useState<boolean>(false)
 
   const fetchPublikasi = useCallback(async () => {
     const res = await getPublikasiById(params.id)
@@ -48,6 +49,29 @@ export default function Page({ params }: { params: { id: string } }) {
       showToast(error.message, WidgetTypes.ERROR)
     } finally {
       setIsLoadingDelete(false)
+    }
+  }
+
+  const onDownloadFile = async () => {
+    try {
+      if (!publikasi) return
+
+      setIsLoadingDownload(true)
+      const res = await downloadDocument(publikasi.publicId)
+
+      const response = await fetch(res.data?.url)
+      const blob = await response.blob()
+      const urlBlob = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = urlBlob
+      link.download = publikasi.fileName
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } catch (error: any) {
+      showToast(error.message, WidgetTypes.ERROR)
+    } finally {
+      setIsLoadingDownload(false)
     }
   }
 
@@ -95,21 +119,44 @@ export default function Page({ params }: { params: { id: string } }) {
           ) : (
             publikasi !== null && (
               <>
-                {publikasi.image !== "" && (
-                  <div className="w-full h-48 rounded-2xl overflow-hidden">
-                    <Image
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      src={publikasi.image}
-                      alt="Logo"
-                      className="w-full h-full object-cover"
-                    />
+                <div className="w-full grid grid-cols-4 gap-6 items-center justify-center py-4">
+                  <div
+                    className={`col-span-3 ${
+                      publikasi.file ? "col-span-3" : "col-span-4"
+                    }`}
+                  >
+                    <h1 className="text-3xl font-semibold text-gray-800">
+                      {publikasi.judul}
+                    </h1>
                   </div>
-                )}
-                <h1 className="text-3xl mt-8 font-semibold text-gray-800">
-                  {publikasi.judul}
-                </h1>
+                  {publikasi.file && (
+                    <div
+                      className="col-span-1 py-2 hover:bg-primary-10 transition-all overflow-hidden flex items-center justify-center cursor-pointer border border-neutral-50 gap-2 rounded-lg h-full"
+                      onClick={() => onDownloadFile()}
+                    >
+                      <>
+                        {isLoadingDownload ? (
+                          <Loader className="animate-spin w-4" />
+                        ) : (
+                          <Image
+                            src={`/assets/${
+                              publikasi.fileName.includes(".pdf")
+                                ? "pdf.png"
+                                : publikasi.fileName.includes(".xlsx")
+                                ? "xlsx.png"
+                                : "docx.png"
+                            }`}
+                            width={24}
+                            height={24}
+                            alt="Excel Icon"
+                          />
+                        )}
+
+                        <p className="text-xs">{publikasi.fileName}</p>
+                      </>
+                    </div>
+                  )}
+                </div>
                 <div className="mt-2 flex gap-4">
                   <p className="text-sm text-neutral-50">
                     Dipublikasi pada:{" "}
@@ -162,7 +209,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 isLoading={isLoadingDelete}
                 isDisabled={isLoadingDelete}
                 onClick={() => {
-                  onDeletePublikasi(publikasi._id, publikasi.image)
+                  onDeletePublikasi(publikasi._id, publikasi.file)
                 }}
               />
               <OutlinedButton
