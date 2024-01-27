@@ -20,9 +20,7 @@ export default function AdminLayout({
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
           <div className="text-start">
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              {title}
-            </h1>
+            <h1 className="font-bold text-2xl text-neutral-100">{title}</h1>
             <p className="text-base">{subtitle}</p>
           </div>
           <div>{mainAction}</div>

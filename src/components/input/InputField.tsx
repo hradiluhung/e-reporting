@@ -24,7 +24,7 @@ export default function InputField({
 }: Props) {
   return (
     <div className="w-full">
-      <label className="text-neutral-500 text-sm">
+      <label className="text-sm">
         {label}
         {isRequired && <span className="ms-1 text-red-500">*</span>}
       </label>

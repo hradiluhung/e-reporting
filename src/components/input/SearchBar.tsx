@@ -16,7 +16,7 @@ export default function SearchBar({
     <div className="w-full flex gap-2 border-2 border-neutral-10 rounded-xl text-base px-4 py-2 text-neutral-50 bg-neutral-0">
       <Search className="w-6" />
       <input
-        className="w-full outline-none text-base bg-transparent placeholder:opacity-50"
+        className="w-full outline-none text-base bg-transparent placeholder:text-sm"
         placeholder={prompt}
         type="text"
         value={searchKeyword}

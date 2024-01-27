@@ -19,7 +19,7 @@ export default function Page() {
           <div className="flex flex-col gap-8 basis-full md:basis-1/2 md:justify-center">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col items-start">
-                <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50 font-bold text-3xl lg:text-5xl">
+                <h1 className="text-white font-bold text-3xl lg:text-5xl">
                   Indonesian Wildlife
                 </h1>
                 <p className="text-lg text-neutral-100 font-medium lg:text-xl">

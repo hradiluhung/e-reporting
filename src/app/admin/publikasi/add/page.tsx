@@ -128,12 +128,10 @@ export default function Page() {
           <div className="flex gap-3 items-center">
             <div>
               <Link href="/admin/publikasi" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                <ArrowLeftCircle className="cursor-pointer w-6" />
               </Link>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Tambah Publikasi
-            </h1>
+            <h1 className="font-bold text-2xl">Tambah Publikasi</h1>
           </div>
 
           <form
@@ -142,26 +140,28 @@ export default function Page() {
             className="flex flex-col gap-3 w-full"
           >
             <div>
-              <p className="text-neutral-500 text-sm">Dokumen</p>
+              <p className="text-sm">Dokumen</p>
               <div className="mt-2">
                 <Callout
                   text="Format Dokumen .pdf dengan ukuran maksimal 10 MB"
                   CalloutIcon={Info}
                 />
                 {file ? (
-                  <div className="w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 transition-all items-center justify-start gap-2">
+                  <div className="w-full rounded-xl p-6 mt-2 bg-red-50 border border-red-300 items-center transition-all grid grid-cols-10">
                     <Image
                       width={0}
                       height={0}
                       sizes="100vw"
-                      className="w-6"
+                      className="w-6 col-span-1"
                       src="/assets/pdf.png"
                       alt="icon pdf"
                     />
-                    <div className="flex w-full justify-between items-center">
-                      <span className="ml-2">{file.name}</span>
+                    <div className="full justify-between items-center col-span-9 grid grid-cols-10">
+                      <span className="ml-2 col-span-9 overflow-hidden">
+                        {file.name}
+                      </span>
                       <XCircle
-                        className="w-6 stroke-red-500 cursor-pointer"
+                        className="w-6 stroke-red-500 cursor-pointer col-span-1 ml-4"
                         onClick={() => setFile(null)}
                       />
                     </div>
@@ -169,7 +169,7 @@ export default function Page() {
                 ) : (
                   <label
                     htmlFor="excel-file"
-                    className={`w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 hover:bg-red-500 hover:bg-opacity-40 cursor-pointer transition-all items-center justify-start gap-2`}
+                    className="w-full rounded-xl flex p-6 mt-2 bg-white border border-red-300 hover:bg-red-200 cursor-pointer transition-all items-center justify-start gap-2"
                   >
                     <input
                       id="excel-file"
@@ -249,6 +249,7 @@ export default function Page() {
               <OutlinedButton
                 text="Batal"
                 size={WidgetSizes.MEDIUM}
+                type={WidgetTypes.SECONDARY}
                 onClick={() => router.back()}
               />
               <FilledButton
@@ -256,6 +257,7 @@ export default function Page() {
                 ButtonIcon={PlusCircle}
                 isSubmit={true}
                 size={WidgetSizes.MEDIUM}
+                type={WidgetTypes.SECONDARY}
                 isLoading={isLoadingSubmit}
                 isDisabled={isLoadingSubmit}
               />

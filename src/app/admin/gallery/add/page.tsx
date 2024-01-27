@@ -97,13 +97,11 @@ export default function Page() {
         <div className="w-full flex flex-col items-start justify-center gap-6 md:w-1/3 lg:w-1/2">
           <div className="flex gap-3 items-center">
             <div>
-              <Link href="/admin/persebaran" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+              <Link href="/admin/gallery" passHref>
+                <ArrowLeftCircle className="cursor-pointer w-6" />
               </Link>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Tambah Gallery
-            </h1>
+            <h1 className="font-bold text-2xl">Tambah Gallery</h1>
           </div>
 
           {isLoadingInit ? (
@@ -195,7 +193,7 @@ export default function Page() {
                     idLembaga: e.target.value,
                   })
                 }}
-                placeholder="Status Dilindungi"
+                placeholder="Pilih Lembaga"
                 size={WidgetSizes.MEDIUM}
                 value={inputGallery.idLembaga}
               />
@@ -205,11 +203,13 @@ export default function Page() {
                   text="Batal"
                   size={WidgetSizes.MEDIUM}
                   onClick={() => router.back()}
+                  type={WidgetTypes.SECONDARY}
                 />
                 <FilledButton
                   text="Tambah"
                   ButtonIcon={PlusCircle}
                   isSubmit={true}
+                  type={WidgetTypes.SECONDARY}
                   size={WidgetSizes.MEDIUM}
                   isLoading={isLoadingSubmit}
                   isDisabled={isLoadingSubmit}

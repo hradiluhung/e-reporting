@@ -30,7 +30,7 @@ export default function FilledButton({
       onClick={onClick}
       type={isSubmit ? "submit" : "button"}
       disabled={isDisabled}
-      className={`flex gap-2 rounded-full text-neutral-0 transition-all justify-center items-center duration-500 ${
+      className={`flex gap-2 rounded-full text-neutral-0 transition-all justify-center items-center shadow-md duration-500 ${
         type === WidgetTypes.PRIMARY
           ? "bg-gradient-to-tl from-primary-100 via-primary-100 to-primary-50 bg-size-200 bg-pos-0 hover:bg-pos-100"
           : type === WidgetTypes.SECONDARY

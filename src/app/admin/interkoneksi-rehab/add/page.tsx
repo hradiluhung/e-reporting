@@ -180,10 +180,10 @@ export default function Page() {
           <div className="flex gap-3 items-center">
             <div>
               <Link href="/admin/interkoneksi-rehab" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                <ArrowLeftCircle className="cursor-pointer w-6" />
               </Link>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
+            <h1 className="font-bold text-2xl">
               Tambah Interkoneksi Satwa Rehabilitasi
             </h1>
           </div>
@@ -195,7 +195,7 @@ export default function Page() {
               }}
             >
               <div>
-                <p className="text-neutral-500 text-sm">
+                <p className="text-sm">
                   Export File Excel<span className="ms-1 text-red-500">*</span>
                 </p>
                 <div className="mt-2">
@@ -206,17 +206,20 @@ export default function Page() {
                 </div>
                 <div className="mt-2">
                   {excelFile ? (
-                    <div className="w-full rounded-xl flex p-6 mt-1 bg-primary-10 border border-primary-50 transition-all items-center justify-start gap-2">
+                    <div className="w-full rounded-xl p-6 mt-1 bg-primary-10 border border-primary-50 items-center transition-all grid grid-cols-10">
                       <Image
                         src="/assets/xls.png"
                         width={24}
                         height={24}
                         alt="Excel Icon"
+                        className="col-span-1"
                       />
-                      <div className="flex w-full justify-between items-center">
-                        <span className="ml-2">{excelFile.name}</span>
+                      <div className="w-full justify-between items-center col-span-9 grid grid-cols-10">
+                        <span className="ml-2 col-span-9 overflow-hidden">
+                          {excelFile.name}
+                        </span>
                         <XCircle
-                          className="w-6 stroke-primary-100 cursor-pointer"
+                          className="w-6 stroke-primary-100 cursor-pointer col-span-1 ml-4"
                           onClick={() => setExcelFile(null)}
                         />
                       </div>
@@ -224,7 +227,7 @@ export default function Page() {
                   ) : (
                     <label
                       htmlFor="excel-file"
-                      className={`w-full rounded-xl flex p-6 mt-1 bg-primary-10 border border-primary-50 hover:bg-primary-50 hover:bg-opacity-40 cursor-pointer transition-all items-center justify-start gap-2`}
+                      className="w-full rounded-xl flex p-6 mt-1 bg-white border border-primary-50 hover:bg-primary-10 cursor-pointer transition-all items-center justify-start gap-2"
                     >
                       <input
                         id="excel-file"
@@ -259,11 +262,11 @@ export default function Page() {
               </div>
             </form>
 
-            <div className="w-full text-center mt-4 text-neutral-500 flex items-center">
+            <div className="w-full text-center mt-4 flex items-center">
               {/* separator */}
-              <div className="w-full h-px bg-neutral-400"></div>
+              <div className="w-full h-px bg-black"></div>
               <p className="px-4 w-full">Atau Input Manual</p>
-              <div className="w-full h-px bg-neutral-400"></div>
+              <div className="w-full h-px bg-black"></div>
             </div>
 
             <form
@@ -486,11 +489,13 @@ export default function Page() {
                   text="Batal"
                   size={WidgetSizes.MEDIUM}
                   onClick={() => router.back()}
+                  type={WidgetTypes.SECONDARY}
                 />
                 <FilledButton
                   text="Tambah"
                   ButtonIcon={PlusCircle}
                   isSubmit={true}
+                  type={WidgetTypes.SECONDARY}
                   size={WidgetSizes.MEDIUM}
                   isLoading={isLoadingSubmit}
                   isDisabled={isLoadingSubmit}

@@ -2,6 +2,7 @@
 import FilledButton from "@/components/buttons/FilledButton"
 import OutlinedButton from "@/components/buttons/OutlinedButton"
 import Dropdown from "@/components/dropdown/Dropdown"
+import Pagination from "@/components/pagination/Pagination"
 import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { MediaType } from "@/constants/media-type"
@@ -14,7 +15,7 @@ import { showToast } from "@/helpers/showToast"
 import { deleteMedia } from "@/helpers/uploadFiles"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { ExternalLink, PlusCircle, Trash2, X } from "react-feather"
 
 export default function Page() {
@@ -28,9 +29,19 @@ export default function Page() {
     useState<Gallery | null>(null)
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false)
 
+  // pagination
+  const [page, setPage] = useState(1)
+  const itemsPerPage = 6
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage)
+  }
+  const [totalPages, setTotalPages] = useState(0)
+
   const fetchAllGallery = useCallback(async () => {
     const res = await getAllGallery()
     setGalleries(res.data)
+
+    setTotalPages(Math.ceil(res.data.length / itemsPerPage))
   }, [])
 
   const fetchAllLembaga = useCallback(async () => {
@@ -80,9 +91,7 @@ export default function Page() {
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
           <div className="text-start">
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Gallery
-            </h1>
+            <h1 className="font-bold text-2xl text-neutral-100">Gallery</h1>
             <p className="text-base">Gallery Lembaga</p>
           </div>
           <div className="flex flex-start">
@@ -90,7 +99,7 @@ export default function Page() {
               <FilledButton
                 text="Tambah"
                 ButtonIcon={PlusCircle}
-                type={WidgetTypes.PRIMARY}
+                type={WidgetTypes.SECONDARY}
                 size={WidgetSizes.MEDIUM}
               />
             </Link>
@@ -128,56 +137,74 @@ export default function Page() {
                 <p className="text-center">Belum ada data gallery</p>
               </div>
             ) : filterLembaga !== "" && filteredGalleries.length !== 0 ? (
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredGalleries.map((gallery, index) => (
-                  <div
-                    key={index}
-                    className="rounded-lg overflow-hidden bg-white shadow-md"
-                  >
-                    {gallery.type === MediaType.IMAGE ? (
-                      <Image
-                        src={gallery.media}
-                        width={500}
-                        height={500}
-                        alt="Galeri lembaga"
-                        className="w-full object-cover h-52"
-                      />
-                    ) : (
-                      // video with video control only play or pause
-                      <video controls className="w-full object-cover h-52">
-                        <source src={gallery.media} />
-                      </video>
-                    )}
-                    <div className="p-4">
-                      <div>
-                        <p className="text-xs font-normal">Nama Lembaga</p>
-                        <p className="text-primary-100 font-semibold">
-                          {gallery.lembaga.nama}
-                        </p>
-                      </div>
+              <>
+                <div className="mb-4 flex justify-center w-full md:justify-end">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </div>
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredGalleries
+                    .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                    .map((gallery, index) => (
+                      <div
+                        key={index}
+                        className="rounded-lg overflow-hidden bg-white shadow-md"
+                      >
+                        {gallery.type === MediaType.IMAGE ? (
+                          <Image
+                            src={gallery.media}
+                            width={500}
+                            height={500}
+                            alt="Galeri lembaga"
+                            className="w-full object-cover h-52"
+                          />
+                        ) : (
+                          // video with video control only play or pause
+                          <video controls className="w-full object-cover h-52">
+                            <source src={gallery.media} />
+                          </video>
+                        )}
+                        <div className="p-4">
+                          <div>
+                            <p className="text-xs font-normal">Nama Lembaga</p>
+                            <p className="text-primary-100 font-semibold">
+                              {gallery.lembaga.nama}
+                            </p>
+                          </div>
 
-                      <div className="mt-2 flex gap-2">
-                        <OutlinedButton
-                          size={WidgetSizes.SMALL}
-                          type={WidgetTypes.ERROR}
-                          ButtonIcon={Trash2}
-                          onClick={() => {
-                            setSelectedDeletedGallery(gallery)
-                          }}
-                        />
-                        <FilledButton
-                          size={WidgetSizes.SMALL}
-                          type={WidgetTypes.PRIMARY}
-                          ButtonIcon={ExternalLink}
-                          onClick={() => {
-                            setSelectedGallery(gallery)
-                          }}
-                        />
+                          <div className="mt-2 flex gap-2">
+                            <OutlinedButton
+                              size={WidgetSizes.SMALL}
+                              type={WidgetTypes.ERROR}
+                              ButtonIcon={Trash2}
+                              onClick={() => {
+                                setSelectedDeletedGallery(gallery)
+                              }}
+                            />
+                            <FilledButton
+                              size={WidgetSizes.SMALL}
+                              type={WidgetTypes.PRIMARY}
+                              ButtonIcon={ExternalLink}
+                              onClick={() => {
+                                setSelectedGallery(gallery)
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    ))}
+                </div>
+                <div className="mt-4 flex justify-center w-full md:justify-end">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </div>
+              </>
             ) : filterLembaga !== "" && filteredGalleries.length === 0 ? (
               <div className="w-full flex justify-center">
                 <p className="text-center">
@@ -185,56 +212,74 @@ export default function Page() {
                 </p>
               </div>
             ) : (
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {galleries.map((gallery, index) => (
-                  <div
-                    key={index}
-                    className="rounded-lg overflow-hidden bg-white shadow-md"
-                  >
-                    {gallery.type === MediaType.IMAGE ? (
-                      <Image
-                        src={gallery.media}
-                        width={500}
-                        height={500}
-                        alt="Galeri lembaga"
-                        className="w-full object-cover h-52"
-                      />
-                    ) : (
-                      // video with video control only play or pause
-                      <video controls className="w-full object-cover h-52">
-                        <source src={gallery.media} />
-                      </video>
-                    )}
-                    <div className="p-4">
-                      <div>
-                        <p className="text-xs font-normal">Nama Lembaga</p>
-                        <p className="text-primary-100 font-semibold">
-                          {gallery.lembaga.nama}
-                        </p>
-                      </div>
+              <>
+                <div className="mb-4 flex justify-center w-full md:justify-end">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </div>
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {galleries
+                    .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                    .map((gallery, index) => (
+                      <div
+                        key={index}
+                        className="rounded-lg overflow-hidden bg-white shadow-md"
+                      >
+                        {gallery.type === MediaType.IMAGE ? (
+                          <Image
+                            src={gallery.media}
+                            width={500}
+                            height={500}
+                            alt="Galeri lembaga"
+                            className="w-full object-cover h-52"
+                          />
+                        ) : (
+                          // video with video control only play or pause
+                          <video controls className="w-full object-cover h-52">
+                            <source src={gallery.media} />
+                          </video>
+                        )}
+                        <div className="p-4">
+                          <div>
+                            <p className="text-xs font-normal">Nama Lembaga</p>
+                            <p className="text-primary-100 font-semibold">
+                              {gallery.lembaga.nama}
+                            </p>
+                          </div>
 
-                      <div className="mt-2 flex gap-2">
-                        <OutlinedButton
-                          size={WidgetSizes.SMALL}
-                          type={WidgetTypes.ERROR}
-                          ButtonIcon={Trash2}
-                          onClick={() => {
-                            setSelectedDeletedGallery(gallery)
-                          }}
-                        />
-                        <FilledButton
-                          size={WidgetSizes.SMALL}
-                          type={WidgetTypes.PRIMARY}
-                          ButtonIcon={ExternalLink}
-                          onClick={() => {
-                            setSelectedGallery(gallery)
-                          }}
-                        />
+                          <div className="mt-2 flex gap-2">
+                            <OutlinedButton
+                              size={WidgetSizes.SMALL}
+                              type={WidgetTypes.ERROR}
+                              ButtonIcon={Trash2}
+                              onClick={() => {
+                                setSelectedDeletedGallery(gallery)
+                              }}
+                            />
+                            <FilledButton
+                              size={WidgetSizes.SMALL}
+                              type={WidgetTypes.PRIMARY}
+                              ButtonIcon={ExternalLink}
+                              onClick={() => {
+                                setSelectedGallery(gallery)
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    ))}
+                </div>
+                <div className="mt-4 flex justify-center w-full md:justify-end">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -288,15 +333,15 @@ export default function Page() {
         </div>
       )}
 
-      {/* Delete Modal */}
+      {/* Detail Modal */}
       {selectedGallery && (
         <div
-          className={`fixed top-0 left-0 w-full h-full px-4 py-4 bg-black bg-opacity-50 flex justify-center items-center ${
+          className={`fixed top-0 left-0 w-full h-full px-4 py-4 bg-black bg-opacity-70 flex justify-center items-center ${
             selectedGallery ? "fade-in-down" : "fade-out-up"
           }`}
         >
-          <div className="w-full bg-white rounded-lg m-24">
-            <div className="flex flex-col gap-4 items-start justify-start w-full h-full relative">
+          <div className="bg-white rounded-lg overflow-hidden">
+            <div className="flex flex-col gap-4 items-start justify-start relative">
               <div className="absolute top-4 end-4 cursor-pointer z-10">
                 <FilledButton
                   size={WidgetSizes.SMALL}
@@ -305,13 +350,15 @@ export default function Page() {
                   onClick={() => setSelectedGallery(null)}
                 />
               </div>
+
               {selectedGallery.type === MediaType.IMAGE ? (
                 <Image
                   src={selectedGallery.media}
-                  width={500}
-                  height={500}
+                  width={0}
+                  height={0}
+                  sizes="100vh"
                   alt="Galeri lembaga"
-                  className="w-full object-cover"
+                  className="h-full w-auto object-cover"
                 />
               ) : (
                 // video with video control only play or pause

@@ -90,10 +90,10 @@ export default function Page() {
           <div className="flex gap-3 items-center">
             <div>
               <Link href="/admin/persebaran" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                <ArrowLeftCircle className="cursor-pointer w-6" />
               </Link>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
+            <h1 className="font-bold text-2xl">
               Tambah Persebaran Satwa Rehabilitasi
             </h1>
           </div>
@@ -115,7 +115,7 @@ export default function Page() {
               />
             ) : (
               <div className="w-full">
-                <label className="text-neutral-500 text-sm">Gambar</label>
+                <label className="text-sm">Gambar</label>
                 <div className="relative w-full rounded-md border border-neutral-50 bg-neutral-0">
                   <Image
                     width={0}
@@ -245,9 +245,11 @@ export default function Page() {
                 text="Batal"
                 size={WidgetSizes.MEDIUM}
                 onClick={() => router.back()}
+                type={WidgetTypes.SECONDARY}
               />
               <FilledButton
                 text="Tambah"
+                type={WidgetTypes.SECONDARY}
                 ButtonIcon={PlusCircle}
                 isSubmit={true}
                 size={WidgetSizes.MEDIUM}

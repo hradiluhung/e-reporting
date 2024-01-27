@@ -78,10 +78,10 @@ export default function Page() {
             <div className="flex gap-3 items-center text-start">
               <div className="">
                 <Link href="/admin/persebaran" passHref>
-                  <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                  <ArrowLeftCircle className="cursor-pointer w-6" />
                 </Link>
               </div>
-              <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
+              <h1 className="font-bold text-2xl">
                 Peta Persebaran Satwa Rehabilitasi
               </h1>
             </div>

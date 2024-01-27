@@ -10,7 +10,6 @@ type Props = {
 
 export default async function PrivateLayout({ children }: Props) {
   const session = await getServerSession(authOptions)
-  const isAuthed = session?.user !== undefined
 
   if (!session?.user) {
     redirect("/")
@@ -19,7 +18,15 @@ export default async function PrivateLayout({ children }: Props) {
   return (
     <>
       <Sidebar />
-      <div className="p-0 py-16 lg:ps-72 min-h-screen bg-no-repeat bg-fixed bg-gradient-primary">
+      <div
+        className="p-0 py-16 lg:ps-72 min-h-screen bg-no-repeat bg-fixed bg-gradient-primary"
+        // background image with opacity 0.2
+        style={{
+          backgroundImage: `url(/assets/admin-bg.webp)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div className="flex-1">{children}</div>
       </div>
     </>

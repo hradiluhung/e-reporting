@@ -144,12 +144,10 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className="flex gap-3 items-center">
             <div>
               <Link href="/admin/profil" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                <ArrowLeftCircle className="cursor-pointer w-6" />
               </Link>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Edit Lembaga
-            </h1>
+            <h1 className="font-bold text-2xl">Edit Lembaga</h1>
           </div>
           {isLoadingInit ? (
             <div className="w-full">
@@ -173,7 +171,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 />
               ) : (
                 <div className="w-full">
-                  <label className="text-neutral-500 text-sm">Gambar</label>
+                  <label className="text-sm">Gambar</label>
                   <div className="relative w-full rounded-md border border-neutral-50 bg-neutral-0">
                     <Image
                       width={0}
@@ -261,6 +259,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 <OutlinedButton
                   text="Batal"
                   size={WidgetSizes.MEDIUM}
+                  type={WidgetTypes.SECONDARY}
                   onClick={() => router.back()}
                 />
                 <FilledButton
@@ -268,6 +267,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   ButtonIcon={PlusCircle}
                   isSubmit={true}
                   size={WidgetSizes.MEDIUM}
+                  type={WidgetTypes.SECONDARY}
                   isLoading={isLoadingSubmit}
                   isDisabled={isLoadingSubmit}
                 />

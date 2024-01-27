@@ -30,7 +30,7 @@ export default function OutlinedButton({
       onClick={onClick}
       type={isSubmit ? "submit" : "button"}
       disabled={isDisabled}
-      className={`flex gap-2 justify-center rounded-full font-semibold text-neutral-0 transition-all items-center duration-500 border 
+      className={`flex gap-2 justify-center rounded-full font-semibold transition-all items-center duration-500 border 
       ${
         size === WidgetSizes.LARGE
           ? "px-6 py-3 font-semibold"
@@ -42,7 +42,7 @@ export default function OutlinedButton({
         type === WidgetTypes.PRIMARY
           ? "border-primary-100 hover:bg-primary-100 hover:bg-opacity-20 text-primary-100"
           : type === WidgetTypes.SECONDARY
-          ? "border-secondary-100 hover:bg-secondary-100 hover:bg-opacity-20 text-secondary-100"
+          ? "border-black hover:bg-black hover:bg-opacity-20 text-black"
           : type === WidgetTypes.ERROR
           ? "border-red-400 hover:bg-red-400 hover:bg-opacity-20 text-red-400"
           : ""

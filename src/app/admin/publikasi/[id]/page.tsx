@@ -13,8 +13,15 @@ import parse from "html-react-parser"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import React, { useCallback, useEffect, useState } from "react"
-import { ArrowLeftCircle, Edit2, Loader, Trash2, X } from "react-feather"
+import { useCallback, useEffect, useState } from "react"
+import {
+  ArrowLeftCircle,
+  Download,
+  Edit2,
+  Loader,
+  Trash2,
+  X,
+} from "react-feather"
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -23,13 +30,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false)
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false)
   const [isLoadingDownload, setIsLoadingDownload] = useState<boolean>(false)
-
-  const fetchPublikasi = useCallback(async () => {
-    const res = await getPublikasiById(params.id)
-    setPublikasi(res.data)
-
-    setIsLoadingInit(false)
-  }, [params.id])
+  const [fileUrl, setFileUrl] = useState<string>("")
 
   const onDeletePublikasi = async (id: string, publidId: string) => {
     try {
@@ -51,6 +52,21 @@ export default function Page({ params }: { params: { id: string } }) {
       setIsLoadingDelete(false)
     }
   }
+
+  const fetchPublikasi = useCallback(async () => {
+    const res = await getPublikasiById(params.id)
+    setPublikasi(res.data)
+
+    const resPdf = await downloadDocument(res.data.publicId)
+    const response = await fetch(resPdf.data?.url)
+
+    const blob = await response.blob()
+    var urlBlob = new Blob([blob], { type: "application/pdf" })
+    var url = URL.createObjectURL(urlBlob)
+    setFileUrl(url)
+
+    setIsLoadingInit(false)
+  }, [params.id])
 
   const onDownloadFile = async () => {
     try {
@@ -86,18 +102,16 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className="flex gap-3 items-center">
             <div>
               <Link href="/admin/publikasi" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                <ArrowLeftCircle className="cursor-pointer w-6" />
               </Link>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Detail Publikasi
-            </h1>
+            <h1 className="font-bold text-2xl">Detail Publikasi</h1>
           </div>
 
           <div className="flex gap-2 justify-end items-stretch">
             <Link href={`/admin/publikasi/edit/${params.id}`} passHref>
               <OutlinedButton
-                type={WidgetTypes.PRIMARY}
+                type={WidgetTypes.SECONDARY}
                 ButtonIcon={Edit2}
                 text="Edit"
                 size={WidgetSizes.SMALL}
@@ -131,43 +145,58 @@ export default function Page({ params }: { params: { id: string } }) {
                   </div>
                   {publikasi.file && (
                     <div
-                      className="col-span-1 py-2 hover:bg-primary-10 transition-all overflow-hidden flex items-center justify-center cursor-pointer border border-neutral-50 gap-2 rounded-lg h-full"
+                      className="col-span-1 p-2 bg-white border border-red-300 hover:bg-red-200 transition-all grid grid-cols-10 items-center justify-center cursor-pointer gap-2 rounded-lg h-full"
                       onClick={() => onDownloadFile()}
                     >
                       <>
                         {isLoadingDownload ? (
-                          <Loader className="animate-spin w-4" />
+                          <div className="col-span-1">
+                            <Loader className="animate-spin w-4" />
+                          </div>
                         ) : (
-                          <Image
-                            src={`/assets/${
-                              publikasi.fileName.includes(".pdf")
-                                ? "pdf.png"
-                                : publikasi.fileName.includes(".xlsx")
-                                ? "xlsx.png"
-                                : "docx.png"
-                            }`}
-                            width={24}
-                            height={24}
-                            alt="Excel Icon"
-                          />
+                          <div className="col-span-1">
+                            <Download className="w-4" />
+                          </div>
                         )}
-
-                        <p className="text-xs">{publikasi.fileName}</p>
+                        <Image
+                          src={`/assets/${
+                            publikasi.fileName.includes(".pdf")
+                              ? "pdf.png"
+                              : publikasi.fileName.includes(".xlsx")
+                              ? "xlsx.png"
+                              : "docx.png"
+                          }`}
+                          width={24}
+                          height={24}
+                          alt="Excel Icon"
+                          className="col-span-1"
+                        />
+                        <p className="text-xs overflow-hidden col-span-8">
+                          {publikasi.fileName}
+                        </p>
                       </>
                     </div>
                   )}
                 </div>
                 <div className="mt-2 flex gap-4">
-                  <p className="text-sm text-neutral-50">
+                  <p className="text-sm">
                     Dipublikasi pada:{" "}
                     {new Date(publikasi.createdAt).toLocaleDateString("id-ID")}
                   </p>
-                  <p className="text-sm text-neutral-50">
-                    Ditulis oleh: {publikasi.penulis}
-                  </p>
+                  <p className="text-sm">Ditulis oleh: {publikasi.penulis}</p>
                 </div>
                 <div className="mt-6 publikasi-content">
                   {parse(publikasi.isi)}
+                </div>
+
+                <div className="mt-4">
+                  <h1 className="text-2xl font-bold">File PDF</h1>
+                  <div
+                    className="w-full rounded-2xl overflow-hidden mt-2"
+                    style={{ height: 560 }}
+                  >
+                    <iframe src={fileUrl} width="100%" height="100%"></iframe>
+                  </div>
                 </div>
               </>
             )

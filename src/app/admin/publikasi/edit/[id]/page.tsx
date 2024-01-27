@@ -9,27 +9,14 @@ import {
   getPublikasiById,
   updatePublikasiById,
 } from "@/controllers/publikasi-controller"
-import { compressFile } from "@/helpers/imageComporession"
 import { showToast } from "@/helpers/showToast"
 import { deleteMedia, uploadPhoto } from "@/helpers/uploadFiles"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import React, {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react"
-import {
-  ArrowLeftCircle,
-  Info,
-  PlusCircle,
-  Trash2,
-  XCircle,
-} from "react-feather"
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
+import { ArrowLeftCircle, Info, PlusCircle, XCircle } from "react-feather"
 import "react-quill/dist/quill.snow.css"
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -170,10 +157,10 @@ export default function Page({ params }: { params: { id: string } }) {
           <div className="flex gap-3 items-center">
             <div>
               <Link href="/admin/publikasi" passHref>
-                <ArrowLeftCircle className="cursor-pointer w-6 stroke-primary-100" />
+                <ArrowLeftCircle className="cursor-pointer w-6" />
               </Link>
             </div>
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
+            <h1 className="font-bold text-2xl text-neutral-100">
               Edit Publikasi
             </h1>
           </div>
@@ -191,7 +178,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 className="flex flex-col gap-3 w-full"
               >
                 <div>
-                  <p className="text-neutral-500 text-sm">Dokumen</p>
+                  <p className="text-sm">Dokumen</p>
                   <Callout
                     text="Format Dokumen .pdf dengan ukuran maksimal 10 MB"
                     CalloutIcon={Info}
@@ -199,7 +186,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   {file == null && publikasi.file == "" ? (
                     <label
                       htmlFor="excel-file"
-                      className={`w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 hover:bg-red-500 hover:bg-opacity-40 cursor-pointer transition-all items-center justify-start gap-2`}
+                      className="w-full rounded-xl flex p-6 mt-2 bg-white border border-red-300 hover:bg-red-200 cursor-pointer transition-all items-center justify-start gap-2"
                     >
                       <input
                         id="excel-file"
@@ -221,7 +208,7 @@ export default function Page({ params }: { params: { id: string } }) {
                       <span className="ml-2">Pilih Dokumen</span>
                     </label>
                   ) : (
-                    <div className="w-full rounded-xl flex p-6 mt-1 bg-red-100 border border-red-500 transition-all items-center justify-start gap-2">
+                    <div className="w-full rounded-xl p-6 mt-2 bg-red-50 border border-red-300 items-center transition-all grid grid-cols-10">
                       <Image
                         width={0}
                         height={0}
@@ -230,12 +217,12 @@ export default function Page({ params }: { params: { id: string } }) {
                         src="/assets/pdf.png"
                         alt="icon pdf"
                       />
-                      <div className="flex w-full justify-between items-center">
-                        <span className="ml-2">
+                      <div className="full justify-between items-center col-span-9 grid grid-cols-10">
+                        <span className="ml-2 col-span-9 overflow-hidden">
                           {file != null ? file.name : publikasi.fileName}
                         </span>
                         <XCircle
-                          className="w-6 stroke-red-500 cursor-pointer"
+                          className="w-6 stroke-red-500 cursor-pointer col-span-1 ml-4"
                           onClick={() => {
                             setFile(null)
                             setPublikasi({
@@ -287,7 +274,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   value={publikasi.tahun}
                 />
                 <div>
-                  <label className="text-neutral-500 text-sm">
+                  <label className="text-sm">
                     Isi
                     <span className="ms-1 text-red-500">*</span>
                   </label>
@@ -307,11 +294,13 @@ export default function Page({ params }: { params: { id: string } }) {
                     text="Batal"
                     size={WidgetSizes.MEDIUM}
                     onClick={() => router.back()}
+                    type={WidgetTypes.SECONDARY}
                   />
                   <FilledButton
                     text="Simpan"
                     ButtonIcon={PlusCircle}
                     isSubmit={true}
+                    type={WidgetTypes.SECONDARY}
                     size={WidgetSizes.MEDIUM}
                     isLoading={isLoadingSubmit}
                     isDisabled={isLoadingSubmit}

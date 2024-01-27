@@ -271,7 +271,7 @@ export default function Navbar({ isAuthed }: Props) {
           >
             <div className="bg-neutral-0 p-6 rounded-xl flex flex-col justify-center gap-6 items-start w-full md:w-96">
               <div className="flex justify-between items-center w-full">
-                <h1 className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
+                <h1 className="text-xl font-semibold text-neutral-100">
                   Login Admin
                 </h1>
                 <X

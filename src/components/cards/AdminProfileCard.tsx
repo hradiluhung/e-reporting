@@ -17,11 +17,13 @@ export default function AdminProfileCard({
   onClickDelete,
 }: Props) {
   return (
-    <div className="relative w-full flex flex-col gap-4 p-8 items-center justify-end bg-neutral-0 border-2 border-neutral-10 rounded-lg overflow-hidden group">
+    <div className="relative w-full flex flex-col gap-4 p-8 items-center justify-end bg-neutral-0 shadow-lg rounded-lg overflow-hidden group">
       <div
         className="absolute inset-0 transform transition-transform duration-500 group-hover:scale-110"
         style={{
-          backgroundImage: `url(${lembaga.image})`,
+          backgroundImage: lembaga.image
+            ? `url(${lembaga.image})`
+            : "linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0) 100%)",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}

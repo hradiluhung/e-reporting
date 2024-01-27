@@ -1,6 +1,7 @@
 "use client"
 import FilledButton from "@/components/buttons/FilledButton"
 import OutlinedButton from "@/components/buttons/OutlinedButton"
+import Dropdown from "@/components/dropdown/Dropdown"
 import SearchBar from "@/components/input/SearchBar"
 import Pagination from "@/components/pagination/Pagination"
 import Skeleton from "@/components/skeleton/Skeleton"
@@ -46,9 +47,6 @@ export default function Page() {
   }
   const [totalPages, setTotalPages] = useState(0)
 
-  // Coba
-  // const [currentPage, setCurrentPage] = useState(1)
-
   const onSearchKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     setSearchKeyword(e.target.value)
@@ -85,10 +83,14 @@ export default function Page() {
 
   useEffect(() => {
     setFilteredSatwaRehabs(
-      satwaRehabs.filter((satwa) =>
-        String(satwa.namaIlmiah)
-          .toLowerCase()
-          .includes(searchKeyword.toLowerCase())
+      satwaRehabs.filter(
+        (satwa) =>
+          String(satwa.namaIlmiah)
+            .toLowerCase()
+            .includes(searchKeyword.toLowerCase()) ||
+          String(satwa.idSatwa)
+            .toLowerCase()
+            .includes(searchKeyword.toLowerCase())
       )
     )
 
@@ -121,9 +123,7 @@ export default function Page() {
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
           <div className="text-start">
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Kelola Satwa Rehabilitasi
-            </h1>
+            <h1 className="font-bold text-2xl">Kelola Satwa Rehabilitasi</h1>
             <p className="text-base">Rehabilitasi satwa untuk pemulihan alam</p>
           </div>
           <div className="flex flex-start">
@@ -131,7 +131,7 @@ export default function Page() {
               <FilledButton
                 text="Tambah"
                 ButtonIcon={PlusCircle}
-                type={WidgetTypes.PRIMARY}
+                type={WidgetTypes.SECONDARY}
                 size={WidgetSizes.MEDIUM}
               />
             </Link>
@@ -142,7 +142,7 @@ export default function Page() {
           <div className="w-full flex justify-between">
             <div className="w-full md:w-64">
               <SearchBar
-                prompt="Cari Nama Ilmiah"
+                prompt="Cari ID atau Nama Ilmiah"
                 searchKeyword={searchKeyword}
                 onSearchKeywordChange={onSearchKeywordChange}
               />

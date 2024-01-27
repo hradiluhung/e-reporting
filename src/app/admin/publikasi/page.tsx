@@ -3,95 +3,53 @@ import FilledButton from "@/components/buttons/FilledButton"
 import SearchBar from "@/components/input/SearchBar"
 import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
-import {
-  deletePublikasiById,
-  getAllPublikasi,
-  getPublikasiById,
-} from "@/controllers/publikasi-controller"
-import { showToast } from "@/helpers/showToast"
-import { deleteMedia, downloadDocument } from "@/helpers/uploadFiles"
+import { getAllPublikasi } from "@/controllers/publikasi-controller"
+import { downloadDocument } from "@/helpers/uploadFiles"
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
-import { Loader, PlusCircle } from "react-feather"
+import { File, PlusCircle } from "react-feather"
 import parse from "html-react-parser"
-import Image from "next/image"
+import Pagination from "@/components/pagination/Pagination"
 
 export default function Page() {
   const [publikasis, setPublikasis] = useState<Publikasi[]>([])
   const [filteredPublikasis, setFilteredPublikasis] = useState<Publikasi[]>([])
   const [isLoadingInit, setIsLoadingInit] = useState<boolean>(true)
-  const [selectedPublikasi, setSelectedPublikasi] = useState<Publikasi | null>(
-    null
-  )
-  const [selectedDeletedPublikasi, setSelectedDeletedPublikasi] =
-    useState<Publikasi | null>(null)
   const [searchKeyword, setSearchKeyword] = useState<string>("")
-  const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false)
-  const [listIsLoadingDownload, setListIsLoadingDownload] = useState<boolean[]>(
-    []
-  )
+  const [listFileUrl, setListFileUrl] = useState<string[]>([])
+
+  // pagination
+  const [page, setPage] = useState(1)
+  const itemsPerPage = 5
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage)
+  }
+  const [totalPages, setTotalPages] = useState(0)
 
   const onSearchKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     setSearchKeyword(e.target.value)
   }
 
-  const onDownloadFile = async (publikasiId: string, index: number) => {
-    try {
-      setListIsLoadingDownload((prevState) => {
-        const newState = [...prevState]
-        newState[index] = true
-        return newState
-      })
-      const publikasi = await getPublikasiById(publikasiId)
-      const res = await downloadDocument(publikasi.data.publicId)
-
-      const response = await fetch(res.data?.url)
-      const blob = await response.blob()
-      const urlBlob = window.URL.createObjectURL(blob)
-      const link = document.createElement("a")
-      link.href = urlBlob
-      link.download = publikasi.data.fileName
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-    } catch (error: any) {
-      showToast(error.message, WidgetTypes.ERROR)
-    } finally {
-      setListIsLoadingDownload((prevState) => {
-        const newState = [...prevState]
-        newState[index] = false
-        return newState
-      })
-    }
-  }
-
   const fetchAllPublikasis = async () => {
     const res = await getAllPublikasi()
     setPublikasis(res.data)
-    setIsLoadingInit(false)
-    setListIsLoadingDownload(new Array(res.data.length).fill(false))
-  }
 
-  const onDeletePublikasi = async (id: string, publidId: string) => {
-    try {
-      setIsLoadingDelete(true)
+    res.data.forEach(async (publikasi: Publikasi) => {
+      if (publikasi.file) {
+        const resPdf = await downloadDocument(publikasi.publicId)
+        const response = await fetch(resPdf.data?.url)
 
-      await deleteMedia(publidId)
+        const blob = await response.blob()
+        var urlBlob = new Blob([blob], { type: "application/pdf" })
+        var url = URL.createObjectURL(urlBlob)
 
-      const res = await deletePublikasiById(id)
-      if (res.status === 200) {
-        fetchAllPublikasis()
-        showToast(res.message, WidgetTypes.SUCCESS)
-        setSelectedDeletedPublikasi(null)
-      } else {
-        showToast(res.message, WidgetTypes.ERROR)
+        setListFileUrl((listFileUrl) => [...listFileUrl, url])
       }
-    } catch (error: any) {
-      showToast(error.message, WidgetTypes.ERROR)
-    } finally {
-      setIsLoadingDelete(false)
-    }
+    })
+
+    setTotalPages(Math.ceil(res.data.length / itemsPerPage))
+    setIsLoadingInit(false)
   }
 
   useEffect(() => {
@@ -104,6 +62,8 @@ export default function Page() {
         publikasi.judul.toLowerCase().includes(searchKeyword.toLowerCase())
       )
     )
+
+    setPage(1)
   }, [searchKeyword, publikasis])
 
   return (
@@ -111,9 +71,7 @@ export default function Page() {
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
           <div className="text-start">
-            <h1 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50">
-              Publikasi
-            </h1>
+            <h1 className="font-bold text-2xl">Publikasi</h1>
             <p className="text-base">Artikel, Berita, dan Publikasi lainnya</p>
           </div>
           <div className="flex flex-start">
@@ -121,7 +79,7 @@ export default function Page() {
               <FilledButton
                 text="Tambah"
                 ButtonIcon={PlusCircle}
-                type={WidgetTypes.PRIMARY}
+                type={WidgetTypes.SECONDARY}
                 size={WidgetSizes.MEDIUM}
               />
             </Link>
@@ -152,79 +110,56 @@ export default function Page() {
               </div>
             ) : searchKeyword !== "" && filteredPublikasis.length !== 0 ? (
               <div className="w-full md:w-full">
-                {filteredPublikasis.map((publikasi, index) => {
-                  const firstParagraph = publikasi.isi.split("</p>")[0]
+                {filteredPublikasis
+                  .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                  .map((publikasi, index) => {
+                    const firstParagraph = publikasi.isi.split("</p>")[0]
 
-                  return (
-                    <div
-                      key={index}
-                      className={`w-full px-8 py-12 ${
-                        index !== publikasis.length - 1 &&
-                        "border-b border-neutral-300"
-                      }`}
-                    >
-                      <div className="w-full grid grid-cols-4 gap-6 items-center">
-                        <div
-                          className={`w-full col-span-3 ${
-                            publikasi.file ? "col-span-3" : "col-span-4"
-                          }`}
-                        >
-                          <Link
-                            className="hover:text-primary-100"
-                            href={`/admin/publikasi/${publikasi._id}`}
-                          >
-                            <h1 className="text-2xl underline">
-                              {publikasi.judul}
-                            </h1>
-                          </Link>
-                          <div className="mt-2 flex gap-4">
-                            <p className="text-sm text-neutral-50">
-                              Dipublikasi pada:{" "}
-                              {new Date(publikasi.createdAt).toLocaleDateString(
-                                "id-ID"
-                              )}
-                            </p>
-                            <p className="text-sm text-neutral-50">
-                              Ditulis oleh: {publikasi.penulis}
-                            </p>
-                          </div>
-                          <div className="mt-4 publikasi-content__card">
-                            {parse(firstParagraph)}
+                    return (
+                      <div
+                        key={index}
+                        className={`w-full px-8 py-10 ${
+                          index !== publikasis.length - 1 &&
+                          "border-b border-neutral-300"
+                        }`}
+                      >
+                        <div className="w-full grid grid-cols-4 gap-6 items-center">
+                          <div className={`w-full col-span-4`}>
+                            <Link
+                              className="hover:text-primary-100"
+                              href={`/admin/publikasi/${publikasi._id}`}
+                            >
+                              <h1 className="text-2xl underline">
+                                {publikasi.judul}
+                              </h1>
+                            </Link>
+                            <div className="mt-2 flex gap-4">
+                              <p className="text-sm text-neutral-50">
+                                Dipublikasi pada:{" "}
+                                {new Date(
+                                  publikasi.createdAt
+                                ).toLocaleDateString("id-ID")}
+                              </p>
+                              <p className="text-sm text-neutral-50">
+                                Ditulis oleh: {publikasi.penulis}
+                              </p>
+                            </div>
+                            {publikasi.file && (
+                              <div className="flex justify-start mt-2">
+                                <div className="bg-neutral-300 text-neutral-600 px-2 py-1 flex gap-2 rounded-full justify-center items-center">
+                                  <File className="w-3 h-3" />
+                                  <span className="text-xs">Mencakup File</span>
+                                </div>
+                              </div>
+                            )}
+                            <div className="mt-4 publikasi-content__card">
+                              {parse(firstParagraph)}
+                            </div>
                           </div>
                         </div>
-
-                        {publikasi.file && (
-                          <div
-                            className="col-span-1 hover:bg-primary-10 transition-all overflow-hidden flex items-center justify-center flex-col cursor-pointer border border-neutral-50 rounded-lg h-full"
-                            onClick={() => onDownloadFile(publikasi._id, index)}
-                          >
-                            {listIsLoadingDownload[index] ? (
-                              <Loader className="animate-spin w-4" />
-                            ) : (
-                              <>
-                                <Image
-                                  src={`/assets/${
-                                    publikasi.fileName.includes(".pdf")
-                                      ? "pdf.png"
-                                      : publikasi.fileName.includes(".xlsx")
-                                      ? "xlsx.png"
-                                      : "docx.png"
-                                  }`}
-                                  width={36}
-                                  height={36}
-                                  alt="Excel Icon"
-                                />
-                                <p className="mt-2 text-xs text-center">
-                                  {publikasi.fileName}
-                                </p>
-                              </>
-                            )}
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
               </div>
             ) : searchKeyword !== "" && filteredPublikasis.length === 0 ? (
               <div className="w-full flex justify-center">
@@ -232,79 +167,79 @@ export default function Page() {
               </div>
             ) : (
               <div className="w-full md:w-full">
-                {publikasis.map((publikasi, index) => {
-                  const firstParagraph = publikasi.isi.split("</p>")[0]
+                <div className="mb-4 flex justify-center w-full md:justify-end">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </div>
+                {publikasis
+                  .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                  .map((publikasi, index) => {
+                    const firstParagraph = publikasi.isi.split("</p>")[0]
 
-                  return (
-                    <div
-                      key={index}
-                      className={`w-full px-8 py-12 ${
-                        index !== publikasis.length - 1 &&
-                        "border-b border-neutral-300"
-                      }`}
-                    >
-                      <div className="w-full grid grid-cols-4 gap-6 items-center">
+                    return (
+                      <>
                         <div
-                          className={`w-full col-span-3 ${
-                            publikasi.file ? "col-span-3" : "col-span-4"
+                          key={index}
+                          className={`w-full px-8 py-10 ${
+                            index + 1 !== itemsPerPage &&
+                            "border-b border-neutral-700"
                           }`}
                         >
-                          <Link
-                            className="hover:text-primary-100"
-                            href={`/admin/publikasi/${publikasi._id}`}
-                          >
-                            <h1 className="text-2xl underline">
-                              {publikasi.judul}
-                            </h1>
-                          </Link>
-                          <div className="mt-2 flex gap-4">
-                            <p className="text-sm text-neutral-50">
-                              Dipublikasi pada:{" "}
-                              {new Date(publikasi.createdAt).toLocaleDateString(
-                                "id-ID"
-                              )}
-                            </p>
-                            <p className="text-sm text-neutral-50">
-                              Ditulis oleh: {publikasi.penulis}
-                            </p>
-                          </div>
-                          <div className="mt-4 publikasi-content__card">
-                            {parse(firstParagraph)}
-                          </div>
-                        </div>
-
-                        {publikasi.file && (
-                          <div
-                            className="col-span-1 hover:bg-primary-10 transition-all overflow-hidden flex items-center justify-center flex-col cursor-pointer border border-neutral-50 rounded-lg h-full"
-                            onClick={() => onDownloadFile(publikasi._id, index)}
-                          >
-                            {listIsLoadingDownload[index] ? (
-                              <Loader className="animate-spin w-4" />
-                            ) : (
-                              <>
-                                <Image
-                                  src={`/assets/${
-                                    publikasi.fileName.includes(".pdf")
-                                      ? "pdf.png"
-                                      : publikasi.fileName.includes(".xlsx")
-                                      ? "xlsx.png"
-                                      : "docx.png"
-                                  }`}
-                                  width={36}
-                                  height={36}
-                                  alt="Excel Icon"
-                                />
-                                <p className="mt-2 text-xs text-center">
-                                  {publikasi.fileName}
+                          <div className="w-full grid grid-cols-4 gap-6 items-center">
+                            <div className={`w-full col-span-3`}>
+                              <Link
+                                className="hover:text-primary-100"
+                                href={`/admin/publikasi/${publikasi._id}`}
+                              >
+                                <h1 className="text-2xl underline">
+                                  {publikasi.judul}
+                                </h1>
+                              </Link>
+                              <div className="mt-2 flex gap-4">
+                                <p className="text-sm">
+                                  Dipublikasi pada:{" "}
+                                  {new Date(
+                                    publikasi.createdAt
+                                  ).toLocaleDateString("id-ID")}
                                 </p>
-                              </>
+                                <p className="text-sm">
+                                  Ditulis oleh: {publikasi.penulis}
+                                </p>
+                              </div>
+                              <div className="mt-4 publikasi-content__card">
+                                {parse(firstParagraph)}
+                              </div>
+                            </div>
+
+                            {publikasi.file && (
+                              <div className="flex justify-center items-center col-span-1">
+                                <div
+                                  className="w-full rounded-2xl overflow-hidden mt-2"
+                                  style={{ height: 300 }}
+                                >
+                                  <iframe
+                                    src={listFileUrl[index]}
+                                    width="100%"
+                                    height="100%"
+                                  ></iframe>
+                                </div>
+                              </div>
                             )}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
+                        </div>
+                      </>
+                    )
+                  })}{" "}
+                <div className="mt-4 flex justify-center w-full md:justify-end">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                  />
+                </div>
               </div>
             )}
           </div>
