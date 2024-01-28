@@ -334,7 +334,7 @@ export default function Page() {
                 value={inputInterkoneksi.personInCharge}
               />
               <InputField
-                label="Kontak HP"
+                label="Kontak PIC"
                 size={WidgetSizes.MEDIUM}
                 onChange={(e) => {
                   setInputInterkoneksi({
@@ -342,7 +342,7 @@ export default function Page() {
                     kontakPIC: e.target.value,
                   })
                 }}
-                placeholder="Contoh: 081234567890"
+                placeholder="Contoh: 081234567890/contoh@mail.com"
                 value={inputInterkoneksi.kontakPIC}
               />
               <InputField

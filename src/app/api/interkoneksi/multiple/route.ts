@@ -22,3 +22,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: 500, message: error.message })
   }
 }
+
+// DELETE MULTIPLE INTERKONEKSI SATWA
+export async function DELETE(request: Request) {
+  try {
+    await startDb()
+
+    const reqBody = await request.json()
+
+    const deletedInterkoneksiSatwa = await Interkoneksi.find({
+      _id: { $in: reqBody },
+    })
+
+    await Interkoneksi.deleteMany({
+      _id: { $in: reqBody },
+    })
+
+    return NextResponse.json({
+      status: 200,
+      message: "Berhasil menghapus banyak interkoneksi satwa",
+      data: deletedInterkoneksiSatwa,
+    })
+  } catch (error: any) {
+    return NextResponse.json({ status: 500, message: error.message })
+  }
+}

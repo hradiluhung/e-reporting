@@ -117,3 +117,15 @@ export const updatePersebaranSatwaById = async ({
     throw new Error(error)
   }
 }
+
+// DELETE MUlTIPE PERSEBARAN SATWA
+export const deleteMultiplePersebaranSatwa = async (data: any) => {
+  try {
+    const response = await axios.delete("/api/persebaran-satwa/multiple", {
+      data,
+    })
+    return response.data
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}

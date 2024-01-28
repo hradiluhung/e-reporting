@@ -166,3 +166,15 @@ export const createMultipleInterkoneksi = async (data: any) => {
     throw new Error(error)
   }
 }
+
+// DELETE MULTIPLE INTERKONEKSI SATWA
+export const deleteMultipleInterkoneksi = async (data: any) => {
+  try {
+    const response = await axios.delete("/api/interkoneksi/multiple", {
+      data,
+    })
+    return response.data
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}

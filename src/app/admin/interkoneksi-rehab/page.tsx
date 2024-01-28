@@ -8,6 +8,7 @@ import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { StatusSatwaRehab } from "@/constants/satwa-rehab"
 import {
   deleteInterkoneksiById,
+  deleteMultipleInterkoneksi,
   getAllInterkoneksi,
 } from "@/controllers/interkoneksi-controller"
 import { showToast } from "@/helpers/showToast"
@@ -42,6 +43,13 @@ export default function Page() {
   const [selectedInterkoneksiSatwa, setSelectedInterkoneksiSatwa] =
     useState<Interkoneksi | null>(null)
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false)
+  const [listDeletedInterkoneksi, setListDeletedInterkoneksi] = useState<
+    string[]
+  >([])
+  const [isLoadingDeleteMultiple, setIsLoadingDeleteMultiple] =
+    useState<boolean>(false)
+  const [isModalDeleteMultipleOpen, setIsModalDeleteMultipleOpen] =
+    useState<boolean>(false)
 
   // pagination
   const [page, setPage] = useState(1)
@@ -62,6 +70,19 @@ export default function Page() {
     setTotalPages(Math.ceil(res.data.length / itemsPerPage))
 
     setIsLoadingInit(false)
+  }
+
+  const handleDeleteInterkoneksi = (id: string) => {
+    const newList = [...listDeletedInterkoneksi]
+    const isExist = newList.includes(id)
+
+    if (isExist) {
+      const filteredList = newList.filter((item) => item !== id)
+      setListDeletedInterkoneksi(filteredList)
+    } else {
+      newList.push(id)
+      setListDeletedInterkoneksi(newList)
+    }
   }
 
   const onOpenDeleteModal = (satwa: Interkoneksi) => {
@@ -91,8 +112,10 @@ export default function Page() {
       )
     )
 
+    setTotalPages(Math.ceil(filteredInterkoneksiSatwas.length / itemsPerPage))
     setPage(1)
-  }, [searchKeyword, interkoneksiSatwas])
+    setListDeletedInterkoneksi([])
+  }, [searchKeyword, interkoneksiSatwas, filteredInterkoneksiSatwas.length])
 
   const onClickDelete = async (id: string, publicId: string) => {
     try {
@@ -112,6 +135,30 @@ export default function Page() {
       showToast(error.message, WidgetTypes.ERROR)
     } finally {
       setIsLoadingDelete(false)
+    }
+  }
+
+  const onDeleteMultipleInterkoneksi = async () => {
+    try {
+      setIsLoadingDeleteMultiple(true)
+      const res = await deleteMultipleInterkoneksi(listDeletedInterkoneksi)
+
+      if (res.status === 200) {
+        res.data.forEach(async (interkoneksi: Interkoneksi) => {
+          interkoneksi.publicId && (await deleteMedia(interkoneksi.publicId))
+        })
+
+        showToast(res.message, WidgetTypes.SUCCESS)
+        fetchAllInterkoneksi()
+        setListDeletedInterkoneksi([])
+      } else {
+        showToast(res.message, WidgetTypes.ERROR)
+      }
+    } catch (error: any) {
+      showToast(error.message, WidgetTypes.ERROR)
+    } finally {
+      setIsLoadingDeleteMultiple(false)
+      setIsModalDeleteMultipleOpen(false)
     }
   }
 
@@ -173,28 +220,28 @@ export default function Page() {
                   <table className="w-full text-sm text-left text-gray-500 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                       <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           No
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           ID Satwa
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Nama Ilmiah
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Status
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Endemik/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           DIlindungi/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Gambar
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Aksi
                         </th>
                       </tr>
@@ -204,19 +251,19 @@ export default function Page() {
                       .map((satwa, index) => (
                         <tbody key={index}>
                           <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {index + (page - 1) * itemsPerPage + 1}
                             </td>
-                            <td className="px-6 py-4">{satwa.idSatwa}</td>
+                            <td className="px-3 py-3">{satwa.idSatwa}</td>
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900"
+                              className="px-3 py-3 font-medium text-gray-900"
                             >
                               {satwa.namaIlmiah}
                             </th>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div
-                                className={`px-2 py-1 rounded-full bg-neutral-0 text-neutral-10 font-semibold text-center text-xs ${
+                                className={`px-2 py-1 rounded-full bg-neutral-0 text-neutral-0 font-semibold text-center text-xs ${
                                   satwa.status === StatusSatwaRehab.REHABILITASI
                                     ? "bg-gradient-to-tr from-amber-400 to-amber-500"
                                     : satwa.status === StatusSatwaRehab.MATI
@@ -227,11 +274,11 @@ export default function Page() {
                                 {satwa.status}
                               </div>
                             </td>
-                            <td className="px-6 py-4">{satwa.statusEndemik}</td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">{satwa.statusEndemik}</td>
+                            <td className="px-3 py-3">
                               {satwa.statusDilindungi}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.image ? (
                                 <Image
                                   width={0}
@@ -245,7 +292,7 @@ export default function Page() {
                                 <div>-</div>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div className="flex gap-2 mt-4">
                                 <OutlinedButton
                                   ButtonIcon={Trash2}
@@ -284,7 +331,20 @@ export default function Page() {
               </div>
             ) : (
               <>
-                <div className="mb-4 flex justify-center w-full md:justify-end">
+                <div className="mb-4 flex justify-center items-center w-full md:justify-between">
+                  <div>
+                    {listDeletedInterkoneksi.length !== 0 && (
+                      <FilledButton
+                        type={WidgetTypes.ERROR}
+                        size={WidgetSizes.SMALL}
+                        text="Hapus Terpilih"
+                        ButtonIcon={Trash2}
+                        onClick={() => {
+                          setIsModalDeleteMultipleOpen(true)
+                        }}
+                      />
+                    )}
+                  </div>
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
@@ -296,28 +356,71 @@ export default function Page() {
                   <table className="w-full text-sm text-left text-gray-500 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                       <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3 text-center">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                            onChange={() => {
+                              // select all just what in current page
+                              const newList = [...listDeletedInterkoneksi]
+                              const totalItem = interkoneksiSatwas.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                              const isAllSelected =
+                                listDeletedInterkoneksi.length === totalItem
+
+                              if (isAllSelected) {
+                                // remove all
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                              } else {
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.push(
+                                    interkoneksiSatwas[
+                                      i + (page - 1) * itemsPerPage
+                                    ]._id
+                                  )
+                                }
+                              }
+
+                              setListDeletedInterkoneksi(newList)
+                            }}
+                            checked={
+                              listDeletedInterkoneksi.length ===
+                              interkoneksiSatwas.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                            }
+                          />
+                        </th>
+                        <th scope="col" className="px-3 py-3">
                           No
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           ID Satwa
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Nama Ilmiah
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Status
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Endemik/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           DIlindungi/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Gambar
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Aksi
                         </th>
                       </tr>
@@ -327,19 +430,31 @@ export default function Page() {
                       .map((satwa, index) => (
                         <tbody key={index}>
                           <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                            <td className="px-6 py-4">
+                            <td className="px-1 py-4 text-center">
+                              <input
+                                type="checkbox"
+                                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                                onChange={() =>
+                                  handleDeleteInterkoneksi(satwa._id)
+                                }
+                                checked={listDeletedInterkoneksi.includes(
+                                  satwa._id
+                                )}
+                              />
+                            </td>
+                            <td className="px-3 py-3">
                               {index + (page - 1) * itemsPerPage + 1}
                             </td>
-                            <td className="px-6 py-4">{satwa.idSatwa}</td>
+                            <td className="px-3 py-3">{satwa.idSatwa}</td>
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900"
+                              className="px-3 py-3 font-medium text-gray-900"
                             >
                               {satwa.namaIlmiah}
                             </th>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div
-                                className={`px-2 py-1 rounded-full bg-neutral-0 text-neutral-10 font-semibold text-center text-xs ${
+                                className={`px-2 py-1 rounded-full bg-neutral-0 text-neutral-0 font-semibold text-center text-xs ${
                                   satwa.status === StatusSatwaRehab.REHABILITASI
                                     ? "bg-gradient-to-tr from-amber-400 to-amber-500"
                                     : satwa.status === StatusSatwaRehab.MATI
@@ -350,11 +465,11 @@ export default function Page() {
                                 {satwa.status}
                               </div>
                             </td>
-                            <td className="px-6 py-4">{satwa.statusEndemik}</td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">{satwa.statusEndemik}</td>
+                            <td className="px-3 py-3">
                               {satwa.statusDilindungi}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.image ? (
                                 <Image
                                   width={0}
@@ -368,7 +483,7 @@ export default function Page() {
                                 <div>-</div>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div className="flex gap-2 mt-4">
                                 <OutlinedButton
                                   ButtonIcon={Trash2}
@@ -588,6 +703,60 @@ export default function Page() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE MULTIPLE MODAL */}
+      {isModalDeleteMultipleOpen && (
+        <div
+          className={`fixed top-0 left-0 w-full h-full px-4 bg-black bg-opacity-50 flex justify-center items-center ${
+            isModalDeleteMultipleOpen ? "fade-in-down" : "fade-out-up"
+          }`}
+        >
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-white rounded-lg p-8">
+            <div className="flex flex-col gap-4 items-start justify-start">
+              <div className="w-full">
+                <div className="flex justify-between w-full">
+                  <h1 className="font-semibold text-lg">
+                    Hapus Satwa Rehabilitasi
+                  </h1>
+                  <X
+                    onClick={() => {
+                      setIsModalDeleteMultipleOpen(false)
+                    }}
+                    className="w-6 cursor-pointer"
+                  />
+                </div>
+                <div className="flex gap-6 items-center mt-2 justify-start ">
+                  <p>
+                    Yakin ingin menghapus{" "}
+                    <b>{listDeletedInterkoneksi.length}</b> satwa rehabilitasi?
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full flex gap-2 mt-4">
+              <FilledButton
+                text="Hapus"
+                size={WidgetSizes.SMALL}
+                type={WidgetTypes.ERROR}
+                ButtonIcon={Trash2}
+                isLoading={isLoadingDeleteMultiple}
+                isDisabled={isLoadingDeleteMultiple}
+                onClick={() => {
+                  onDeleteMultipleInterkoneksi()
+                }}
+              />
+              <OutlinedButton
+                text="Batal"
+                size={WidgetSizes.SMALL}
+                ButtonIcon={X}
+                onClick={() => {
+                  setIsModalDeleteMultipleOpen(false)
+                }}
+              />
             </div>
           </div>
         </div>

@@ -22,3 +22,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: 500, message: error.message })
   }
 }
+
+// DELETE MULTIPLE SATWA REHABILITASI
+export async function DELETE(request: Request) {
+  try {
+    await startDb()
+
+    const reqBody = await request.json()
+
+    const deletedSatwaRehabs = await SatwaRehabilitasi.find({
+      _id: { $in: reqBody },
+    })
+
+    await SatwaRehabilitasi.deleteMany({
+      _id: { $in: reqBody },
+    })
+
+    return NextResponse.json({
+      status: 200,
+      message: "Berhasil menghapus banyak satwa rehabilitasi",
+      data: deletedSatwaRehabs,
+    })
+  } catch (error: any) {
+    return NextResponse.json({ status: 500, message: error.message })
+  }
+}

@@ -7,6 +7,7 @@ import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import "mapbox-gl/dist/mapbox-gl.css"
 import {
+  deleteMultiplePersebaranSatwa,
   deletePersebaranSatwaById,
   getAllPersebaranSatwa,
 } from "@/controllers/persebaran-satwa-controller"
@@ -58,6 +59,14 @@ export default function Home() {
   })
   const mapRef: any = useRef(null)
 
+  const [listDeletedPersebaran, setListDeletedPersebaran] = useState<string[]>(
+    []
+  )
+  const [isLoadingDeleteMultiple, setIsLoadingDeleteMultiple] =
+    useState<boolean>(false)
+  const [isModalDeleteMultipleOpen, setIsModalDeleteMultipleOpen] =
+    useState<boolean>(false)
+
   // pagination
   const [page, setPage] = useState<number>(1)
   const itemsPerPage = 10
@@ -107,7 +116,7 @@ export default function Home() {
         fetchAllPersebaranSatwa()
         setSelectedDeletedPersebaranSatwa(null)
       } else {
-        showToast("Gagal menghapus lembaga", WidgetTypes.ERROR)
+        showToast(res.message, WidgetTypes.ERROR)
       }
     } catch (error: any) {
       showToast(error.message, WidgetTypes.ERROR)
@@ -132,19 +141,64 @@ export default function Home() {
     }
   }
 
+  const onDeleteMultiplePersebaran = async () => {
+    try {
+      setIsLoadingDeleteMultiple(true)
+
+      const res = await deleteMultiplePersebaranSatwa(listDeletedPersebaran)
+
+      if (res.status === 200) {
+        res.data.forEach(async (persebaran: PersebaranSatwa) => {
+          persebaran.publicId && (await deleteMedia(persebaran.publicId))
+        })
+
+        showToast(res.message, WidgetTypes.SUCCESS)
+
+        fetchAllPersebaranSatwa()
+        setListDeletedPersebaran([])
+      } else {
+        showToast(res.message, WidgetTypes.ERROR)
+      }
+    } catch (error: any) {
+      showToast(error.message, WidgetTypes.ERROR)
+    } finally {
+      setIsLoadingDeleteMultiple(false)
+      setIsModalDeleteMultipleOpen(false)
+    }
+  }
+
+  const handleDeletePersebaran = (id: string) => {
+    const newList = [...listDeletedPersebaran]
+    const isExist = newList.includes(id)
+
+    if (isExist) {
+      const filteredList = newList.filter((item) => item !== id)
+      setListDeletedPersebaran(filteredList)
+    } else {
+      newList.push(id)
+      setListDeletedPersebaran(newList)
+    }
+  }
+
   useEffect(() => {
     fetchAllPersebaranSatwa()
   }, [])
 
   useEffect(() => {
     setFilteredPersebaranSatwas(
-      persebaranSatwas.filter((satwa) =>
-        satwa.namaIlmiah.toLowerCase().includes(searchKeyword.toLowerCase())
+      persebaranSatwas.filter(
+        (satwa) =>
+          satwa.namaIlmiah
+            .toLowerCase()
+            .includes(searchKeyword.toLowerCase()) ||
+          satwa.idSatwa.toLowerCase().includes(searchKeyword.toLowerCase())
       )
     )
 
+    setTotalPages(Math.ceil(filteredPersebaranSatwas.length / itemsPerPage))
+    setListDeletedPersebaran([])
     setPage(1)
-  }, [searchKeyword, persebaranSatwas])
+  }, [searchKeyword, persebaranSatwas, filteredPersebaranSatwas.length])
 
   return (
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
@@ -212,31 +266,31 @@ export default function Home() {
                   <table className="w-full text-sm text-left text-gray-500 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                       <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           No
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           ID Satwa
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Nama Ilmiah
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Endemik/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Dilindungi/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Lokasi Pelepasliaran
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Tanggal Pelepasliaran
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Gambar
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Aksi
                         </th>
                       </tr>
@@ -246,29 +300,29 @@ export default function Home() {
                       .map((satwa, index) => (
                         <tbody key={index}>
                           <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {index + (page - 1) * itemsPerPage + 1}
                             </td>
-                            <td className="px-6 py-4">{satwa.idSatwa}</td>
+                            <td className="px-3 py-3">{satwa.idSatwa}</td>
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900"
+                              className="px-3 py-3 font-medium text-gray-900"
                             >
                               {satwa.namaIlmiah}
                             </th>
-                            <td className="px-6 py-4">{satwa.statusEndemik}</td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">{satwa.statusEndemik}</td>
+                            <td className="px-3 py-3">
                               {satwa.statusDilindungi}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.lokasiPelepasliaran}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {new Date(
                                 satwa.tanggalPelepasliaran
                               ).toLocaleDateString("id-ID")}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.image ? (
                                 <Image
                                   width={0}
@@ -282,7 +336,7 @@ export default function Home() {
                                 <div>-</div>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div className="flex gap-2 mt-4">
                                 <OutlinedButton
                                   ButtonIcon={Trash2}
@@ -303,13 +357,13 @@ export default function Home() {
                         </tbody>
                       ))}
                   </table>
-                  <div className="mt-4">
-                    <Pagination
-                      currentPage={page}
-                      setCurrentPage={handlePageChange}
-                      totalPages={totalPages}
-                    />
-                  </div>
+                </div>
+                <div className="mt-4">
+                  <Pagination
+                    currentPage={page}
+                    setCurrentPage={handlePageChange}
+                    totalPages={totalPages}
+                  />
                 </div>
               </>
             ) : searchKeyword !== "" &&
@@ -321,7 +375,20 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <div className="mb-4 flex justify-center w-full md:justify-end">
+                <div className="mb-4 flex justify-center items-center w-full md:justify-between">
+                  <div>
+                    {listDeletedPersebaran.length !== 0 && (
+                      <FilledButton
+                        type={WidgetTypes.ERROR}
+                        size={WidgetSizes.SMALL}
+                        text="Hapus Terpilih"
+                        ButtonIcon={Trash2}
+                        onClick={() => {
+                          setIsModalDeleteMultipleOpen(true)
+                        }}
+                      />
+                    )}
+                  </div>
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
@@ -332,63 +399,121 @@ export default function Home() {
                   <table className="w-full text-sm text-left text-gray-500 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                       <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3 text-center">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                            onChange={() => {
+                              // select all just what in current page
+                              const newList = [...listDeletedPersebaran]
+                              const totalItem = persebaranSatwas.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                              const isAllSelected =
+                                listDeletedPersebaran.length === totalItem
+
+                              if (isAllSelected) {
+                                // remove all
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                              } else {
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.push(
+                                    persebaranSatwas[
+                                      i + (page - 1) * itemsPerPage
+                                    ]._id
+                                  )
+                                }
+                              }
+
+                              setListDeletedPersebaran(newList)
+                            }}
+                            checked={
+                              listDeletedPersebaran.length ===
+                              persebaranSatwas.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                            }
+                          />
+                        </th>
+                        <th scope="col" className="px-3 py-3">
                           No
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           ID Satwa
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Nama Ilmiah
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Endemik/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Dilindungi/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Lokasi Pelepasliaran
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Tanggal Pelepasliaran
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Gambar
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Aksi
                         </th>
                       </tr>
                     </thead>
-                    {persebaranSatwas
-                      .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-                      .map((satwa, index) => (
-                        <tbody key={index}>
-                          <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                            <td className="px-6 py-4">
+                    <tbody>
+                      {persebaranSatwas
+                        .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                        .map((satwa, index) => (
+                          <tr
+                            key={index}
+                            className="odd:bg-white even:bg-gray-50 border-b"
+                          >
+                            <td className="px-1 py-4 text-center">
+                              <input
+                                type="checkbox"
+                                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                                onChange={() =>
+                                  handleDeletePersebaran(satwa._id)
+                                }
+                                checked={listDeletedPersebaran.includes(
+                                  satwa._id
+                                )}
+                              />
+                            </td>
+                            <td className="px-3 py-3">
                               {index + (page - 1) * itemsPerPage + 1}
                             </td>
-                            <td className="px-6 py-4">{satwa.idSatwa}</td>
+                            <td className="px-3 py-3">{satwa.idSatwa}</td>
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900"
+                              className="px-3 py-3 font-medium text-gray-900"
                             >
                               {satwa.namaIlmiah}
                             </th>
-                            <td className="px-6 py-4">{satwa.statusEndemik}</td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">{satwa.statusEndemik}</td>
+                            <td className="px-3 py-3">
                               {satwa.statusDilindungi}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.lokasiPelepasliaran}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {new Date(
                                 satwa.tanggalPelepasliaran
                               ).toLocaleDateString("id-ID")}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.image ? (
                                 <Image
                                   width={0}
@@ -402,7 +527,7 @@ export default function Home() {
                                 <div>-</div>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div className="flex gap-2 mt-4">
                                 <OutlinedButton
                                   ButtonIcon={Trash2}
@@ -421,8 +546,8 @@ export default function Home() {
                               </div>
                             </td>
                           </tr>
-                        </tbody>
-                      ))}
+                        ))}
+                    </tbody>
                   </table>
                 </div>
                 <div className="mt-4 flex justify-center w-full md:justify-end">
@@ -663,6 +788,60 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE MULTIPLE MODAL */}
+      {isModalDeleteMultipleOpen && (
+        <div
+          className={`fixed top-0 left-0 w-full h-full px-4 bg-black bg-opacity-50 flex justify-center items-center ${
+            isModalDeleteMultipleOpen ? "fade-in-down" : "fade-out-up"
+          }`}
+        >
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-white rounded-lg p-8">
+            <div className="flex flex-col gap-4 items-start justify-start">
+              <div className="w-full">
+                <div className="flex justify-between w-full">
+                  <h1 className="font-semibold text-lg">
+                    Hapus Satwa Rehabilitasi
+                  </h1>
+                  <X
+                    onClick={() => {
+                      setIsModalDeleteMultipleOpen(false)
+                    }}
+                    className="w-6 cursor-pointer"
+                  />
+                </div>
+                <div className="flex gap-6 items-center mt-2 justify-start ">
+                  <p>
+                    Yakin ingin menghapus <b>{listDeletedPersebaran.length}</b>{" "}
+                    satwa rehabilitasi?
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full flex gap-2 mt-4">
+              <FilledButton
+                text="Hapus"
+                size={WidgetSizes.SMALL}
+                type={WidgetTypes.ERROR}
+                ButtonIcon={Trash2}
+                isLoading={isLoadingDeleteMultiple}
+                isDisabled={isLoadingDeleteMultiple}
+                onClick={() => {
+                  onDeleteMultiplePersebaran()
+                }}
+              />
+              <OutlinedButton
+                text="Batal"
+                size={WidgetSizes.SMALL}
+                ButtonIcon={X}
+                onClick={() => {
+                  setIsModalDeleteMultipleOpen(false)
+                }}
+              />
             </div>
           </div>
         </div>

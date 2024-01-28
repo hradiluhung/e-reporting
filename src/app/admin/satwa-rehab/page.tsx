@@ -8,6 +8,7 @@ import Skeleton from "@/components/skeleton/Skeleton"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import { StatusSatwaRehab } from "@/constants/satwa-rehab"
 import {
+  deleteMultipleSatwaRehabilitasi,
   deleteSatwaRehabById,
   getAllSatwaRehabilitasi,
 } from "@/controllers/satwa-rehab-controller"
@@ -38,12 +39,20 @@ export default function Page() {
   const [selectedSatwaRehab, setSelectedSatwaRehab] =
     useState<SatwaRehabilitasi | null>(null)
   const [isLoadingDelete, setIsLoadingDelete] = useState<boolean>(false)
+  const [listDeletedSatwaRehab, setListDeletedSatwaRehab] = useState<string[]>(
+    []
+  )
+  const [isLoadingDeleteMultiple, setIsLoadingDeleteMultiple] =
+    useState<boolean>(false)
+  const [isModalDeleteMultipleOpen, setIsModalDeleteMultipleOpen] =
+    useState<boolean>(false)
 
   // pagination
   const [page, setPage] = useState(1)
   const itemsPerPage = 10
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
+    setListDeletedSatwaRehab([])
   }
   const [totalPages, setTotalPages] = useState(0)
 
@@ -77,6 +86,30 @@ export default function Page() {
     setSelectedSatwaRehab(null)
   }
 
+  const onDeleteMultipleSatwaRehab = async () => {
+    try {
+      setIsLoadingDeleteMultiple(true)
+      const res = await deleteMultipleSatwaRehabilitasi(listDeletedSatwaRehab)
+
+      if (res.status === 200) {
+        res.data.forEach(async (satwaRehab: SatwaRehabilitasi) => {
+          satwaRehab.publicId && (await deleteMedia(satwaRehab.publicId))
+        })
+
+        showToast(res.message, WidgetTypes.SUCCESS)
+        fetchAllSatwaRehab()
+        setListDeletedSatwaRehab([])
+      } else {
+        showToast(res.message, WidgetTypes.ERROR)
+      }
+    } catch (error: any) {
+      showToast(error.message, WidgetTypes.ERROR)
+    } finally {
+      setIsLoadingDeleteMultiple(false)
+      setIsModalDeleteMultipleOpen(false)
+    }
+  }
+
   useEffect(() => {
     fetchAllSatwaRehab()
   }, [])
@@ -94,8 +127,23 @@ export default function Page() {
       )
     )
 
+    setTotalPages(Math.ceil(filteredSatwaRehabs.length / itemsPerPage))
     setPage(1)
-  }, [searchKeyword, satwaRehabs])
+    setListDeletedSatwaRehab([])
+  }, [searchKeyword, satwaRehabs, filteredSatwaRehabs.length])
+
+  const handleDeleteSatwaRehab = (id: string) => {
+    const newList = [...listDeletedSatwaRehab]
+    const isExist = newList.includes(id)
+
+    if (isExist) {
+      const filteredList = newList.filter((item) => item !== id)
+      setListDeletedSatwaRehab(filteredList)
+    } else {
+      newList.push(id)
+      setListDeletedSatwaRehab(newList)
+    }
+  }
 
   const onClickDelete = async (id: string, publicId: string) => {
     try {
@@ -159,7 +207,20 @@ export default function Page() {
               </div>
             ) : searchKeyword !== "" && filteredSatwaRehabs.length !== 0 ? (
               <>
-                <div className="mb-4 flex justify-center w-full md:justify-end">
+                <div className="mb-4 flex justify-center items-center w-full md:justify-between">
+                  <div>
+                    {listDeletedSatwaRehab.length !== 0 && (
+                      <FilledButton
+                        type={WidgetTypes.ERROR}
+                        size={WidgetSizes.SMALL}
+                        text="Hapus Terpilih"
+                        ButtonIcon={Trash2}
+                        onClick={() => {
+                          setIsModalDeleteMultipleOpen(true)
+                        }}
+                      />
+                    )}
+                  </div>
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
@@ -171,50 +232,108 @@ export default function Page() {
                   <table className="w-full text-sm text-left text-gray-500 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                       <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3 text-center">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                            onChange={() => {
+                              // select all just what in current page
+                              const newList = [...listDeletedSatwaRehab]
+                              const totalItem = filteredSatwaRehabs.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                              const isAllSelected =
+                                listDeletedSatwaRehab.length === totalItem
+
+                              if (isAllSelected) {
+                                // remove all
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                              } else {
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.push(
+                                    filteredSatwaRehabs[
+                                      i + (page - 1) * itemsPerPage
+                                    ]._id
+                                  )
+                                }
+                              }
+
+                              setListDeletedSatwaRehab(newList)
+                            }}
+                            checked={
+                              listDeletedSatwaRehab.length ===
+                              filteredSatwaRehabs.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                            }
+                          />
+                        </th>
+                        <th scope="col" className="px-3 py-3">
                           No
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           ID Satwa
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Nama Ilmiah
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Status
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Endemik/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
-                          DIlindungi/Non
+                        <th scope="col" className="px-3 py-3">
+                          Dilindungi/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Gambar
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Aksi
                         </th>
                       </tr>
                     </thead>
-                    {filteredSatwaRehabs
-                      .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-                      .map((satwa, index) => (
-                        <tbody key={index}>
-                          <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                            <td className="px-6 py-4">
+                    <tbody>
+                      {filteredSatwaRehabs
+                        .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                        .map((satwa, index) => (
+                          <tr
+                            key={index}
+                            className="odd:bg-white even:bg-gray-50 border-b"
+                          >
+                            <td className="px-1 py-4 text-center">
+                              <input
+                                type="checkbox"
+                                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                                onChange={() =>
+                                  handleDeleteSatwaRehab(satwa._id)
+                                }
+                                checked={listDeletedSatwaRehab.includes(
+                                  satwa._id
+                                )}
+                              />
+                            </td>
+                            <td className="px-3 py-3">
                               {index + (page - 1) * itemsPerPage + 1}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.idSatwa ? satwa.idSatwa : "-"}
                             </td>
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900"
+                              className="px-3 py-3 font-medium text-gray-900"
                             >
                               {satwa.namaIlmiah ? satwa.namaIlmiah : "-"}
                             </th>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.status ? (
                                 <div
                                   className={`px-2 py-1 rounded-full bg-neutral-0 text-neutral-10 font-semibold text-center text-xs ${
@@ -232,15 +351,15 @@ export default function Page() {
                                 "-"
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.statusEndemik ? satwa.statusEndemik : "-"}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.statusDilindungi
                                 ? satwa.statusDilindungi
                                 : "-"}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.image ? (
                                 <Image
                                   width={0}
@@ -254,7 +373,7 @@ export default function Page() {
                                 <div>-</div>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div className="flex gap-2 mt-4">
                                 <OutlinedButton
                                   ButtonIcon={Trash2}
@@ -272,8 +391,8 @@ export default function Page() {
                               </div>
                             </td>
                           </tr>
-                        </tbody>
-                      ))}
+                        ))}
+                    </tbody>
                   </table>
                 </div>
 
@@ -293,7 +412,20 @@ export default function Page() {
               </div>
             ) : (
               <>
-                <div className="mb-4 flex justify-center w-full md:justify-end">
+                <div className="mb-4 flex justify-center items-center w-full md:justify-between">
+                  <div>
+                    {listDeletedSatwaRehab.length !== 0 && (
+                      <FilledButton
+                        type={WidgetTypes.ERROR}
+                        size={WidgetSizes.SMALL}
+                        text="Hapus Terpilih"
+                        ButtonIcon={Trash2}
+                        onClick={() => {
+                          setIsModalDeleteMultipleOpen(true)
+                        }}
+                      />
+                    )}
+                  </div>
                   <Pagination
                     currentPage={page}
                     setCurrentPage={handlePageChange}
@@ -305,50 +437,107 @@ export default function Page() {
                   <table className="w-full text-sm text-left text-gray-500 ">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                       <tr>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3 text-center">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                            onChange={() => {
+                              // select all just what in current page
+                              const newList = [...listDeletedSatwaRehab]
+                              const totalItem = satwaRehabs.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                              const isAllSelected =
+                                listDeletedSatwaRehab.length === totalItem
+
+                              if (isAllSelected) {
+                                // remove all
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                              } else {
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.pop()
+                                }
+                                for (let i = 0; i < totalItem; i++) {
+                                  newList.push(
+                                    satwaRehabs[i + (page - 1) * itemsPerPage]
+                                      ._id
+                                  )
+                                }
+                              }
+
+                              setListDeletedSatwaRehab(newList)
+                            }}
+                            checked={
+                              listDeletedSatwaRehab.length ===
+                              satwaRehabs.slice(
+                                (page - 1) * itemsPerPage,
+                                page * itemsPerPage
+                              ).length
+                            }
+                          />
+                        </th>
+                        <th scope="col" className="px-3 py-3">
                           No
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           ID Satwa
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Nama Ilmiah
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Status
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Endemik/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
-                          DIlindungi/Non
+                        <th scope="col" className="px-3 py-3">
+                          Dilindungi/Non
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Gambar
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-3 py-3">
                           Aksi
                         </th>
                       </tr>
                     </thead>
-                    {satwaRehabs
-                      .slice((page - 1) * itemsPerPage, page * itemsPerPage)
-                      .map((satwa, index) => (
-                        <tbody key={index}>
-                          <tr className="odd:bg-white even:bg-gray-50 border-b ">
-                            <td className="px-6 py-4">
+                    <tbody>
+                      {satwaRehabs
+                        .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                        .map((satwa, index) => (
+                          <tr
+                            key={index}
+                            className="odd:bg-white even:bg-gray-50 border-b"
+                          >
+                            <td className="px-1 py-4 text-center">
+                              <input
+                                type="checkbox"
+                                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out cursor-pointer"
+                                onChange={() =>
+                                  handleDeleteSatwaRehab(satwa._id)
+                                }
+                                checked={listDeletedSatwaRehab.includes(
+                                  satwa._id
+                                )}
+                              />
+                            </td>
+                            <td className="px-3 py-3">
                               {index + (page - 1) * itemsPerPage + 1}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.idSatwa ? satwa.idSatwa : "-"}
                             </td>
                             <th
                               scope="row"
-                              className="px-6 py-4 font-medium text-gray-900"
+                              className="px-3 py-3 font-medium text-gray-900"
                             >
                               {satwa.namaIlmiah ? satwa.namaIlmiah : "-"}
                             </th>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.status ? (
                                 <div
                                   className={`px-2 py-1 rounded-full bg-neutral-0 text-neutral-10 font-semibold text-center text-xs ${
@@ -366,15 +555,15 @@ export default function Page() {
                                 "-"
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.statusEndemik ? satwa.statusEndemik : "-"}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.statusDilindungi
                                 ? satwa.statusDilindungi
                                 : "-"}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               {satwa.image ? (
                                 <Image
                                   width={0}
@@ -388,7 +577,7 @@ export default function Page() {
                                 <div>-</div>
                               )}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-3 py-3">
                               <div className="flex gap-2 mt-4">
                                 <OutlinedButton
                                   ButtonIcon={Trash2}
@@ -406,8 +595,8 @@ export default function Page() {
                               </div>
                             </td>
                           </tr>
-                        </tbody>
-                      ))}
+                        ))}
+                    </tbody>
                   </table>
                 </div>
 
@@ -630,6 +819,60 @@ export default function Page() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* DELETE MULTIPLE MODAL */}
+      {isModalDeleteMultipleOpen && (
+        <div
+          className={`fixed top-0 left-0 w-full h-full px-4 bg-black bg-opacity-50 flex justify-center items-center ${
+            isModalDeleteMultipleOpen ? "fade-in-down" : "fade-out-up"
+          }`}
+        >
+          <div className="w-full md:w-1/2 lg:w-1/3 bg-white rounded-lg p-8">
+            <div className="flex flex-col gap-4 items-start justify-start">
+              <div className="w-full">
+                <div className="flex justify-between w-full">
+                  <h1 className="font-semibold text-lg">
+                    Hapus Satwa Rehabilitasi
+                  </h1>
+                  <X
+                    onClick={() => {
+                      setIsModalDeleteMultipleOpen(false)
+                    }}
+                    className="w-6 cursor-pointer"
+                  />
+                </div>
+                <div className="flex gap-6 items-center mt-2 justify-start ">
+                  <p>
+                    Yakin ingin menghapus <b>{listDeletedSatwaRehab.length}</b>{" "}
+                    satwa rehabilitasi?
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="w-full flex gap-2 mt-4">
+              <FilledButton
+                text="Hapus"
+                size={WidgetSizes.SMALL}
+                type={WidgetTypes.ERROR}
+                ButtonIcon={Trash2}
+                isLoading={isLoadingDeleteMultiple}
+                isDisabled={isLoadingDeleteMultiple}
+                onClick={() => {
+                  onDeleteMultipleSatwaRehab()
+                }}
+              />
+              <OutlinedButton
+                text="Batal"
+                size={WidgetSizes.SMALL}
+                ButtonIcon={X}
+                onClick={() => {
+                  setIsModalDeleteMultipleOpen(false)
+                }}
+              />
             </div>
           </div>
         </div>

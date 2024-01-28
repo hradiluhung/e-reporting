@@ -97,102 +97,186 @@ export default function Page() {
             ) : (
               <>
                 <Link href="/admin/profil">
-                  <div className="p-6 border border-gray-200 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all">
-                    <div>
-                      <p className="text-neutral-500 font-medium">
-                        Jumlah Lembaga
-                      </p>
+                  <div className="relative overflow-hidden p-6 border border-slate-600 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all group">
+                    <div
+                      className="absolute inset-0 transform transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(/assets/dashboard-card/lembaga.jpg)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-black opacity-60"></div>
                     </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-2xl">{lembagas.length}</p>
+                    <div className="relative">
+                      <div>
+                        <p className="text-neutral-0 font-medium">
+                          Jumlah Lembaga
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-2xl text-neutral-0">
+                          {lembagas.length}
+                        </p>
 
-                      <div className="p-2 bg-green-200 rounded-full">
-                        <User className="w-5 h-5 stroke-green-500" />
+                        <div className="p-2 bg-green-200 rounded-full">
+                          <User className="w-5 h-5 stroke-green-500" />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </Link>
 
                 <Link href="/admin/satwa-rehab">
-                  <div className="p-6 border border-gray-200 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all">
-                    <div>
-                      <p className="text-neutral-500 font-medium">
-                        Jumlah Satwa Rehabilitasi
-                      </p>
+                  <div className="relative overflow-hidden p-6 border border-slate-600 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all group">
+                    <div
+                      className="absolute inset-0 transform transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(/assets/dashboard-card/satwa-rehab.jpg)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-black opacity-60"></div>
                     </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-2xl">{satwaRehabs.length}</p>
+                    <div className="relative">
+                      <div>
+                        <p className="text-neutral-0 font-medium">
+                          Jumlah Satwa Rehabilitasi
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-2xl text-neutral-0">
+                          {satwaRehabs.length}
+                        </p>
 
-                      <div className="p-2 bg-blue-200 rounded-full">
-                        <LifeBuoy className="w-5 h-5 stroke-blue-500" />
+                        <div className="p-2 bg-blue-200 rounded-full">
+                          <LifeBuoy className="w-5 h-5 stroke-blue-500" />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </Link>
 
                 <Link href="/admin/persebaran">
-                  <div className="p-6 border border-gray-200 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all">
-                    <div>
-                      <p className="text-neutral-500 font-medium">
-                        Jumlah Persebaran Satwa
-                      </p>
+                  <div className="relative overflow-hidden p-6 border border-slate-600 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all group">
+                    <div
+                      className="absolute inset-0 transform transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(/assets/dashboard-card/persebaran.jpg)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-black opacity-60"></div>
                     </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-2xl">{persebaranSatwas.length}</p>
+                    <div className="relative">
+                      <div>
+                        <p className="text-neutral-0 font-medium">
+                          Jumlah Persebaran Satwa
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-2xl text-neutral-0">
+                          {persebaranSatwas.length}
+                        </p>
 
-                      <div className="p-2 bg-fuchsia-200 rounded-full">
-                        <Disc className="w-5 h-5 stroke-fuchsia-500" />
+                        <div className="p-2 bg-fuchsia-200 rounded-full">
+                          <Disc className="w-5 h-5 stroke-fuchsia-500" />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </Link>
 
                 <Link href="/admin/interkoneksi-rehab">
-                  <div className="p-6 border border-gray-200 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all">
-                    <div>
-                      <p className="text-neutral-500 font-medium">
-                        Jumlah Interkoneksi Rehabilitasi Satwa
-                      </p>
+                  <div className="relative overflow-hidden p-6 border border-slate-600 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all group">
+                    <div
+                      className="absolute inset-0 transform transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(/assets/dashboard-card/interkoneksi.jpg)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-black opacity-60"></div>
                     </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-2xl">{interkoneksiSatwas.length}</p>
+                    <div className="relative">
+                      <div>
+                        <p className="text-neutral-0 font-medium">
+                          Jumlah Interkoneksi Rehabilitasi Satwa
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-2xl text-neutral-0">
+                          {interkoneksiSatwas.length}
+                        </p>
 
-                      <div className="p-2 bg-rose-200 rounded-full">
-                        <CornerDownRight className="w-5 h-5 stroke-rose-500" />
+                        <div className="p-2 bg-rose-200 rounded-full">
+                          <CornerDownRight className="w-5 h-5 stroke-rose-500" />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </Link>
 
                 <Link href="/admin/publikasi">
-                  <div className="p-6 border border-gray-200 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all">
-                    <div>
-                      <p className="text-neutral-500 font-medium">
-                        Jumlah Publikasi
-                      </p>
+                  <div className="relative overflow-hidden p-6 border border-slate-600 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all group">
+                    <div
+                      className="absolute inset-0 transform transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(/assets/dashboard-card/publikasi.jpg)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-black opacity-60"></div>
                     </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-2xl">{publikasis.length}</p>
+                    <div className="relative">
+                      <div>
+                        <p className="text-neutral-0 font-medium">
+                          Jumlah Publikasi
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-2xl text-neutral-0">
+                          {publikasis.length}
+                        </p>
 
-                      <div className="p-2 bg-amber-200 rounded-full">
-                        <Hexagon className="w-5 h-5 stroke-amber-500" />
+                        <div className="p-2 bg-amber-200 rounded-full">
+                          <Hexagon className="w-5 h-5 stroke-amber-500" />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </Link>
 
                 <Link href="/admin/gallery">
-                  <div className="p-6 border border-gray-200 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all">
-                    <div>
-                      <p className="text-neutral-500 font-medium">
-                        Jumlah Gallery
-                      </p>
+                  <div className="relative overflow-hidden p-6 border border-slate-600 rounded-lg shadow-sm w-full bg-white hover:shadow-lg cursor-pointer transition-all group">
+                    <div
+                      className="absolute inset-0 transform transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage: `url(/assets/dashboard-card/gallery.jpg)`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-black opacity-60"></div>
                     </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <p className="text-2xl">{galleris.length}</p>
+                    <div className="relative">
+                      <div>
+                        <p className="font-medium text-neutral-0">
+                          Jumlah Gallery
+                        </p>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-2xl text-neutral-0">
+                          {galleris.length}
+                        </p>
 
-                      <div className="p-2 bg-purple-200 rounded-full">
-                        <ImageIcon className="w-5 h-5 stroke-purple-500" />
+                        <div className="p-2 bg-purple-200 rounded-full">
+                          <ImageIcon className="w-5 h-5 stroke-purple-500" />
+                        </div>
                       </div>
                     </div>
                   </div>
