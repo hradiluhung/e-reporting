@@ -98,7 +98,7 @@ export default function Page() {
 
     setPage(1)
     setTotalPages(Math.ceil(filteredLembagas.length / itemsPerPage))
-  }, [searchKeyword, lembagas, filteredLembagas])
+  }, [searchKeyword, lembagas, filteredLembagas.length])
 
   return (
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">

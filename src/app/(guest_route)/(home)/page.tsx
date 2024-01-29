@@ -12,18 +12,18 @@ import { WidgetSizes } from "@/constants/button-types"
 
 export default function Page() {
   return (
-    <div className="w-full mt-16 px-4 py-6 md:px-8 lg:px-36 lg:py-24">
+    <div className="w-full mt-16 py-6 lg:py-24">
       {/* SECTION 1 */}
-      <div className="py-4 flex flex-col gap-24 lg:pt-6 lg:pb-12">
+      <div className="py-4 flex flex-col gap-24 lg:pt-6 lg:pb-12 px-4 md:px-8 lg:px-36">
         <div className="flex flex-col gap-8 md:flex-row md:justify-between">
           <div className="flex flex-col gap-8 basis-full md:basis-1/2 md:justify-center">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col items-start">
-                <h1 className="text-white font-bold text-3xl lg:text-5xl">
-                  Indonesian Wildlife
+                <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-primary-100 to-secondary-50 font-bold text-3xl lg:text-5xl">
+                  Indonesia Wildlife
                 </h1>
                 <p className="text-lg text-neutral-100 font-medium lg:text-xl">
-                  Indonesian Wildlife Rescue Data Center
+                  Indonesia Wildlife Rescue Data Center
                 </p>
               </div>
               <div>
@@ -98,23 +98,32 @@ export default function Page() {
         exit="hide"
         variants={fadeInUpVariants}
       >
-        <div className="py-12 flex flex-col items-center gap-8 lg:py-16">
-          <div>
-            <h1 className="text-neutral-100 font-bold text-2xl">Fitur Utama</h1>
-          </div>
-          <div className="flex flex-col gap-8 w-full">
-            {GUEST_MENUS.filter(
-              (menu) => menu.isMain === true && menu.name !== "Beranda"
-            ).map((menu, index) => (
-              <HomeCardMain
-                key={index}
-                index={index}
-                title={menu.name}
-                description={menu.description}
-                image={menu.image}
-                url={menu.path}
-              />
-            ))}
+        <div
+          className="py-12 lg:py-16"
+          style={{
+            backgroundImage: `url(/assets/admin-bg.webp)`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="px-4 md:px-8 lg:px-36 flex flex-col items-center gap-8">
+            <div>
+              <h1 className="font-bold text-2xl">Fitur Utama</h1>
+            </div>
+            <div className="flex flex-col gap-8 w-full">
+              {GUEST_MENUS.filter(
+                (menu) => menu.isMain === true && menu.name !== "Beranda"
+              ).map((menu, index) => (
+                <HomeCardMain
+                  key={index}
+                  index={index}
+                  title={menu.name}
+                  description={menu.description}
+                  image={menu.image}
+                  url={menu.path}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </motion.div>
@@ -127,7 +136,7 @@ export default function Page() {
         exit="hide"
         variants={fadeInUpVariants}
       >
-        <div className="py-12 flex flex-col items-center gap-8 lg:py-16">
+        <div className="py-12 flex flex-col items-center gap-8 lg:py-16 px-4 md:px-8 lg:px-36 ">
           <div>
             <h1 className="text-neutral-100 font-bold text-2xl">
               Fitur Lainnya

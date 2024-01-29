@@ -20,7 +20,6 @@ export default async function PrivateLayout({ children }: Props) {
       <Sidebar />
       <div
         className="p-0 py-16 lg:ps-72 min-h-screen bg-no-repeat bg-fixed bg-gradient-primary"
-        // background image with opacity 0.2
         style={{
           backgroundImage: `url(/assets/admin-bg.webp)`,
           backgroundSize: "cover",

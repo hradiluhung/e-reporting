@@ -739,7 +739,14 @@ export default function Home() {
                               )
                             }}
                           >
-                            <MapPin size={30} />
+                            <Image
+                              width={0}
+                              height={0}
+                              sizes="100vh"
+                              src="/assets/marker.png"
+                              alt="Gambar Satwa"
+                              className="w-8 h-8"
+                            />
                           </button>
                         </Marker>
                         {selectedMarker.latitude !== null &&

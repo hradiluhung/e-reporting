@@ -35,7 +35,6 @@ export default function Page() {
       r[a.koordinatPelepasliaran] = [...(r[a.koordinatPelepasliaran] || []), a]
       return r
     }, {})
-    console.log(grouped)
     setGroupedPersebaranSatwas(grouped)
     setIsLoadingInit(false)
   }
@@ -74,9 +73,9 @@ export default function Page() {
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
-          <div className="">
+          <div>
             <div className="flex gap-3 items-center text-start">
-              <div className="">
+              <div>
                 <Link href="/admin/persebaran" passHref>
                   <ArrowLeftCircle className="cursor-pointer w-6" />
                 </Link>

@@ -89,6 +89,7 @@ type Publikasi = {
   isi: string
   file: string
   fileName: string
+  fileUrl?: string
   publicId: string
   createdAt: string
   updatedAt: string
@@ -103,4 +104,16 @@ type Gallery = {
   lembaga: Lembaga
   createdAt: string
   updatedAt: string
+}
+
+// Feedback
+type Feedback = {
+  _id?: string
+  idLembaga: string
+  isi: string
+  jenis: string
+  pengirim: string
+  kontakPengirim: string
+  createdAt?: string
+  updatedAt?: string
 }

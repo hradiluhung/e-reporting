@@ -157,27 +157,3 @@ export async function uploadDocument(formData: any) {
     }
   }
 }
-
-// if I uploaded the pdf file, the result will be encoded in base64
-// how to convert it back and then the file will be downloaded
-export async function downloadDocument(publicId: string) {
-  try {
-    const result: any = await cloudinary.api.resource(publicId, {
-      resource_type: "raw",
-    })
-
-    return {
-      status: 200,
-      message: "Berhasil mendownload dokumen",
-      data: {
-        publicId: result.public_id,
-        url: result.secure_url,
-      },
-    }
-  } catch (error: any) {
-    return {
-      status: 500,
-      message: error.message,
-    }
-  }
-}

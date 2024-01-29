@@ -5,22 +5,19 @@ import Callout from "@/components/callout/Callout"
 import InputField from "@/components/input/InputField"
 import { WidgetSizes, WidgetTypes } from "@/constants/button-types"
 import {
-  createPublikasi,
-  getPublikasiById,
+  createPublikasi
 } from "@/controllers/publikasi-controller"
 import { showToast } from "@/helpers/showToast"
-import { downloadDocument, uploadDocument } from "@/helpers/uploadFiles"
+import { uploadDocument } from "@/helpers/uploadFiles"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FormEvent, useEffect, useMemo, useState } from "react"
 import {
-  ArrowLeftCircle,
-  FileText,
-  Info,
+  ArrowLeftCircle, Info,
   PlusCircle,
-  XCircle,
+  XCircle
 } from "react-feather"
 import "react-quill/dist/quill.snow.css"
 

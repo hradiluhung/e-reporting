@@ -81,10 +81,15 @@ export default function Page() {
   }, [fetchAllData])
 
   useEffect(() => {
-    setFilteredGalleries(
-      galleries.filter((gallery) => gallery.lembaga._id === filterLembaga)
-    )
-  }, [filterLembaga, galleries])
+    if (filterLembaga !== "") {
+      setFilteredGalleries(
+        galleries.filter((gallery) => gallery.lembaga._id === filterLembaga)
+      )
+
+      setPage(1)
+      setTotalPages(Math.ceil(filteredGalleries.length / itemsPerPage))
+    }
+  }, [filterLembaga, galleries, filteredGalleries.length])
 
   return (
     <div className="w-full px-4 py-4 md:px-8 lg:px-20 lg:py-4">

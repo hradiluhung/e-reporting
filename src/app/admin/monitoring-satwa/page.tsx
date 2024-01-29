@@ -10,9 +10,7 @@ export default function page() {
       <div className="flex flex-col items-start gap-8">
         <div className="flex gap-6 justify-between w-full flex-col lg:flex-row lg:items-center">
           <div className="text-start">
-            <h1 className="font-bold text-2xl">
-              Monitoring Satwa
-            </h1>
+            <h1 className="font-bold text-2xl">Monitoring Satwa</h1>
             <p className="text-base">Informasi Monitoring Satwa</p>
           </div>
           {/* <div className="flex flex-start">

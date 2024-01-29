@@ -8,20 +8,12 @@ import {
   getPublikasiById,
 } from "@/controllers/publikasi-controller"
 import { showToast } from "@/helpers/showToast"
-import { deleteMedia, downloadDocument } from "@/helpers/uploadFiles"
+import { deleteMedia } from "@/helpers/uploadFiles"
 import parse from "html-react-parser"
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
-import {
-  ArrowLeftCircle,
-  Download,
-  Edit2,
-  Loader,
-  Trash2,
-  X,
-} from "react-feather"
+import { ArrowLeftCircle, Download, Edit2, Trash2, X } from "react-feather"
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -57,9 +49,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const res = await getPublikasiById(params.id)
     setPublikasi(res.data)
 
-    const resPdf = await downloadDocument(res.data.publicId)
-    const response = await fetch(resPdf.data?.url)
-
+    const response = await fetch(res.data.file)
     const blob = await response.blob()
     var urlBlob = new Blob([blob], { type: "application/pdf" })
     var url = URL.createObjectURL(urlBlob)
@@ -73,9 +63,8 @@ export default function Page({ params }: { params: { id: string } }) {
       if (!publikasi) return
 
       setIsLoadingDownload(true)
-      const res = await downloadDocument(publikasi.publicId)
 
-      const response = await fetch(res.data?.url)
+      const response = await fetch(publikasi.publicId)
       const blob = await response.blob()
       const urlBlob = window.URL.createObjectURL(blob)
       const link = document.createElement("a")
@@ -133,71 +122,45 @@ export default function Page({ params }: { params: { id: string } }) {
           ) : (
             publikasi !== null && (
               <>
-                <div className="w-full grid grid-cols-4 gap-6 items-center justify-center py-4">
-                  <div
-                    className={`col-span-3 ${
-                      publikasi.file ? "col-span-3" : "col-span-4"
-                    }`}
-                  >
+                <div className="w-full gap-6 items-center justify-center py-4">
+                  <div>
                     <h1 className="text-3xl font-semibold text-gray-800">
                       {publikasi.judul}
                     </h1>
                   </div>
-                  {publikasi.file && (
-                    <div
-                      className="col-span-1 p-2 bg-white border border-red-300 hover:bg-red-200 transition-all grid grid-cols-10 items-center justify-center cursor-pointer gap-2 rounded-lg h-full"
-                      onClick={() => onDownloadFile()}
-                    >
-                      <>
-                        {isLoadingDownload ? (
-                          <div className="col-span-1">
-                            <Loader className="animate-spin w-4" />
-                          </div>
-                        ) : (
-                          <div className="col-span-1">
-                            <Download className="w-4" />
-                          </div>
-                        )}
-                        <Image
-                          src={`/assets/${
-                            publikasi.fileName.includes(".pdf")
-                              ? "pdf.png"
-                              : publikasi.fileName.includes(".xlsx")
-                              ? "xlsx.png"
-                              : "docx.png"
-                          }`}
-                          width={24}
-                          height={24}
-                          alt="Excel Icon"
-                          className="col-span-1"
-                        />
-                        <p className="text-xs overflow-hidden col-span-8">
-                          {publikasi.fileName}
-                        </p>
-                      </>
-                    </div>
-                  )}
                 </div>
                 <div className="mt-2 flex gap-4">
-                  <p className="text-sm">
+                  <p>
                     Dipublikasi pada:{" "}
                     {new Date(publikasi.createdAt).toLocaleDateString("id-ID")}
                   </p>
-                  <p className="text-sm">Ditulis oleh: {publikasi.penulis}</p>
+                  <p>Ditulis oleh: {publikasi.penulis}</p>
                 </div>
                 <div className="mt-6 publikasi-content">
                   {parse(publikasi.isi)}
                 </div>
 
-                <div className="mt-4">
-                  <h1 className="text-2xl font-bold">File PDF</h1>
-                  <div
-                    className="w-full rounded-2xl overflow-hidden mt-2"
-                    style={{ height: 560 }}
-                  >
-                    <iframe src={fileUrl} width="100%" height="100%"></iframe>
+                {publikasi.file && (
+                  <div className="mt-10">
+                    <div className="flex justify-between items-center">
+                      <h1 className="text-2xl font-bold">File PDF</h1>
+                      <OutlinedButton
+                        text="Download File"
+                        ButtonIcon={Download}
+                        size={WidgetSizes.SMALL}
+                        onClick={() => onDownloadFile()}
+                        type={WidgetTypes.SECONDARY}
+                        isLoading={isLoadingDownload}
+                      />
+                    </div>
+                    <div
+                      className="w-full rounded-2xl overflow-hidden mt-4"
+                      style={{ height: 560 }}
+                    >
+                      <iframe src={fileUrl} width="100%" height="100%"></iframe>
+                    </div>
                   </div>
-                </div>
+                )}
               </>
             )
           )}

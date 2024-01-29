@@ -18,6 +18,8 @@ export default function Pagination({
   setCurrentPage,
   totalPages,
 }: props) {
+  console.log("TOTAL PAGES", totalPages)
+
   // Calculate the range of page numbers to show
   const isMobileSize = useMobileSize()
   const maxPageNumbersToShow = isMobileSize ? 3 : 5
