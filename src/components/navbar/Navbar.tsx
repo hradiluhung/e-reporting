@@ -189,12 +189,17 @@ export default function Navbar({ isAuthed }: Props) {
                   />
                 </>
               ) : (
-                <OutlinedButton
-                  size={WidgetSizes.MEDIUM}
-                  text="Login"
-                  onClick={onToggleModalLogin}
-                  ButtonIcon={LogIn}
-                />
+                <div className="flex items-center justify-center flex-col">
+                  <OutlinedButton
+                    size={WidgetSizes.MEDIUM}
+                    text="Login"
+                    onClick={onToggleModalLogin}
+                    ButtonIcon={LogIn}
+                  />
+                  <p className="text-xs mt-1 font-medium">
+                    <span className="text-red-500">* </span>Khusus walidata
+                  </p>
+                </div>
               )}
             </div>
           </>

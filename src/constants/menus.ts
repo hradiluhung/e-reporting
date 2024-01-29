@@ -107,19 +107,20 @@ export const GUEST_MENUS = [
     isMain: true,
   },
   {
-    name: "Monitoring Satwa Rehabilitasi/Persebaran Satwa Rehabilitasi",
+    name: "Persebaran Satwa",
     description:
       "Informasi tentang monitoring persebaran satwa rehabilitasi yang telah dilepasliarkan. Pengguna dapat melihat data dan statistik terkini tentang satwa yang telah dilepasliarkan beserta peta persebarannya",
-    path: "/monitoring-satwa",
-    icon: Monitor,
+    path: "/persebaran",
+    icon: Disc,
     image: "home_feature_illustration_3.jpg",
     isMain: true,
   },
   {
-    name: "Persebaran Satwa",
-    description: "",
-    path: "/persebaran",
-    icon: Disc,
+    name: "Monitoring Satwa Rehabilitasi",
+    description:
+      "Informasi tentang monitoring persebaran satwa rehabilitasi yang telah dilepasliarkan. Pengguna dapat melihat data dan statistik terkini tentang satwa yang telah dilepasliarkan beserta peta persebarannya",
+    path: "/monitoring-satwa",
+    icon: Monitor,
     image: "",
     isMain: false,
   },
